@@ -1,0 +1,17 @@
+{
+  "name": "did-registration",
+  "description": "DID Registration specification",
+  "version": "0.0.1",
+  "homepage": "http://identity.foundation/did-registration",
+  "license": "Apache 2",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/decentralized-identity/did-registration"
+  },
+  "dependencies": {
+    "spec-up": "^0.9.78"
+  },
+  "scripts": {
+    "edit": "node -e \"require('spec-up')()\""
+  }
+}
