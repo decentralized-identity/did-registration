@@ -12,6 +12,7 @@ DID Registration
 <!-- -->
 **Authors:**
 ~ [Markus Sabadello](https://www.linkedin.com/in/markus-sabadello-353a0821/) (Danube Tech)
+~ [Cihan Saglam](https://www.linkedin.com/in/cihans/) (Danube Tech)
 ~ Others?
 <!-- -->
 **Participate:**
