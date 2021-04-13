@@ -255,13 +255,53 @@ The following sections explain the possible values for `didState.state`.
 
 This state indicates that the DID operation has been completed.
 
+Example:
+
+```
+{
+	"jobId": null,
+	"didState": {
+		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"state": "finished",
+		"secret": {
+			"keys": [{
+				...
+			}]
+		}
+	},
+	"registrarMetadata": { ... },
+	"methodMetadata": { ... }
+}
+```
+
 ##### `didState.state=failed`
 
 This state indicates that the DID operation has failed.
 
+In this state, the [`didState` output field] MUST contain a `reason` property, and MAY contain additional
+properties, to explain the reason for the failure.
+
+Example:
+
+```
+{
+	"jobId": null,
+	"didState": {
+		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"state": "failed",
+		"reason": "networkUnavailable"
+	},
+	"registrarMetadata": { ... },
+	"methodMetadata": { ... }
+}
+```
+
 ##### `didState.state=action`
 
 This state indicates that the client needs to perform an action, before the DID operation can be continued.
+
+In this state, the [`didState` output field] MUST contain an `action` property, and MAY contain additional
+properties, to specify the nature of the action that has to be taken.
 
 Possible uses for `didState.state==action`:
 
@@ -269,18 +309,51 @@ Possible uses for `didState.state==action`:
   * Accept some legal agreement
   * Perform signature on a byte array
 
+Example:
+
+```
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"didState": {
+		"state": "action",
+		"action": "Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."
+	},
+	"registrarMetadata": { ... },
+	"methodMetadata": { ... }
+}
+```
+
 ##### `didState.state=wait`
 
 This state indicates that the client needs to wait, before the DID operation can be continued.
+
+In this state, the [`didState` output field] MUST contain a `wait` property, and MAY contain additional
+properties, to explain the reason for the failure.
 
 Possible uses for `didState.state==wait`:
 
   * Wait for confirmation on chain
   * Wait for approval by someone
 
+```
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"didState": {
+		"state": "wait",
+		"wait": "Please wait until the transaction is complete.",
+		"waitTime": 3600000
+	},
+	"registrarMetadata": { ... },
+	"methodMetadata": { ... }
+}
+```
+
 #### `didState.did`
 
 This output field contains the DID at the end of the DID operation.
+
+For the [`create()` function](#create), if the value of the [`didState.state` output field] is `"finished"`,
+then the value of this output field MUST NOT be null.
 
 For the [`update()` function](#update) and [`deactivate()` function](#deactivate), this output field MUST NOT
 be null, and its value MUST match the [`did` input field](#did) that was used when executing the function.

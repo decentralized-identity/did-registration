@@ -257,25 +257,83 @@ is finished, failed, or if a longer-running “job” has been created that requ
 <p>The following sections explain the possible values for <code>didState.state</code>.</p>
 <h5 id="didstatestatefinished"><a class="toc-anchor" href="#didstatestatefinished" >§</a> <code>didState.state=finished</code></h5>
 <p>This state indicates that the DID operation has been completed.</p>
+<p>Example:</p>
+<pre><code>{
+	&quot;jobId&quot;: null,
+	&quot;didState&quot;: {
+		&quot;did&quot;: &quot;did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN&quot;,
+		&quot;state&quot;: &quot;finished&quot;,
+		&quot;secret&quot;: {
+			&quot;keys&quot;: [{
+				...
+			}]
+		}
+	},
+	&quot;registrarMetadata&quot;: { ... },
+	&quot;methodMetadata&quot;: { ... }
+}
+</code></pre>
 <h5 id="didstatestatefailed"><a class="toc-anchor" href="#didstatestatefailed" >§</a> <code>didState.state=failed</code></h5>
 <p>This state indicates that the DID operation has failed.</p>
+<p>In this state, the [<code>didState</code> output field] MUST contain a <code>reason</code> property, and MAY contain additional
+properties, to explain the reason for the failure.</p>
+<p>Example:</p>
+<pre><code>{
+	&quot;jobId&quot;: null,
+	&quot;didState&quot;: {
+		&quot;did&quot;: &quot;did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN&quot;,
+		&quot;state&quot;: &quot;failed&quot;,
+		&quot;reason&quot;: &quot;networkUnavailable&quot;
+	},
+	&quot;registrarMetadata&quot;: { ... },
+	&quot;methodMetadata&quot;: { ... }
+}
+</code></pre>
 <h5 id="didstatestateaction"><a class="toc-anchor" href="#didstatestateaction" >§</a> <code>didState.state=action</code></h5>
 <p>This state indicates that the client needs to perform an action, before the DID operation can be continued.</p>
+<p>In this state, the [<code>didState</code> output field] MUST contain an <code>action</code> property, and MAY contain additional
+properties, to specify the nature of the action that has to be taken.</p>
 <p>Possible uses for <code>didState.state==action</code>:</p>
 <ul>
 <li>Send coins to fund a wallet</li>
 <li>Accept some legal agreement</li>
 <li>Perform signature on a byte array</li>
 </ul>
+<p>Example:</p>
+<pre><code>{
+	&quot;jobId&quot;: &quot;155eae21-45e5-4e71-bb22-fef51cda5bf7&quot;,
+	&quot;didState&quot;: {
+		&quot;state&quot;: &quot;action&quot;,
+		&quot;action&quot;: &quot;Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG.&quot;
+	},
+	&quot;registrarMetadata&quot;: { ... },
+	&quot;methodMetadata&quot;: { ... }
+}
+</code></pre>
 <h5 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=wait</code></h5>
 <p>This state indicates that the client needs to wait, before the DID operation can be continued.</p>
+<p>In this state, the [<code>didState</code> output field] MUST contain a <code>wait</code> property, and MAY contain additional
+properties, to explain the reason for the failure.</p>
 <p>Possible uses for <code>didState.state==wait</code>:</p>
 <ul>
 <li>Wait for confirmation on chain</li>
 <li>Wait for approval by someone</li>
 </ul>
+<pre><code>{
+	&quot;jobId&quot;: &quot;155eae21-45e5-4e71-bb22-fef51cda5bf7&quot;,
+	&quot;didState&quot;: {
+		&quot;state&quot;: &quot;wait&quot;,
+		&quot;wait&quot;: &quot;Please wait until the transaction is complete.&quot;,
+		&quot;waitTime&quot;: 3600000
+	},
+	&quot;registrarMetadata&quot;: { ... },
+	&quot;methodMetadata&quot;: { ... }
+}
+</code></pre>
 <h4 id="didstatedid"><a class="toc-anchor" href="#didstatedid" >§</a> <code>didState.did</code></h4>
 <p>This output field contains the DID at the end of the DID operation.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, if the value of the [<code>didState.state</code> output field] is <code>&quot;finished&quot;</code>,
+then the value of this output field MUST NOT be null.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this output field MUST NOT
 be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when executing the function.</p>
 <h4 id="didstatesecret"><a class="toc-anchor" href="#didstatesecret" >§</a> <code>didState.secret</code></h4>
