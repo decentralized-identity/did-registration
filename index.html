@@ -125,7 +125,7 @@ work is being done.</p>
 <p>The DID create/update/deactivate functions raise architectural questions around key management,
 since they typically involve the generation and use of private keys and other secrets.</p>
 <p>With regard to key management, a DID Registrar can operate in the following modes:</p>
-<h3 id="secret-modes"><a class="toc-anchor" href="#secret-modes" >§</a> Secret Modes</h3>
+<h3 id="internal-secret-mode"><a class="toc-anchor" href="#internal-secret-mode" >§</a> Internal Secret Mode</h3>
 <p>In this mode, the DID Registrar is responsible for generating the DID controller keys used by DID operations. This
 means  that the DID Registrar is considered a highly trusted component which should be fully under the control of a
 DID controller. If it is operated as a remotely hosted service, secure connection protocols such as TLS, DIDComm,
@@ -158,7 +158,7 @@ of accessing an external wallet in order to perform cryptographic operations suc
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<img alt="Diagram showing Client-managed Secret Mode](images/diagram-mode-client-managed-secret.png">
+<img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
 <h2 id="operations"><a class="toc-anchor" href="#operations" >§</a> Operations</h2>
 <h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
 <pre><code>create(method, did, options, secret, didDocument) -&gt; jobId, didState, metadata
@@ -213,10 +213,10 @@ should be created.</p>
 </ul>
 <h3 id="diddocumentoperation"><a class="toc-anchor" href="#diddocumentoperation" >§</a> <code>didDocumentOperation</code></h3>
 <p>This input field indicates which update operation should be applied to a DID’s associated DID document.</p>
-<p>For the <a href="#create" ><code>create()</code> function</a>, this input field is absent, and is implied to have a value of <code>setDidDocument</code>.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be absent, and is implied to have a value of <code>setDidDocument</code>.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL.
-If it is null, it is implied to have a value of <code>&quot;setDidDocument&quot;</code>.</p>
-<p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field is absent.</p>
+If it is absent or has a null value, it is implied to have a value of <code>&quot;setDidDocument&quot;</code>.</p>
+<p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
 <p>This specification defines two standard values for this operation. Individual DID methods MAY specify other
 ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 <p>Possible values:</p>
@@ -246,8 +246,8 @@ on the value of the <a href="#operation" ><code>didDocumentOperation</code> inpu
 <p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
 state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
 have to be called multiple times, and the <code>jobId</code> is used to keep track of the ongoing process.</p>
-<p>This output field MUST have a null value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is
-either <code>finished</code> or <code>failed</code>, and MUST NOT have a null value otherwise.</p>
+<p>This output field MUST be absent or have a null value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a>
+is either <code>finished</code> or <code>failed</code>, and MUST NOT have a null value otherwise.</p>
 <h3 id="didstate"><a class="toc-anchor" href="#didstate" >§</a> <code>didState</code></h3>
 <h4 id="didstatestate"><a class="toc-anchor" href="#didstatestate" >§</a> <code>didState.state</code></h4>
 <p>This output field contains the current state of the DID operations. It is used to indicate if a DID operation
@@ -312,13 +312,26 @@ properties, to specify the nature of the action that has to be taken.</p>
 }
 </code></pre>
 <p>Example 2:</p>
+<p>TODO: This is used in Client-managed Secret Mode. Need to specify in more detail how a DID Registrar requests signing, and how the client responds.</p>
 <pre><code>{
 	&quot;jobId&quot;: &quot;155eae21-45e5-4e71-bb22-fef51cda5bf7&quot;,
 	&quot;didState&quot;: {
 		&quot;state&quot;: &quot;action&quot;,
-		&quot;action&quot;: &quot;signatureRequired&quot;,
-		&quot;payloadForSignature&quot;: &quot;...&quot;,
-		&quot;signingAlgorithm&quot;: &quot;EdDsa&quot;
+		&quot;action&quot;: &quot;signPayload&quot;,
+		&quot;signingRequests&quot;: [
+		  {
+		    &quot;payload&quot;: &quot;...&quot;,
+		    &quot;payloadId&quot;: &quot;...&quot;,
+		    &quot;signingAlgorithm&quot;: &quot;EdDsa&quot;,
+		    &quot;keyReference&quot;: &quot;... OPTIONAL ...&quot;
+		  },
+		  {
+		    &quot;payload&quot;: &quot;...&quot;,
+		    &quot;payloadId&quot;: &quot;...&quot;,
+		    &quot;signingAlgorithm&quot;: &quot;EdDsa&quot;,
+		    &quot;keyReference&quot;: &quot;... OPTIONAL ...&quot;
+		  }
+		]
 	},
 	&quot;registrarMetadata&quot;: { ... },
 	&quot;methodMetadata&quot;: { ... }
@@ -354,8 +367,10 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <p>This output field contains DID controller keys and other secrets.</p>
 <p>It is only used if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a>, and if the
 [<code>secretReturning</code> option] is set to <code>true</code>.</p>
+<p>TODO: Specify the format of returned DID controller keys.</p>
 <h4 id="didstatediddocument"><a class="toc-anchor" href="#didstatediddocument" >§</a> <code>didState.didDocument</code></h4>
 <p>This output field contains the DID document after the DID operation has been successfully executed.</p>
+<p>This output field is OPTIONAL.</p>
 <h3 id="metadata"><a class="toc-anchor" href="#metadata" >§</a> <code>metadata</code></h3>
 <p>This output field contains various metadata about the DID operation.</p>
 <p>Possible uses for the <code>metadata</code> output field:</p>
@@ -433,7 +448,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#terminology" >Terminology</a></li>
 <li><a href="#architecture-modes" >Architecture Modes</a>
 <ul>
-<li><a href="#secret-modes" >Secret Modes</a>
+<li><a href="#internal-secret-mode" >Internal Secret Mode</a>
 <ul>
 <li><a href="#secretstoring-option" >secretStoring Option</a></li>
 <li><a href="#secretreturning-option" >secretReturning Option</a></li>

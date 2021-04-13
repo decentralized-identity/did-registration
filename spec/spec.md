@@ -59,7 +59,7 @@ since they typically involve the generation and use of private keys and other se
 
 With regard to key management, a DID Registrar can operate in the following modes:
 
-### Secret Modes
+### Internal Secret Mode
 
 In this mode, the DID Registrar is responsible for generating the DID controller keys used by DID operations. This
 means  that the DID Registrar is considered a highly trusted component which should be fully under the control of a
@@ -110,7 +110,7 @@ of accessing an external wallet in order to perform cryptographic operations suc
 In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.
 
-<img alt="Diagram showing Client-managed Secret Mode](images/diagram-mode-client-managed-secret.png">
+<img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
 
 ## Operations
 
@@ -191,12 +191,12 @@ Possible keys and values:
 
 This input field indicates which update operation should be applied to a DID's associated DID document.
 
-For the [`create()` function](#create), this input field is absent, and is implied to have a value of `setDidDocument`.
+For the [`create()` function](#create), this input field MUST be absent, and is implied to have a value of `setDidDocument`.
 
 For the [`update()` function](#update), this input field is OPTIONAL.
-If it is null, it is implied to have a value of `"setDidDocument"`.
+If it is absent or has a null value, it is implied to have a value of `"setDidDocument"`.
 
-For the [`deactivate()` function](#deactivate), this input field is absent.
+For the [`deactivate()` function](#deactivate), this input field MUST be absent.
 
 This specification defines two standard values for this operation. Individual DID methods MAY specify other
 ways of executing an [`update()` function](#update).
@@ -235,8 +235,8 @@ When executing DID operations, an operation can turn into a longer-running "job"
 state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
 have to be called multiple times, and the `jobId` is used to keep track of the ongoing process.
 
-This output field MUST have a null value if the value of the [`didState.state` output field](#didstatestate) is
-either `finished` or `failed`, and MUST NOT have a null value otherwise.
+This output field MUST be absent or have a null value if the value of the [`didState.state` output field](#didstatestate)
+is either `finished` or `failed`, and MUST NOT have a null value otherwise.
 
 ### `didState`
 
@@ -326,14 +326,28 @@ Example 1:
 
 Example 2:
 
+TODO: This is used in Client-managed Secret Mode. Need to specify in more detail how a DID Registrar requests signing, and how the client responds.
+
 ```
 {
 	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
 		"state": "action",
-		"action": "signatureRequired",
-		"payloadForSignature": "...",
-		"signingAlgorithm": "EdDsa"
+		"action": "signPayload",
+		"signingRequests": [
+		  {
+		    "payload": "...",
+		    "payloadId": "...",
+		    "signingAlgorithm": "EdDsa",
+		    "keyReference": "... OPTIONAL ..."
+		  },
+		  {
+		    "payload": "...",
+		    "payloadId": "...",
+		    "signingAlgorithm": "EdDsa",
+		    "keyReference": "... OPTIONAL ..."
+		  }
+		]
 	},
 	"registrarMetadata": { ... },
 	"methodMetadata": { ... }
@@ -382,10 +396,13 @@ This output field contains DID controller keys and other secrets.
 It is only used if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode), and if the
 [`secretReturning` option] is set to `true`.
 
+TODO: Specify the format of returned DID controller keys.
+
 #### `didState.didDocument`
 
 This output field contains the DID document after the DID operation has been successfully executed.
 
+This output field is OPTIONAL.
 
 ### `metadata`
 
