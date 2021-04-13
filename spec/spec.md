@@ -147,7 +147,8 @@ This function deactivates the DID.
 
 This input field indicates the DID method that should be used for the DID operation.
 
-For the [`create()` function](#create), this input field MUST NOT be null.
+For the [`create()` function](#create), if the [`did` input field](#did) is absent or its value is null, then
+this input field MUST NOT be null, otherwise it MUST be null.
 
 For the [`update()` function](#update) and [`deactivate()` function](#deactivate), this input field MUST be
 null, since the DID method is determined by the [`did` input field](#did).
@@ -164,7 +165,8 @@ Possible values:
 
 This input field indicates the DID that is the target of the DID operation.
 
-For the [`create()` function](#create), this input field MUST be null.
+For the [`create()` function](#create), this input field is OPTIONAL. Specific DID methods typically
+restrict how this input field is used.
 
 For the [`update()` function](#update) and [`deactivate()` function](#deactivate), this input field MUST NOT be null.
 

@@ -181,7 +181,8 @@ by performing an incremental update (see the <a href="#diddocumentoperation" ><c
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
 <p>This input field indicates the DID method that should be used for the DID operation.</p>
-<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST NOT be null.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, if the <a href="#did" ><code>did</code> input field</a> is absent or its value is null, then
+this input field MUST NOT be null, otherwise it MUST be null.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be
 null, since the DID method is determined by the <a href="#did" ><code>did</code> input field</a>.</p>
 <p>Possible values:</p>
@@ -194,7 +195,8 @@ null, since the DID method is determined by the <a href="#did" ><code>did</code>
 </ul>
 <h3 id="did"><a class="toc-anchor" href="#did" >§</a> <code>did</code></h3>
 <p>This input field indicates the DID that is the target of the DID operation.</p>
-<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be null.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, this input field is OPTIONAL. Specific DID methods typically
+restrict how this input field is used.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST NOT be null.</p>
 <h3 id="options"><a class="toc-anchor" href="#options" >§</a> <code>options</code></h3>
 <p>This input field contains an object with various options for the DID operation, such as the network where the DID
