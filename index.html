@@ -73,9 +73,11 @@ customElements.define("slide-panels",class extends HTMLElement{static get observ
 <h2 id="abstract"><a class="toc-anchor" href="#abstract" >§</a> Abstract</h2>
 <p>Each DID method specifies how to create/read/update/deactivate DIDs within a given verifiable data
 registry. How exactly this works can be very different depending on the DID method and may involve
-various steps, architectural components, and network communication. This document is an attempt
-to define the concept of a “DID registrar” which executes these DID write operations via a common
-abstract interface, similar to how a “DID resolver” performs the DID resolution operation.</p>
+various steps, architectural components, and network communication. The process of resolving a DID
+to a DID document by executing the read() operation is well-understood and specified in the
+<a path-0="w3c-ccg.github.io"path-1="did-resolution"path-2=""href="https://w3c-ccg.github.io/did-resolution/" >DID Resolution</a> specification. This document complements
+the concept of a “DID Resolver” by also defining a “DID Registrar” component that can execute the three remaining
+create/update/deactivate operations via a common interface.</p>
 <h2 id="status-of-this-document"><a class="toc-anchor" href="#status-of-this-document" >§</a> Status of This Document</h2>
 <p>DID Registration is a draft specification under development within the
 <a path-0="identity.foundation"href="https://identity.foundation" >Decentralized Identity Foundation</a> (DIF (DIF), and designed to incorporate the
@@ -107,11 +109,11 @@ work is being done.</p>
 </tr>
 <tr>
 <td style="text-align:left">DID Registrar</td>
-<td style="text-align:left">A software and/or hardware component that performs the DID create/update/deactivate functions.</td>
+<td style="text-align:left">A software and/or hardware component that implements the DID create/update/deactivate functions.</td>
 </tr>
 <tr>
 <td style="text-align:left">DID Resolver</td>
-<td style="text-align:left">A software and/or hardware component that performs the DID resolution function.</td>
+<td style="text-align:left">A software and/or hardware component that implements the DID resolution function.</td>
 </tr>
 <tr>
 <td style="text-align:left">Wallet</td>
@@ -119,101 +121,172 @@ work is being done.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="architecture-modes"><a class="toc-anchor" href="#architecture-modes" >§</a> Architecture Modes</h2>
+<p>The DID create/update/deactivate functions raise architectural questions around key management,
+since they typically involve the generation and use of private keys and other secrets.</p>
+<p>With regard to key management, a DID Registrar can operate in the following modes:</p>
+<h3 id="secret-modes"><a class="toc-anchor" href="#secret-modes" >§</a> Secret Modes</h3>
+<p>In this mode, the DID Registrar is responsible for generating the DID controller keys used by DID operations. This
+means  that the DID Registrar is considered a highly trusted component which should be fully under the control of a
+DID controller. If it is operated as a remotely hosted service, secure connection protocols such as TLS, DIDComm,
+etc. MUST be used.</p>
+<p>This mode has two options that control how DID controller keys are handled.</p>
+<h4 id="secretstoring-option"><a class="toc-anchor" href="#secretstoring-option" >§</a> secretStoring Option</h4>
+<p>If the <code>secretStoring</code> option is set to <code>true</code>, then the DID Registrar maintains an internal wallet where DIDs
+and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
+example, if a <code>create()</code> operation is executed, then a subsequent <code>update()</code> or <code>deactivate()</code> operation will
+be able to use existing DID controller keys stored in the DID Registrar.</p>
+<h4 id="secretreturning-option"><a class="toc-anchor" href="#secretreturning-option" >§</a> secretReturning Option</h4>
+<p>If the secretReturning option is set to <code>true</code>, then the DID Registrar will return generated DID controller keys
+to the client.</p>
+<h4 id="considerations"><a class="toc-anchor" href="#considerations" >§</a> Considerations</h4>
+<p>The <code>secretStoring</code> and <code>secretReturning</code> options can be enabled or disabled independently. A DID Registrar
+may define default values for these options, and/or it may allow a client to set them via
+the <a href="#options" ><code>options</code> input field</a>.</p>
+<p>If <code>secretReturning==false</code>, then the</p>
+<p>Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
+operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> will generate DID controller keys internally, but it will
+neither store them nor return them to a client.</p>
+<p>If a DID Registrar is configured with options <code>secretStoring=false</code> and <code>secretReturning=true</code>, then a DID Registrar
+with option <code>secretStoring=true</code> can be simulated by building a “wrapping DID Registrar” around an
+“inner DID Registrar”.</p>
+<img alt="Diagram showing Internal Secret Mode" src="images/diagram-mode-internal-secret.png">
+<h3 id="external-secret-mode"><a class="toc-anchor" href="#external-secret-mode" >§</a> External Secret Mode</h3>
+<p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it has a way
+of accessing an external wallet in order to perform cryptographic operations such as generating signatures.</p>
+<img alt="Diagram showing External Secret Mode" src="images/diagram-mode-external-secret.png">
+<h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
+<p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
+the client to perform cryptographic operations such as generating signatures.</p>
+<img alt="Diagram showing Client-managed Secret Mode](images/diagram-mode-client-managed-secret.png">
 <h2 id="operations"><a class="toc-anchor" href="#operations" >§</a> Operations</h2>
-<h3 id="create"><a class="toc-anchor" href="#create" >§</a> create()</h3>
+<h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
+<pre><code>create(method, did, options, secret, didDocument) -&gt; jobId, didState, metadata
+</code></pre>
 <hr>
-<p><code>create(method, options) -&gt; state, metadata</code></p>
-<p><code>create(method, options, did-document) -&gt; state, metadata</code></p>
-<p><code>create(method, options, did-document, wallet) -&gt; state, metadata</code></p>
+<p>This function creates a new DID and associated DID document, according to a known DID method, using
+various options and optionally an initial DID document.</p>
+<h3 id="update"><a class="toc-anchor" href="#update" >§</a> <code>update()</code></h3>
+<pre><code>update(did, options, secret, didDocumentOperation, didDocument) -&gt; jobId, didState, metadata
+</code></pre>
 <hr>
-<p>To create a DID, we specify where we want it created, with optional parameters for registering a DID Document and storing keys.</p>
-<hr>
-<p><code>method</code></p>
-<ul>
-<li>sov, btcr, v1, …</li>
-</ul>
-<p><code>options</code></p>
-<ul>
-<li>mainnet or testnet or other…</li>
-<li>seed</li>
-</ul>
-<p><code>did-document</code></p>
-<ul>
-<li>entire new DID Document</li>
-</ul>
-<p><code>wallet</code></p>
-<ul>
-<li>storage for generated private keys</li>
-<li>storage of existing keys</li>
-<li>e.g. text file, wallet API endpoint, local wallet, etc.</li>
-</ul>
-<h3 id="update"><a class="toc-anchor" href="#update" >§</a> update()</h3>
-<hr>
-<p><code>update(did, options, wallet, did-document) -&gt; state, metadata</code></p>
-<p><code>update(did, options, wallet, did-document-operation) -&gt; state, metadata</code></p>
-<hr>
-<p>This function updates the DID document associated with the DID, either by completely replacing it, or by performing an incremental update (delta).</p>
-<hr>
-<p><code>did-document</code></p>
-<ul>
-<li>entire new DID Document, to replace the previous one</li>
-</ul>
-<p><code>did-document-operation</code></p>
-<ul>
-<li>incremental update to the existing DID Document, e.g.:</li>
-<li>add-service</li>
-<li>remove-service</li>
-<li>add-publickey</li>
-<li>remove-publickey</li>
-</ul>
-<h3 id="deactivate"><a class="toc-anchor" href="#deactivate" >§</a> deactivate()</h3>
-<hr>
-<p><code>deactivate(did, options, wallet) -&gt; state, metadata</code></p>
+<p>This function updates the DID document associated with the DID, either by completely replacing it, or
+by performing an incremental update (see the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>).</p>
+<h3 id="deactivate"><a class="toc-anchor" href="#deactivate" >§</a> <code>deactivate()</code></h3>
+<pre><code>deactivate(did, options, secret) -&gt; jobId, didState, metadata
+</code></pre>
 <hr>
 <p>This function deactivates the DID.</p>
-<h2 id="state"><a class="toc-anchor" href="#state" >§</a> State</h2>
-<p>When executing the functions, an operation can turn into a longer-running “job” during which the operation’s state might change, and multiple steps may have to be performed before the operation can be completed:</p>
-<p><img src="images/diagram-flow.png" alt=""></p>
-<p>Explanation of states:</p>
-<p><code>state</code></p>
+<h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
+<h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
+<p>This input field indicates the DID method that should be used for the DID operation.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST NOT be null.</p>
+<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be
+null, since the DID method is determined by the <a href="#did" ><code>did</code> input field</a>.</p>
+<p>Possible values:</p>
 <ul>
-<li>finished
+<li><code>btcr</code></li>
+<li><code>sov</code></li>
+<li><code>key</code></li>
+<li><code>web</code></li>
+<li>… other supported DID method names …</li>
+</ul>
+<h3 id="did"><a class="toc-anchor" href="#did" >§</a> <code>did</code></h3>
+<p>This input field indicates the DID that is the target of the DID operation.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be null.</p>
+<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST NOT be null.</p>
+<h3 id="options"><a class="toc-anchor" href="#options" >§</a> <code>options</code></h3>
+<p>This input field contains an object with various options for the DID operation, such as the network where the DID
+should be created.</p>
+<p>Possible keys and values:</p>
 <ul>
-<li>DID</li>
-<li optional="">wallet</li>
+<li><code>network=mainnet</code></li>
+<li>… others …</li>
 </ul>
-</li>
-<li>action
+<h3 id="secret"><a class="toc-anchor" href="#secret" >§</a> <code>secret</code></h3>
+<p>This input field contains an object with DID controller keys and other secrets needed for performing the DID operations.</p>
+<p>Possible keys and values:</p>
 <ul>
-<li>jobid</li>
-<li>actiontype</li>
+<li><code>seed=...</code></li>
+<li><code>privateKey=...</code></li>
+<li>… others …</li>
 </ul>
-</li>
-<li>wait
+<h3 id="diddocumentoperation"><a class="toc-anchor" href="#diddocumentoperation" >§</a> <code>didDocumentOperation</code></h3>
+<p>This input field indicates which update operation should be applied to a DID’s associated DID document.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, this input field is absent, and is implied to have a value of <code>setDidDocument</code>.</p>
+<p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL.
+If it is null, it is implied to have a value of <code>&quot;setDidDocument&quot;</code>.</p>
+<p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field is absent.</p>
+<p>This specification defines two standard values for this operation. Individual DID methods MAY specify other
+ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
+<p>Possible values:</p>
 <ul>
-<li>jobid</li>
-<li>waittype</li>
+<li><code>&quot;setDidDocument&quot;</code>: The <a href="#didDocument" ><code>didDocument</code> input field</a> contains the new DID document of the DID after the DID operation is executed.</li>
+<li><code>&quot;addToDidDocument&quot;</code>: The <a href="#didDocument" ><code>didDocument</code> input field</a> contains properties to be added to the current DID document of the DID after the DID operation is executed.</li>
+<li><code>&quot;removeFromDidDocument&quot;</code>: The <a href="#didDocument" ><code>didDocument</code> input field</a> contains properties to be removed from the current DID document of the DID after the DID operation is executed.</li>
+<li>… other DID method-specific DID document operations …</li>
 </ul>
-</li>
-<li>fail
+<p>Note that some of the above update operations can be internally transformed into others, e.g.:</p>
 <ul>
-<li>error message</li>
+<li>If the update operation is <code>&quot;setDidDocument&quot;</code>, then it may be transformed into either <code>&quot;addToDidDocument&quot;</code>
+or <code>&quot;removeFromDidDocument&quot;</code>, by first resolving the current DID document, and then calculating an incremental
+change (diff) between the resolved DID document and the value of the [<code>didDocument</code> input field].</li>
+<li>If the update operation is either <code>&quot;addToDidDocument&quot;</code> or <code>&quot;removeFromDidDocument&quot;</code>, then it may be transformed
+into <code>&quot;setDidDocument&quot;</code>, by first resolving the current DID document, and then calculating the updated complete
+DID document after applying the incremental change (diff) in the [<code>didDocument</code> input field].</li>
 </ul>
-</li>
-</ul>
-<p>Possible uses for <code>action</code>:</p>
+<p>A DID Registrar may or may not support certain update operations, and it may or may not support internal
+transformation between them.</p>
+<h3 id="diddocument"><a class="toc-anchor" href="#diddocument" >§</a> <code>didDocument</code></h3>
+<p>This input field contains either a complete DID document, or an incremental change (diff) to a DID document, depending
+on the value of the <a href="#operation" ><code>didDocumentOperation</code> input field</a>.</p>
+<p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field is absent.</p>
+<h2 id="output-fields"><a class="toc-anchor" href="#output-fields" >§</a> Output Fields</h2>
+<h3 id="jobid"><a class="toc-anchor" href="#jobid" >§</a> <code>jobId</code></h3>
+<p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
+state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
+have to be called multiple times, and the <code>jobId</code> is used to keep track of the ongoing process.</p>
+<p>This output field MUST have a null value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is
+either <code>finished</code> or <code>failed</code>, and MUST NOT have a null value otherwise.</p>
+<h3 id="didstate"><a class="toc-anchor" href="#didstate" >§</a> <code>didState</code></h3>
+<h4 id="didstatestate"><a class="toc-anchor" href="#didstatestate" >§</a> <code>didState.state</code></h4>
+<p>This output field contains the current state of the DID operations. It is used to indicate if a DID operation
+is finished, failed, or if a longer-running “job” has been created that requires additional steps.</p>
+<p>The following diagram illustrates the use of the <code>didState.state</code> and <code>jobId</code> output fields.</p>
+<p><img src="images/diagram-flow.png" alt="Diagram showing the flow and states of DID operations"></p>
+<p>The following sections explain the possible values for <code>didState.state</code>.</p>
+<h5 id="didstatestatefinished"><a class="toc-anchor" href="#didstatestatefinished" >§</a> <code>didState.state=finished</code></h5>
+<p>This state indicates that the DID operation has been completed.</p>
+<h5 id="didstatestatefailed"><a class="toc-anchor" href="#didstatestatefailed" >§</a> <code>didState.state=failed</code></h5>
+<p>This state indicates that the DID operation has failed.</p>
+<h5 id="didstatestateaction"><a class="toc-anchor" href="#didstatestateaction" >§</a> <code>didState.state=action</code></h5>
+<p>This state indicates that the client needs to perform an action, before the DID operation can be continued.</p>
+<p>Possible uses for <code>didState.state==action</code>:</p>
 <ul>
 <li>Send coins to fund a wallet</li>
 <li>Accept some legal agreement</li>
 <li>Perform signature on a byte array</li>
 </ul>
-<p>Possible uses for <code>wait</code>:</p>
+<h5 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=wait</code></h5>
+<p>This state indicates that the client needs to wait, before the DID operation can be continued.</p>
+<p>Possible uses for <code>didState.state==wait</code>:</p>
 <ul>
 <li>Wait for confirmation on chain</li>
 <li>Wait for approval by someone</li>
 </ul>
-<h2 id="metadata"><a class="toc-anchor" href="#metadata" >§</a> Metadata</h2>
-<p><code>metadata</code></p>
+<h4 id="didstatedid"><a class="toc-anchor" href="#didstatedid" >§</a> <code>didState.did</code></h4>
+<p>This output field contains the DID at the end of the DID operation.</p>
+<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this output field MUST NOT
+be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when executing the function.</p>
+<h4 id="didstatesecret"><a class="toc-anchor" href="#didstatesecret" >§</a> <code>didState.secret</code></h4>
+<p>This output field contains DID controller keys and other secrets.</p>
+<p>It is only used if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a>, and if the
+[<code>secretReturning</code> option] is set to <code>true</code>.</p>
+<h4 id="didstatediddocument"><a class="toc-anchor" href="#didstatediddocument" >§</a> <code>didState.didDocument</code></h4>
+<p>This output field contains the DID document after the DID operation has been successfully executed.</p>
+<h3 id="metadata"><a class="toc-anchor" href="#metadata" >§</a> <code>metadata</code></h3>
+<p>This output field contains various metadata about the DID operation.</p>
+<p>Possible uses for the <code>metadata</code> output field:</p>
 <ul>
 <li>operation metadata
 <ul>
@@ -227,30 +300,29 @@ work is being done.</p>
 </ul>
 </li>
 </ul>
-<h2 id="architecture"><a class="toc-anchor" href="#architecture" >§</a> Architecture</h2>
-<p>In order to implement a library or tool that supports the above interfaces for creating, updating, and deactivating DIDs in a method-agnostic way, we can imagine a similar architecture as is common for a DID resolver, i.e. using a set of drivers that perform method-specific operations.</p>
-<p>Some architectural questions that apply to the <code>resolve()</code> operation also apply to other operations, e.g.:</p>
+<h2 id="implementation-considerations"><a class="toc-anchor" href="#implementation-considerations" >§</a> Implementation Considerations</h2>
+<p>In order to implement a library or tool that supports the above interfaces for
+creating, updating, and deactivating DIDs in a method-agnostic way, we can imagine
+a similar architecture as is common for a DID resolver, i.e. using a set of drivers
+that perform method-specific operations.</p>
+<p>Some architectural questions that apply to a DID Resolver also apply to a DID Registrar, e.g.:</p>
 <ul>
-<li>Is the abstract interface implemented as a library that can be integrated locally into an application or service, or is the abstract interface exposed by a remote service and used via HTTP or another binding?</li>
-<li>How do method-specific drivers interact with the DID’s target system? For example, do they have direct access to a blockchain full node?</li>
+<li>Is the abstract interface implemented as a library that can be integrated
+locally into an application or service, or is the abstract interface exposed by a remote
+service and used via HTTP or another binding?</li>
+<li>How do method-specific drivers interact with the DID’s target system? For example,
+do they have direct access to a blockchain full node?</li>
 <li>What are implications of the above questions for trust and security?</li>
 </ul>
-<p>Unlike the <code>resolve()</code> operation however, the other operations <code>create()</code>, <code>update()</code>, and <code>deactivate()</code> are more challenging and therefore raise additional architectural questions, since they typically involve the use of secrets such as private keys, and write operations to the DID’s target system:</p>
-<ul>
-<li><strong>Where are secrets generated?</strong> Are a DID’s private keys generated by the driver, or by the client that uses the Universal Registrar?</li>
-<li><strong>Where are secrets stored?</strong> Are a DID’s private keys stored in a wallet held by the driver, or by the client that uses the Universal Registrar?</li>
-<li><strong>Where are the identifiers generated?</strong> Does the client generate the identifier (the DID) that gets created, or does this happen entirely inside the driver? Note that e.g. in the “btcr” DID method, the DID only becomes known at the end of the creation process, not at the beginning.</li>
-</ul>
-<p><img src="images/diagram-wallets.png" alt="There are different choices where wallets exist in the architecture."></p>
-<h1 id="http-binding"><a class="toc-anchor" href="#http-binding" >§</a> HTTP Binding</h1>
+<h2 id="http-binding"><a class="toc-anchor" href="#http-binding" >§</a> HTTP Binding</h2>
 <p>The abstract interface above can be implemented and deployed in the form of bindings to different protocols, such as simple HTTP POST operations, with inputs and outputs encoded as JSON.</p>
 <p>For example, the operations above can be deployed at the following endpoints:</p>
 <pre><code>https://uniregistrar.io/1.0/create
 https://uniregistrar.io/1.0/update
 https://uniregistrar.io/1.0/deactivate
 </code></pre>
-<p>See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">for a Swagger definition</a>.</p>
-<h1 id="resources"><a class="toc-anchor" href="#resources" >§</a> Resources</h1>
+<p>See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">for an OpenAPI definition</a>.</p>
+<h2 id="resources"><a class="toc-anchor" href="#resources" >§</a> Resources</h2>
 <p>The following projects are working on pluggable support for write operations across different DID methods.</p>
 <ul>
 <li><a path-0="github.com"path-1="decentralized-identity"path-2="universal-registrar"href="https://github.com/decentralized-identity/universal-registrar" >DIF Universal Registrar</a></li>
@@ -287,16 +359,53 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#abstract" >Abstract</a></li>
 <li><a href="#status-of-this-document" >Status of This Document</a></li>
 <li><a href="#terminology" >Terminology</a></li>
-<li><a href="#operations" >Operations</a>
+<li><a href="#architecture-modes" >Architecture Modes</a>
 <ul>
-<li><a href="#create" >create()</a></li>
-<li><a href="#update" >update()</a></li>
-<li><a href="#deactivate" >deactivate()</a></li>
+<li><a href="#secret-modes" >Secret Modes</a>
+<ul>
+<li><a href="#secretstoring-option" >secretStoring Option</a></li>
+<li><a href="#secretreturning-option" >secretReturning Option</a></li>
+<li><a href="#considerations" >Considerations</a></li>
 </ul>
 </li>
-<li><a href="#state" >State</a></li>
-<li><a href="#metadata" >Metadata</a></li>
-<li><a href="#architecture" >Architecture</a></li>
+<li><a href="#external-secret-mode" >External Secret Mode</a></li>
+<li><a href="#client-managed-secret-mode" >Client-managed Secret Mode</a></li>
+</ul>
+</li>
+<li><a href="#operations" >Operations</a>
+<ul>
+<li><a href="#create" ><code>create()</code></a></li>
+<li><a href="#update" ><code>update()</code></a></li>
+<li><a href="#deactivate" ><code>deactivate()</code></a></li>
+</ul>
+</li>
+<li><a href="#input-fields" >Input Fields</a>
+<ul>
+<li><a href="#method" ><code>method</code></a></li>
+<li><a href="#did" ><code>did</code></a></li>
+<li><a href="#options" ><code>options</code></a></li>
+<li><a href="#secret" ><code>secret</code></a></li>
+<li><a href="#diddocumentoperation" ><code>didDocumentOperation</code></a></li>
+<li><a href="#diddocument" ><code>didDocument</code></a></li>
+</ul>
+</li>
+<li><a href="#output-fields" >Output Fields</a>
+<ul>
+<li><a href="#jobid" ><code>jobId</code></a></li>
+<li><a href="#didstate" ><code>didState</code></a>
+<ul>
+<li><a href="#didstatestate" ><code>didState.state</code></a></li>
+<li><a href="#didstatedid" ><code>didState.did</code></a></li>
+<li><a href="#didstatesecret" ><code>didState.secret</code></a></li>
+<li><a href="#didstatediddocument" ><code>didState.didDocument</code></a></li>
+</ul>
+</li>
+<li><a href="#metadata" ><code>metadata</code></a></li>
+</ul>
+</li>
+<li><a href="#implementation-considerations" >Implementation Considerations</a></li>
+<li><a href="#http-binding" >HTTP Binding</a></li>
+<li><a href="#resources" >Resources</a></li>
 </ul>
 
                       </div>
