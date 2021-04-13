@@ -309,14 +309,31 @@ Possible uses for `didState.state==action`:
   * Accept some legal agreement
   * Perform signature on a byte array
 
-Example:
+Example 1:
 
 ```
 {
 	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
 		"state": "action",
-		"action": "Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."
+		"action": "fundingRequired",
+		"description": "Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."
+	},
+	"registrarMetadata": { ... },
+	"methodMetadata": { ... }
+}
+```
+
+Example 2:
+
+```
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"didState": {
+		"state": "action",
+		"action": "signatureRequired",
+		"payloadForSignature": "...",
+		"signingAlgorithm": "EdDsa"
 	},
 	"registrarMetadata": { ... },
 	"methodMetadata": { ... }

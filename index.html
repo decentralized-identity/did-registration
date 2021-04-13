@@ -299,12 +299,26 @@ properties, to specify the nature of the action that has to be taken.</p>
 <li>Accept some legal agreement</li>
 <li>Perform signature on a byte array</li>
 </ul>
-<p>Example:</p>
+<p>Example 1:</p>
 <pre><code>{
 	&quot;jobId&quot;: &quot;155eae21-45e5-4e71-bb22-fef51cda5bf7&quot;,
 	&quot;didState&quot;: {
 		&quot;state&quot;: &quot;action&quot;,
-		&quot;action&quot;: &quot;Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG.&quot;
+		&quot;action&quot;: &quot;fundingRequired&quot;,
+		&quot;description&quot;: &quot;Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG.&quot;
+	},
+	&quot;registrarMetadata&quot;: { ... },
+	&quot;methodMetadata&quot;: { ... }
+}
+</code></pre>
+<p>Example 2:</p>
+<pre><code>{
+	&quot;jobId&quot;: &quot;155eae21-45e5-4e71-bb22-fef51cda5bf7&quot;,
+	&quot;didState&quot;: {
+		&quot;state&quot;: &quot;action&quot;,
+		&quot;action&quot;: &quot;signatureRequired&quot;,
+		&quot;payloadForSignature&quot;: &quot;...&quot;,
+		&quot;signingAlgorithm&quot;: &quot;EdDsa&quot;
 	},
 	&quot;registrarMetadata&quot;: { ... },
 	&quot;methodMetadata&quot;: { ... }
