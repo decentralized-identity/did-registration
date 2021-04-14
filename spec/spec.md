@@ -1,7 +1,7 @@
 DID Registration
 ================
 
-**Specification Status:** Strawman
+**Specification Status:** Pre-Draft
 
 **Latest Draft:**
   [identity.foundation/did-registration](https://identity.foundation/did-registration)
