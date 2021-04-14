@@ -76,6 +76,8 @@ and DID controller keys can be stored. The DID controller keys can then be used 
 example, if a `create()` operation is executed, then a subsequent `update()` or `deactivate()` operation will
 be able to use existing DID controller keys stored in the DID Registrar.
 
+TODO: Mention potential import/export of keys, and how this could relate to other specs such as Universal Wallet or WebKMS.
+
 #### secretReturning Option
 
 If the secretReturning option is set to `true`, then the DID Registrar will return generated DID controller keys
@@ -104,12 +106,16 @@ with option `secretStoring=true` can be simulated by building a "wrapping DID Re
 In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it has a way
 of accessing an external wallet in order to perform cryptographic operations such as generating signatures.
 
+TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.
+
 <img alt="Diagram showing External Secret Mode" src="images/diagram-mode-external-secret.png">
 
 ### Client-managed Secret Mode
 
 In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.
+
+TODO: Discuss how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.
 
 <img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
 
