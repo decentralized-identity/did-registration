@@ -72,13 +72,17 @@ customElements.define("slide-panels",class extends HTMLElement{static get observ
 </dl>
 <hr>
 <h2 id="abstract"><a class="toc-anchor" href="#abstract" >§</a> Abstract</h2>
-<p>Each DID method specifies how to create/read/update/deactivate DIDs within a given verifiable data
+<p>Each DID method specifies how to create/resolve/update/deactivate DIDs within a given verifiable data
 registry. How exactly this works can be very different depending on the DID method and may involve
 various steps, architectural components, and network communication. The process of resolving a DID
 to a DID document by executing the read() operation is well-understood and specified in the
 <a path-0="w3c-ccg.github.io"path-1="did-resolution"path-2=""href="https://w3c-ccg.github.io/did-resolution/" >DID Resolution</a> specification. This document complements
 the concept of a “DID Resolver” by also defining a “DID Registrar” component that can execute the three remaining
 create/update/deactivate operations via a common interface.</p>
+<p>This specification does NOT specify a DID method. It does NOT specify how to build a verifiable data
+registry, only a “DID Registrar” component that can interact with a verifiable data registry. This
+specification also does NOT suggest that private keys should be controlled by any other entity than the
+DID controller.</p>
 <h2 id="status-of-this-document"><a class="toc-anchor" href="#status-of-this-document" >§</a> Status of This Document</h2>
 <p>DID Registration is a draft specification under development within the
 <a path-0="identity.foundation"href="https://identity.foundation" >Decentralized Identity Foundation</a> (DIF (DIF), and designed to incorporate the
