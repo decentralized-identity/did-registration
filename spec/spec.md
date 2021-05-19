@@ -292,7 +292,7 @@ Example:
 
 This state indicates that the DID operation has failed.
 
-In this state, the [`didState` output field] MUST contain a `reason` property, and MAY contain additional
+In this state, the [`didState` output field](#didstate) MUST contain a `reason` property, and MAY contain additional
 properties, to explain the reason for the failure.
 
 Example:
@@ -314,7 +314,7 @@ Example:
 
 This state indicates that the client needs to perform an action, before the DID operation can be continued.
 
-In this state, the [`didState` output field] MUST contain an `action` property, and MAY contain additional
+In this state, the [`didState` output field](#didstate) MUST contain an `action` property, and MAY contain additional
 properties, to specify the nature of the action that has to be taken.
 
 Possible uses for `didState.state==action`:
@@ -372,7 +372,7 @@ TODO: This is used in Client-managed Secret Mode. Need to specify in more detail
 
 This state indicates that the client needs to wait, before the DID operation can be continued.
 
-In this state, the [`didState` output field] MUST contain a `wait` property, and MAY contain additional
+In this state, the [`didState` output field](#didstate) MUST contain a `wait` property, and MAY contain additional
 properties, to explain the reason for the failure.
 
 Possible uses for `didState.state==wait`:
@@ -397,7 +397,7 @@ Possible uses for `didState.state==wait`:
 
 This output field contains the DID at the end of the DID operation.
 
-For the [`create()` function](#create), if the value of the [`didState.state` output field] is `"finished"`,
+For the [`create()` function](#create), if the value of the [`didState.state` output field](#didstatestate) is `"finished"`,
 then the value of this output field MUST NOT be null.
 
 For the [`update()` function](#update) and [`deactivate()` function](#deactivate), this output field MUST NOT
