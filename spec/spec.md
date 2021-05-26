@@ -212,7 +212,7 @@ If it is absent or has a null value, it is implied to have a value of `"setDidDo
 
 For the [`deactivate()` function](#deactivate), this input field MUST be absent.
 
-This specification defines two standard values for this operation. Individual DID methods MAY specify other
+This specification defines several standard values for this operation. Individual DID methods MAY specify other
 ways of executing an [`update()` function](#update).
 
 Possible values:
@@ -226,10 +226,10 @@ Note that some of the above update operations can be internally transformed into
 
 - If the update operation is `"setDidDocument"`, then it may be transformed into either `"addToDidDocument"`
   or `"removeFromDidDocument"`, by first resolving the current DID document, and then calculating an incremental
-  change (diff) between the resolved DID document and the value of the [`didDocument` input field].
+  change (diff) between the resolved DID document and the value of the [`didDocument` input field](#didDocument).
 - If the update operation is either `"addToDidDocument"` or `"removeFromDidDocument"`, then it may be transformed
   into `"setDidDocument"`, by first resolving the current DID document, and then calculating the updated complete
-  DID document after applying the incremental change (diff) in the [`didDocument` input field].
+  DID document after applying the incremental change (diff) in the [`didDocument` input field](#didDocument).
 
 A DID Registrar may or may not support certain update operations, and it may or may not support internal
 transformation between them.

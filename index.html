@@ -227,7 +227,7 @@ should be created.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL.
 If it is absent or has a null value, it is implied to have a value of <code>&quot;setDidDocument&quot;</code>.</p>
 <p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
-<p>This specification defines two standard values for this operation. Individual DID methods MAY specify other
+<p>This specification defines several standard values for this operation. Individual DID methods MAY specify other
 ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 <p>Possible values:</p>
 <ul>
@@ -240,10 +240,10 @@ ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 <ul>
 <li>If the update operation is <code>&quot;setDidDocument&quot;</code>, then it may be transformed into either <code>&quot;addToDidDocument&quot;</code>
 or <code>&quot;removeFromDidDocument&quot;</code>, by first resolving the current DID document, and then calculating an incremental
-change (diff) between the resolved DID document and the value of the [<code>didDocument</code> input field].</li>
+change (diff) between the resolved DID document and the value of the <a href="#didDocument" ><code>didDocument</code> input field</a>.</li>
 <li>If the update operation is either <code>&quot;addToDidDocument&quot;</code> or <code>&quot;removeFromDidDocument&quot;</code>, then it may be transformed
 into <code>&quot;setDidDocument&quot;</code>, by first resolving the current DID document, and then calculating the updated complete
-DID document after applying the incremental change (diff) in the [<code>didDocument</code> input field].</li>
+DID document after applying the incremental change (diff) in the <a href="#didDocument" ><code>didDocument</code> input field</a>.</li>
 </ul>
 <p>A DID Registrar may or may not support certain update operations, and it may or may not support internal
 transformation between them.</p>
