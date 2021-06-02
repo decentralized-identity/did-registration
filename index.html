@@ -411,9 +411,12 @@ service and used via HTTP or another binding?</li>
 do they have direct access to a blockchain full node?</li>
 <li>What are implications of the above questions for trust and security?</li>
 </ul>
-<h2 id="http-binding"><a class="toc-anchor" href="#http-binding" >§</a> HTTP Binding</h2>
-<p>The abstract interface above can be implemented and deployed in the form of bindings to different protocols, such as simple HTTP POST operations, with inputs and outputs encoded as JSON.</p>
-<p>For example, the operations above can be deployed at the following endpoints:</p>
+<h2 id="https-binding"><a class="toc-anchor" href="#https-binding" >§</a> HTTPS Binding</h2>
+<p>The abstract interfaces defined by this specification can be implemented and deployed in the form of bindings to
+different concrete protocols and transports. This section defines a binding based on HTTP POST operations, with inputs
+and outputs sent in the HTTP body, encoded as JSON.</p>
+<p>In this binding, a secure HTTPS connection with at least TLS 1.2 MUST be used.</p>
+<p>For example, the abstract interfaces can be deployed at the following HTTPS endpoints:</p>
 <pre><code>https://uniregistrar.io/1.0/create
 https://uniregistrar.io/1.0/update
 https://uniregistrar.io/1.0/deactivate
@@ -501,7 +504,7 @@ https://uniregistrar.io/1.0/deactivate
 </ul>
 </li>
 <li><a href="#implementation-considerations" >Implementation Considerations</a></li>
-<li><a href="#http-binding" >HTTP Binding</a></li>
+<li><a href="#https-binding" >HTTPS Binding</a></li>
 <li><a href="#resources" >Resources</a></li>
 </ul>
 
