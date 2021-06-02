@@ -408,7 +408,7 @@ be null, and its value MUST match the [`did` input field](#did) that was used wh
 This output field contains DID controller keys and other secrets.
 
 It is only used if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode), and if the
-[`secretReturning` option] is set to `true`.
+[`secretReturning` option](#secretreturning-option) is set to `true`.
 
 TODO: Specify the format of returned DID controller keys.
 
