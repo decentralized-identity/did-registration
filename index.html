@@ -375,12 +375,45 @@ then the value of this output field MUST NOT be null.</p>
 be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when executing the function.</p>
 <h4 id="didstatesecret"><a class="toc-anchor" href="#didstatesecret" >§</a> <code>didState.secret</code></h4>
 <p>This output field contains DID controller keys and other secrets.</p>
-<p>It is only used if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a>, and if the
-<a href="#secretreturning-option" ><code>secretReturning</code> option</a> is set to <code>true</code>.</p>
-<p>TODO: Specify the format of returned DID controller keys.</p>
+<p>It MUST be present if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> and the
+<a href="#secretreturning-option" ><code>secretReturning</code> option</a> is set to <code>true</code>, and MUST NOT be present otherwise.</p>
+<p>If present, this output field MUST contain a JWK Set (JWKS) according to [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>]. The <code>kid</code> parameters of the
+JWK entries in the JWK Set SHOULD match the values of the <code>id</code> properties of the corresponding verification methods in
+the DID’s associated DID document, which MAY be returned separately in the
+<a href="#didstatediddocument" ><code>didState.didDocument</code> output field</a>.</p>
+<p>The JWK Set MAY contain JWK entries that do not correspond to any verification method in the DID’s associated DID
+document.</p>
+<p>This output field MAY contain additional members that are considered secrets, such as seeds, passwords, etc.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"seed"</span><span class="token operator">:</span> <span class="token string">"bwT5J3lXaclZzMWfvNOFNr5maUHxZajj"</span><span class="token punctuation">,</span>
+	<span class="token property">"keys"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"</span><span class="token punctuation">,</span>
+		<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"OKP"</span><span class="token punctuation">,</span>
+		<span class="token property">"d"</span><span class="token operator">:</span> <span class="token string">"YndUNUozbFhhY2xaek1XZnZOT0ZOcjVtYVVIeFphamo"</span><span class="token punctuation">,</span>
+		<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"Ed25519"</span><span class="token punctuation">,</span>
+		<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"zY_7_5gb3AJ033yM9HG5D0tP_ypk0Ozr7x2vzgE279c"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="didstatediddocument"><a class="toc-anchor" href="#didstatediddocument" >§</a> <code>didState.didDocument</code></h4>
 <p>This output field contains the DID document after the DID operation has been successfully executed.</p>
 <p>This output field is OPTIONAL.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"@context"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+		<span class="token string">"https://www.w3.org/ns/did/v1"</span>
+	<span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g"</span><span class="token punctuation">,</span>
+	<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span><span class="token punctuation">,</span>
+		<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"</span><span class="token punctuation">,</span>
+		<span class="token property">"publicKeyBase58"</span><span class="token operator">:</span> <span class="token string">"EqRvGzVX3aoLYwZSdKhNd2q5Ez7EVbdPA4DVZW3ngn1U"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"authentication"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"assertionMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="didregistrationmetadata"><a class="toc-anchor" href="#didregistrationmetadata" >§</a> <code>didRegistrationMetadata</code></h3>
 <p>This output field contains metadata about the registration process itself.</p>
 <p>Possible uses of the <code>didRegistrationMetadata</code> output field:</p>
@@ -424,7 +457,16 @@ https://uniregistrar.io/1.0/deactivate
 </code></pre>
 <p>See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">for an OpenAPI definition</a>.</p>
 <h2 id="normative-references"><a class="toc-anchor" href="#normative-references" >§</a> Normative References</h2>
-<p>[[spec]]</p>
+<p>
+<dl class="reference-list">
+        <dt id="ref:RFC7517">RFC7517</dt>
+        <dd>
+          <cite><a href="https://tools.ietf.org/html/rfc7517">JSON Web Key (JWK)</a></cite>. 
+          M. Jones; 2015-05. <span class="reference-status">Status: Proposed Standard</span>.
+        </dd>
+      
+</dl>
+</p>
 <h2 id="appendix"><a class="toc-anchor" href="#appendix" >§</a> Appendix</h2>
 <h3 id="other-resources"><a class="toc-anchor" href="#other-resources" >§</a> Other Resources</h3>
 <p>The following projects are working on DID registration across different DID methods.</p>

@@ -407,16 +407,57 @@ be null, and its value MUST match the [`did` input field](#did) that was used wh
 
 This output field contains DID controller keys and other secrets.
 
-It is only used if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode), and if the
-[`secretReturning` option](#secretreturning-option) is set to `true`.
+It MUST be present if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode) and the
+[`secretReturning` option](#secretreturning-option) is set to `true`, and MUST NOT be present otherwise.
 
-TODO: Specify the format of returned DID controller keys.
+If present, this output field MUST contain a JWK Set (JWKS) according to [[spec:RFC7517]]. The `kid` parameters of the
+JWK entries in the JWK Set SHOULD match the values of the `id` properties of the corresponding verification methods in
+the DID's associated DID document, which MAY be returned separately in the
+[`didState.didDocument` output field](#didstatediddocument).
+
+The JWK Set MAY contain JWK entries that do not correspond to any verification method in the DID's associated DID
+document.
+
+This output field MAY contain additional members that are considered secrets, such as seeds, passwords, etc.
+
+Example:
+
+```json
+{
+	"seed": "bwT5J3lXaclZzMWfvNOFNr5maUHxZajj",
+	"keys": [{
+		"kid": "did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1",
+		"kty": "OKP",
+		"d": "YndUNUozbFhhY2xaek1XZnZOT0ZOcjVtYVVIeFphamo",
+		"crv": "Ed25519",
+		"x": "zY_7_5gb3AJ033yM9HG5D0tP_ypk0Ozr7x2vzgE279c"
+	}]
+}
+```
 
 #### `didState.didDocument`
 
 This output field contains the DID document after the DID operation has been successfully executed.
 
 This output field is OPTIONAL.
+
+Example:
+
+```json
+{
+	"@context": [
+		"https://www.w3.org/ns/did/v1"
+	],
+	"id": "did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g",
+	"verificationMethod": [{
+		"type": "Ed25519VerificationKey2018",
+		"id": "did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1",
+		"publicKeyBase58": "EqRvGzVX3aoLYwZSdKhNd2q5Ez7EVbdPA4DVZW3ngn1U"
+	}],
+	"authentication": ["did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"],
+	"assertionMethod": ["did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"]
+}
+```
 
 ### `didRegistrationMetadata`
 
