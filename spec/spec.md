@@ -464,6 +464,10 @@ https://uniregistrar.io/1.0/deactivate
 
 See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">for an OpenAPI definition</a>.
 
+## Normative References
+
+[[spec]]
+
 ## Resources
 
 The following projects are working on pluggable support for write operations across different DID methods.
