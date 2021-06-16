@@ -468,9 +468,11 @@ See <a href="https://github.com/decentralized-identity/universal-registrar/blob/
 
 [[spec]]
 
-## Resources
+## Appendix
 
-The following projects are working on pluggable support for write operations across different DID methods.
+### Other Resources
+
+The following projects are working on DID registration across different DID methods.
 
 * [DIF Universal Registrar](https://github.com/decentralized-identity/universal-registrar)
 * [Universal Services](https://github.com/alenhorvat/universal-services)
