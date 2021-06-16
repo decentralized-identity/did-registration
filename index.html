@@ -262,111 +262,10 @@ is either <code>finished</code> or <code>failed</code>, and MUST NOT have a null
 <h4 id="didstatestate"><a class="toc-anchor" href="#didstatestate" >§</a> <code>didState.state</code></h4>
 <p>This output field contains the current state of the DID operations. It is used to indicate if a DID operation
 is finished, failed, or if a longer-running “job” has been created that requires additional steps.</p>
+<p>This specification defines four well-known values for this property: <code>finished</code>, <code>failed</code>, <code>action</code>, <code>wait</code>. These
+values are further explained in <a href="#states" >States</a>.</p>
 <p>The following diagram illustrates the use of the <code>didState.state</code> and <code>jobId</code> output fields.</p>
 <p><img src="images/diagram-flow.png" alt="Diagram showing the flow and states of DID operations"></p>
-<p>The following sections explain the possible values for <code>didState.state</code>.</p>
-<h5 id="didstatestatefinished"><a class="toc-anchor" href="#didstatestatefinished" >§</a> <code>didState.state=finished</code></h5>
-<p>This state indicates that the DID operation has been completed.</p>
-<p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
-		<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"keys"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-				...
-			<span class="token punctuation">}</span><span class="token punctuation">]</span>
-		<span class="token punctuation">}</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<h5 id="didstatestatefailed"><a class="toc-anchor" href="#didstatestatefailed" >§</a> <code>didState.state=failed</code></h5>
-<p>This state indicates that the DID operation has failed.</p>
-<p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>reason</code> property, and MAY contain additional
-properties, to explain the reason for the failure.</p>
-<p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"failed"</span><span class="token punctuation">,</span>
-		<span class="token property">"reason"</span><span class="token operator">:</span> <span class="token string">"networkUnavailable"</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<h5 id="didstatestateaction"><a class="toc-anchor" href="#didstatestateaction" >§</a> <code>didState.state=action</code></h5>
-<p>This state indicates that the client needs to perform an action, before the DID operation can be continued.</p>
-<p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain an <code>action</code> property, and MAY contain additional
-properties, to specify the nature of the action that has to be taken.</p>
-<p>Possible uses for <code>didState.state==action</code>:</p>
-<ul>
-<li>Send coins to fund a wallet</li>
-<li>Accept some legal agreement</li>
-<li>Perform signature on a byte array</li>
-</ul>
-<p>Example 1:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
-		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"fundingRequired"</span><span class="token punctuation">,</span>
-		<span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>Example 2:</p>
-<p>TODO: This is used in Client-managed Secret Mode. Need to specify in more detail how a DID Registrar requests signing, and how the client responds.</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
-		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"signPayload"</span><span class="token punctuation">,</span>
-		<span class="token property">"signingRequests"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-		  <span class="token punctuation">{</span>
-		    <span class="token property">"payload"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
-		    <span class="token property">"payloadId"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
-		    <span class="token property">"signingAlgorithm"</span><span class="token operator">:</span> <span class="token string">"EdDsa"</span><span class="token punctuation">,</span>
-		    <span class="token property">"keyReference"</span><span class="token operator">:</span> <span class="token string">"... OPTIONAL ..."</span>
-		  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-		  <span class="token punctuation">{</span>
-		    <span class="token property">"payload"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
-		    <span class="token property">"payloadId"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
-		    <span class="token property">"signingAlgorithm"</span><span class="token operator">:</span> <span class="token string">"EdDsa"</span><span class="token punctuation">,</span>
-		    <span class="token property">"keyReference"</span><span class="token operator">:</span> <span class="token string">"... OPTIONAL ..."</span>
-		  <span class="token punctuation">}</span>
-		<span class="token punctuation">]</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<h5 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=wait</code></h5>
-<p>This state indicates that the client needs to wait, before the DID operation can be continued.</p>
-<p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>wait</code> property, and MAY contain additional
-properties, to explain the reason for the failure.</p>
-<p>Possible uses for <code>didState.state==wait</code>:</p>
-<ul>
-<li>Wait for confirmation on chain</li>
-<li>Wait for approval by someone</li>
-</ul>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"wait"</span><span class="token punctuation">,</span>
-		<span class="token property">"wait"</span><span class="token operator">:</span> <span class="token string">"Please wait until the transaction is complete."</span><span class="token punctuation">,</span>
-		<span class="token property">"waitTime"</span><span class="token operator">:</span> <span class="token number">3600000</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
 <h4 id="didstatedid"><a class="toc-anchor" href="#didstatedid" >§</a> <code>didState.did</code></h4>
 <p>This output field contains the DID at the end of the DID operation.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is <code>&quot;finished&quot;</code>,
@@ -397,6 +296,148 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 </ul>
 </li>
 </ul>
+<h2 id="states"><a class="toc-anchor" href="#states" >§</a> States</h2>
+<p>The following sections explain the possible states of a DID registration process, which are returned as values of the
+<a href="#didstatestate" ><code>didState.state</code> output field</a>.</p>
+<h3 id="didstatestatefinished"><a class="toc-anchor" href="#didstatestatefinished" >§</a> <code>didState.state=&quot;finished&quot;</code></h3>
+<p>This state indicates that the DID operation has been completed.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
+		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
+		<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"keys"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+				...
+			<span class="token punctuation">}</span><span class="token punctuation">]</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="didstatestatefailed"><a class="toc-anchor" href="#didstatestatefailed" >§</a> <code>didState.state=&quot;failed&quot;</code></h3>
+<p>This state indicates that the DID operation has failed.</p>
+<p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>reason</code> property that indicates the reason
+for the failure.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this state.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"failed"</span><span class="token punctuation">,</span>
+		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
+		<span class="token property">"reason"</span><span class="token operator">:</span> <span class="token string">"networkUnavailable"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="didstatestateaction"><a class="toc-anchor" href="#didstatestateaction" >§</a> <code>didState.state=&quot;action&quot;</code></h3>
+<p>This state indicates that the client needs to perform an action, before the DID operation can be continued.</p>
+<p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain an <code>action</code> property that indicates the type of
+action that needs to be performed.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this state.</p>
+<p>This specification defines two well-known values for the <code>action</code> property that may be used in this state:</p>
+<ul>
+<li><a href="#didstateactionredirect" ><code>didState.action==&quot;redirect&quot;</code></a> - Client needs to be redirected to a web page, e.g. an onboarding service</li>
+<li><a href="#didstateactionsignpayload" ><code>didState.action==&quot;signPayload&quot;</code></a> - Client needs to generate a signature on a payload</li>
+</ul>
+<p>Possible other uses for this state:</p>
+<ul>
+<li>Client needs to send coins to fund a wallet</li>
+<li>Client needs to accept the terms of a legal agreement</li>
+<li>Client needs to upload a file to a webserver</li>
+</ul>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"fundingRequired"</span><span class="token punctuation">,</span>
+		<span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="didstateactionredirect"><a class="toc-anchor" href="#didstateactionredirect" >§</a> <code>didState.action=&quot;redirect&quot;</code></h4>
+<p>This action indicates that the client needs to be redirected to a web page, e.g. an onboarding service where the
+DID controller takes certain steps, before the DID operation can be continued.</p>
+<p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>redirectUrl</code> property, which indicates
+the URL of the web page where the client needs to be redirected.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
+<p>TODO: How does this work exactly if the client is not browser-based?</p>
+<p>TODO: Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs,
+nonces, states, etc.?</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"redirect"</span><span class="token punctuation">,</span>
+        <span class="token property">"redirectUrl"</span> <span class="token operator">:</span> <span class="token string">"https://..."</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="didstateactionsignpayload"><a class="toc-anchor" href="#didstateactionsignpayload" >§</a> <code>didState.action=&quot;signPayload&quot;</code></h4>
+<p>This action indicates that the client needs to generate a signature on a payload, before the DID operation can be
+continued.</p>
+<p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
+<p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain properties that indicate the payload
+to be signed, as well as additional information such as a key identifier or the signing algorithm to be used.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
+<p>TODO: Need to specify in more detail how a DID Registrar requests signing, and how the client responds.</p>
+<p>TODO: How can this re-use the Universal Wallet of WebKMS specifications?</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"signPayload"</span><span class="token punctuation">,</span>
+		<span class="token property">"signingRequests"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+		  <span class="token punctuation">{</span>
+		    <span class="token property">"payload"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
+		    <span class="token property">"payloadId"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
+		    <span class="token property">"signingAlgorithm"</span><span class="token operator">:</span> <span class="token string">"EdDsa"</span><span class="token punctuation">,</span>
+		    <span class="token property">"keyId"</span><span class="token operator">:</span> <span class="token string">"... OPTIONAL ..."</span>
+		  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+		  <span class="token punctuation">{</span>
+		    <span class="token property">"payload"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
+		    <span class="token property">"payloadId"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
+		    <span class="token property">"signingAlgorithm"</span><span class="token operator">:</span> <span class="token string">"EdDsa"</span><span class="token punctuation">,</span>
+		    <span class="token property">"keyId"</span><span class="token operator">:</span> <span class="token string">"... OPTIONAL ..."</span>
+		  <span class="token punctuation">}</span>
+		<span class="token punctuation">]</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=wait</code></h3>
+<p>This state indicates that the client needs to wait, before the DID operation can be continued.</p>
+<p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>wait</code> property, and MAY contain additional
+properties, to explain the reason for the failure.</p>
+<p>Possible uses for <code>didState.state==wait</code>:</p>
+<ul>
+<li>Client needs to wait for confirmation on chain</li>
+<li>Client needs to wait for approval by someone</li>
+</ul>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"wait"</span><span class="token punctuation">,</span>
+		<span class="token property">"wait"</span><span class="token operator">:</span> <span class="token string">"Please wait until the transaction is complete."</span><span class="token punctuation">,</span>
+		<span class="token property">"waitTime"</span><span class="token operator">:</span> <span class="token number">3600000</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="implementation-considerations"><a class="toc-anchor" href="#implementation-considerations" >§</a> Implementation Considerations</h2>
 <p>In order to implement a library or tool that supports the above interfaces for
 creating, updating, and deactivating DIDs in a method-agnostic way, we can imagine
@@ -504,6 +545,19 @@ https://uniregistrar.io/1.0/deactivate
 </ul>
 </li>
 <li><a href="#metadata" ><code>metadata</code></a></li>
+</ul>
+</li>
+<li><a href="#states" >States</a>
+<ul>
+<li><a href="#didstatestatefinished" ><code>didState.state=&quot;finished&quot;</code></a></li>
+<li><a href="#didstatestatefailed" ><code>didState.state=&quot;failed&quot;</code></a></li>
+<li><a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a>
+<ul>
+<li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a></li>
+<li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a></li>
+</ul>
+</li>
+<li><a href="#didstatestatewait" ><code>didState.state=wait</code></a></li>
 </ul>
 </li>
 <li><a href="#implementation-considerations" >Implementation Considerations</a></li>
