@@ -214,13 +214,9 @@ should be created.</p>
 <li>… others …</li>
 </ul>
 <h3 id="secret"><a class="toc-anchor" href="#secret" >§</a> <code>secret</code></h3>
-<p>This input field contains an object with DID controller keys and other secrets needed for performing the DID operations.</p>
-<p>Possible keys and values:</p>
-<ul>
-<li><code>seed=...</code></li>
-<li><code>privateKey=...</code></li>
-<li>… others …</li>
-</ul>
+<p>This input field contains an object with DID controller keys and other secrets.</p>
+<p>If present, the structure of this input field MUST follow the same rules as the
+<a href="#didstatesecret" ><code>didState.secret</code> output field</a></p>
 <h3 id="diddocumentoperation"><a class="toc-anchor" href="#diddocumentoperation" >§</a> <code>didDocumentOperation</code></h3>
 <p>This input field indicates which update operation should be applied to a DID’s associated DID document.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be absent, and is implied to have a value of <code>setDidDocument</code>.</p>
@@ -374,7 +370,7 @@ then the value of this output field MUST NOT be null.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this output field MUST NOT
 be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when executing the function.</p>
 <h4 id="didstatesecret"><a class="toc-anchor" href="#didstatesecret" >§</a> <code>didState.secret</code></h4>
-<p>This output field contains DID controller keys and other secrets.</p>
+<p>This output field contains an object with DID controller keys and other secrets.</p>
 <p>It MUST be present if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> and the
 <a href="#secretreturning-option" ><code>secretReturning</code> option</a> is set to <code>true</code>, and MUST NOT be present otherwise.</p>
 <p>If present, this output field MUST contain a JWK Set (JWKS) according to [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>]. The <code>kid</code> parameters of the

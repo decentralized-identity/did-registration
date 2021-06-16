@@ -193,13 +193,10 @@ Possible keys and values:
 
 ### `secret`
 
-This input field contains an object with DID controller keys and other secrets needed for performing the DID operations.
+This input field contains an object with DID controller keys and other secrets.
 
-Possible keys and values:
-
-* `seed=...`
-* `privateKey=...`
-* ... others ...
+If present, the structure of this input field MUST follow the same rules as the
+[`didState.secret` output field](#didstatesecret)
 
 ### `didDocumentOperation`
 
@@ -405,7 +402,7 @@ be null, and its value MUST match the [`did` input field](#did) that was used wh
 
 #### `didState.secret`
 
-This output field contains DID controller keys and other secrets.
+This output field contains an object with DID controller keys and other secrets.
 
 It MUST be present if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode) and the
 [`secretReturning` option](#secretreturning-option) is set to `true`, and MUST NOT be present otherwise.
