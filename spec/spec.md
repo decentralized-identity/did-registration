@@ -271,7 +271,7 @@ This state indicates that the DID operation has been completed.
 
 Example:
 
-```
+```json
 {
 	"jobId": null,
 	"didState": {
@@ -297,7 +297,7 @@ properties, to explain the reason for the failure.
 
 Example:
 
-```
+```json
 {
 	"jobId": null,
 	"didState": {
@@ -325,7 +325,7 @@ Possible uses for `didState.state==action`:
 
 Example 1:
 
-```
+```json
 {
 	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
@@ -342,7 +342,7 @@ Example 2:
 
 TODO: This is used in Client-managed Secret Mode. Need to specify in more detail how a DID Registrar requests signing, and how the client responds.
 
-```
+```json
 {
 	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
@@ -380,7 +380,7 @@ Possible uses for `didState.state==wait`:
   * Wait for confirmation on chain
   * Wait for approval by someone
 
-```
+```json
 {
 	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
