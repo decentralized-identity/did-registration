@@ -446,11 +446,15 @@ Some architectural questions that apply to a DID Resolver also apply to a DID Re
   do they have direct access to a blockchain full node?
 * What are implications of the above questions for trust and security?
 
-## HTTP Binding
+## HTTPS Binding
 
-The abstract interface above can be implemented and deployed in the form of bindings to different protocols, such as simple HTTP POST operations, with inputs and outputs encoded as JSON.
+The abstract interfaces defined by this specification can be implemented and deployed in the form of bindings to
+different concrete protocols and transports. This section defines a binding based on HTTP POST operations, with inputs
+and outputs sent in the HTTP body, encoded as JSON.
 
-For example, the operations above can be deployed at the following endpoints:
+In this binding, a secure HTTPS connection with at least TLS 1.2 MUST be used.
+
+For example, the abstract interfaces can be deployed at the following HTTPS endpoints:
 
 ```
 https://uniregistrar.io/1.0/create
