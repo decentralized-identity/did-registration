@@ -129,7 +129,7 @@ TODO: Discuss how the did:ion use case fits in, where the client supplies the pu
 ### `create()`
 
 ```
-create(method, did, options, secret, didDocument) -> jobId, didState, metadata
+create(method, did, options, secret, didDocument) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
 ```
 ___
 This function creates a new DID and associated DID document, according to a known DID method, using
@@ -138,7 +138,7 @@ various options and optionally an initial DID document.
 ### `update()`
 
 ```
-update(did, options, secret, didDocumentOperation, didDocument) -> jobId, didState, metadata
+update(did, options, secret, didDocumentOperation, didDocument) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
 ```
 ____
 This function updates the DID document associated with the DID, either by completely replacing it, or
@@ -147,7 +147,7 @@ by performing an incremental update (see the [`didDocumentOperation` input field
 ### `deactivate()`
 
 ```
-deactivate(did, options, secret) -> jobId, didState, metadata
+deactivate(did, options, secret) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
 ```
 ___
 This function deactivates the DID.
@@ -283,8 +283,8 @@ Example:
 			}]
 		}
 	},
-	"registrarMetadata": { ... },
-	"methodMetadata": { ... }
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
 }
 ```
 
@@ -305,8 +305,8 @@ Example:
 		"state": "failed",
 		"reason": "networkUnavailable"
 	},
-	"registrarMetadata": { ... },
-	"methodMetadata": { ... }
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
 }
 ```
 
@@ -333,8 +333,8 @@ Example 1:
 		"action": "fundingRequired",
 		"description": "Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."
 	},
-	"registrarMetadata": { ... },
-	"methodMetadata": { ... }
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
 }
 ```
 
@@ -363,8 +363,8 @@ TODO: This is used in Client-managed Secret Mode. Need to specify in more detail
 		  }
 		]
 	},
-	"registrarMetadata": { ... },
-	"methodMetadata": { ... }
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
 }
 ```
 
@@ -388,8 +388,8 @@ Possible uses for `didState.state==wait`:
 		"wait": "Please wait until the transaction is complete.",
 		"waitTime": 3600000
 	},
-	"registrarMetadata": { ... },
-	"methodMetadata": { ... }
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
 }
 ```
 
@@ -418,17 +418,26 @@ This output field contains the DID document after the DID operation has been suc
 
 This output field is OPTIONAL.
 
-### `metadata`
+### `didRegistrationMetadata`
 
-This output field contains various metadata about the DID operation.
+This output field contains metadata about the registration process itself.
 
-Possible uses for the `metadata` output field:
+Possible uses of the `didRegistrationMetadata` output field:
 
-* operation metadata
-   * duration
-* method metadata
-   * method-specific hash
-   * token balance
+* Duration of the DID registration process.
+* Various URLs, IP addresses or other network information that was used during the DID registration process.
+* Current balance or other information about tokens or cryptocurrencies that were used during the DID registration process.
+* Information about third parties that were involved in the DID registration process, such as trust anchors, onboarding services, transaction endorsers, etc.
+* Proofs added by a DID registrar (e.g. to establish trusted registration).
+
+### `didDocumentMetadata`
+
+This output field contains metadata about the DID's associated DID document.
+
+Possible uses of the `didDocumentMetadata` output field:
+
+* Hash values, smart contract addresses, blockchain heights, transaction numbers, etc.
+* Proofs added by a DID controller (e.g. to establish control authority).
 
 ## Implementation Considerations
 
