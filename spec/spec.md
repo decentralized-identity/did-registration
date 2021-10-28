@@ -407,15 +407,66 @@ This output field contains an object with DID controller keys and other secrets.
 It MUST be present if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode) and the
 [`secretReturning` option](#secretreturning-option) is set to `true`, and MUST NOT be present otherwise.
 
-If present, this output field MUST contain a JWK Set (JWKS) according to [[spec:RFC7517]]. The `kid` parameters of the
-JWK entries in the JWK Set SHOULD match the values of the `id` properties of the corresponding verification methods in
-the DID's associated DID document, which MAY be returned separately in the
+If present, the `didState.secret` output field MUST contain a JSON object with either a member `verificationMethod`, or
+`keys`, or both.
+
+If the `didState.secret` output field contains a member `verificationMethod`, then the value of that member MUST be a
+JSON array, which MAY be empty. Each element of that JSON array MUST be a verification method as defined by [[DID-CORE]],
+with the following differences:
+* The `id` property is OPTIONAL.
+  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
+    associated DID document, which MAY be returned separately in the
+    [`didState.didDocument` output field](#didstatediddocument).
+  * If it is absent, then the verification method does not correspond to any verification method in the DID's
+    associated DID document. 
+* Instead of containing properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material,
+  the verification method contains corresponding private key material, using properties such as `privateKeyJwk` or
+  `privateKeyMultibase`.
+
+If the `didState.secret` output field contains a member `verificationMethod`, then it SHOULD also contain
+verification relationships such as `authentication` or `assertionMethod`, which contain references to verification
+methods.
+
+Example: 
+
+```json
+{
+	"verificationMethod": [{
+			"id": "did:example:123#key-0",
+			"type": "JsonWebKey2020",
+			"controller": "did:example:123",
+			"privateKeyJwk": {
+				"kty": "EC",
+				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
+				"crv": "secp256k1",
+				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+			}
+		},
+		{
+			"id": "did:example:123#key-1",
+			"type": "Ed25519VerificationKey2020",
+			"controller": "did:example:123",
+			"privateKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
+		}
+	],
+	"authentication": ["did:example:123#key-0", "did:example:123#key-1"],
+	"assertionMethod": ["did:example:123#key-0"],
+	"capabilityDelegation": ["did:example:123#key-0"],
+	"capabilityInvocation": ["did:example:123#key-0"]
+}
+```
+
+If the `didState.secret` output field contains a member `keys`, then it MUST be a valid JWK Set (JWKS) according to
+[[spec:RFC7517]]. The value of that member MUST be a JSON array, which MAY be empty. Each element of that JSON array
+MUST be a JWK, with the following rule:
+* The `kid` parameter is OPTIONAL.
+  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's 
+  associated DID document, which MAY be returned separately in the
 [`didState.didDocument` output field](#didstatediddocument).
+  * If it is absent, then the JWK does not correspond to any verification method in the DID's associated DID document.
 
-The JWK Set MAY contain JWK entries that do not correspond to any verification method in the DID's associated DID
-document.
-
-This output field MAY contain additional members that are considered secrets, such as seeds, passwords, etc.
+The `didState.secret` MAY contain additional members that are considered secrets, such as seeds, passwords, etc.
 
 Example:
 
