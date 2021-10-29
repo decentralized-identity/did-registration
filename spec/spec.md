@@ -435,6 +435,7 @@ Example:
 			"id": "did:example:123#key-0",
 			"type": "JsonWebKey2020",
 			"controller": "did:example:123",
+			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
 			"privateKeyJwk": {
 				"kty": "EC",
 				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
@@ -447,13 +448,10 @@ Example:
 			"id": "did:example:123#key-1",
 			"type": "Ed25519VerificationKey2020",
 			"controller": "did:example:123",
+			"purpose": ["authentication"],
 			"privateKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
 		}
-	],
-	"authentication": ["did:example:123#key-0", "did:example:123#key-1"],
-	"assertionMethod": ["did:example:123#key-0"],
-	"capabilityDelegation": ["did:example:123#key-0"],
-	"capabilityInvocation": ["did:example:123#key-0"]
+	]
 }
 ```
 
