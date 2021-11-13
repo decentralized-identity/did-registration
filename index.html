@@ -214,13 +214,9 @@ should be created.</p>
 <li>… others …</li>
 </ul>
 <h3 id="secret"><a class="toc-anchor" href="#secret" >§</a> <code>secret</code></h3>
-<p>This input field contains an object with DID controller keys and other secrets needed for performing the DID operations.</p>
-<p>Possible keys and values:</p>
-<ul>
-<li><code>seed=...</code></li>
-<li><code>privateKey=...</code></li>
-<li>… others …</li>
-</ul>
+<p>This input field contains an object with DID controller keys and other secrets.</p>
+<p>If present, the structure of this input field MUST follow the same rules as the
+<a href="#didstatesecret" ><code>didState.secret</code> output field</a></p>
 <h3 id="diddocumentoperation"><a class="toc-anchor" href="#diddocumentoperation" >§</a> <code>didDocumentOperation</code></h3>
 <p>This input field indicates which update operation should be applied to a DID’s associated DID document.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be absent, and is implied to have a value of <code>setDidDocument</code>.</p>
@@ -374,13 +370,100 @@ then the value of this output field MUST NOT be null.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this output field MUST NOT
 be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when executing the function.</p>
 <h4 id="didstatesecret"><a class="toc-anchor" href="#didstatesecret" >§</a> <code>didState.secret</code></h4>
-<p>This output field contains DID controller keys and other secrets.</p>
-<p>It is only used if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a>, and if the
-<a href="#secretreturning-option" ><code>secretReturning</code> option</a> is set to <code>true</code>.</p>
-<p>TODO: Specify the format of returned DID controller keys.</p>
+<p>This output field contains an object with DID controller keys and other secrets.</p>
+<p>It MUST be present if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> and the
+<a href="#secretreturning-option" ><code>secretReturning</code> option</a> is set to <code>true</code>, and MUST NOT be present otherwise.</p>
+<p>If present, the <code>didState.secret</code> output field MUST contain a JSON object with either a member <code>verificationMethod</code>, or
+<code>keys</code>, or both.</p>
+<p>If the <code>didState.secret</code> output field contains a member <code>verificationMethod</code>, then the value of that member MUST be a
+JSON array, which MAY be empty. Each element of that JSON array MUST be a verification method as defined by [[DID-CORE]],
+with the following differences:</p>
+<ul>
+<li>The <code>id</code> property is OPTIONAL.
+<ul>
+<li>If it is present, its value MUST match the <code>id</code> property of the corresponding verification method in the DID’s
+associated DID document, which MAY be returned separately in the
+<a href="#didstatediddocument" ><code>didState.didDocument</code> output field</a>.</li>
+<li>If it is absent, then the verification method does not correspond to any verification method in the DID’s
+associated DID document.</li>
+</ul>
+</li>
+<li>Instead of containing properties such as <code>publicKeyJwk</code> or <code>publicKeyMultibase</code> for expressing verification material,
+the verification method contains corresponding private key material, using properties such as <code>privateKeyJwk</code> or
+<code>privateKeyMultibase</code>.</li>
+</ul>
+<p>If the <code>didState.secret</code> output field contains a member <code>verificationMethod</code>, then it SHOULD also contain
+verification relationships such as <code>authentication</code> or <code>assertionMethod</code>, which contain references to verification
+methods.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
+			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
+			<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">,</span> <span class="token string">"capabilityDelegation"</span><span class="token punctuation">,</span> <span class="token string">"capabilityInvocation"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+			<span class="token property">"privateKeyJwk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"EC"</span><span class="token punctuation">,</span>
+				<span class="token property">"d"</span><span class="token operator">:</span> <span class="token string">"-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4"</span><span class="token punctuation">,</span>
+				<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"secp256k1"</span><span class="token punctuation">,</span>
+				<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0"</span><span class="token punctuation">,</span>
+				<span class="token property">"y"</span><span class="token operator">:</span> <span class="token string">"RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token punctuation">{</span>
+			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-1"</span><span class="token punctuation">,</span>
+			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2020"</span><span class="token punctuation">,</span>
+			<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+			<span class="token property">"privateKeyMultibase"</span><span class="token operator">:</span> <span class="token string">"z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>If the <code>didState.secret</code> output field contains a member <code>keys</code>, then it MUST be a valid JWK Set (JWKS) according to
+[<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>]. The value of that member MUST be a JSON array, which MAY be empty. Each element of that JSON array
+MUST be a JWK, with the following rule:</p>
+<ul>
+<li>The <code>kid</code> parameter is OPTIONAL.
+<ul>
+<li>If it is present, its value MUST match the <code>id</code> property of the corresponding verification method in the DID’s
+associated DID document, which MAY be returned separately in the
+<a href="#didstatediddocument" ><code>didState.didDocument</code> output field</a>.</li>
+<li>If it is absent, then the JWK does not correspond to any verification method in the DID’s associated DID document.</li>
+</ul>
+</li>
+</ul>
+<p>The <code>didState.secret</code> MAY contain additional members that are considered secrets, such as seeds, passwords, etc.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"seed"</span><span class="token operator">:</span> <span class="token string">"bwT5J3lXaclZzMWfvNOFNr5maUHxZajj"</span><span class="token punctuation">,</span>
+	<span class="token property">"keys"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"</span><span class="token punctuation">,</span>
+		<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"OKP"</span><span class="token punctuation">,</span>
+		<span class="token property">"d"</span><span class="token operator">:</span> <span class="token string">"YndUNUozbFhhY2xaek1XZnZOT0ZOcjVtYVVIeFphamo"</span><span class="token punctuation">,</span>
+		<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"Ed25519"</span><span class="token punctuation">,</span>
+		<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"zY_7_5gb3AJ033yM9HG5D0tP_ypk0Ozr7x2vzgE279c"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="didstatediddocument"><a class="toc-anchor" href="#didstatediddocument" >§</a> <code>didState.didDocument</code></h4>
 <p>This output field contains the DID document after the DID operation has been successfully executed.</p>
 <p>This output field is OPTIONAL.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"@context"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+		<span class="token string">"https://www.w3.org/ns/did/v1"</span>
+	<span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g"</span><span class="token punctuation">,</span>
+	<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span><span class="token punctuation">,</span>
+		<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"</span><span class="token punctuation">,</span>
+		<span class="token property">"publicKeyBase58"</span><span class="token operator">:</span> <span class="token string">"EqRvGzVX3aoLYwZSdKhNd2q5Ez7EVbdPA4DVZW3ngn1U"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"authentication"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"assertionMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="didregistrationmetadata"><a class="toc-anchor" href="#didregistrationmetadata" >§</a> <code>didRegistrationMetadata</code></h3>
 <p>This output field contains metadata about the registration process itself.</p>
 <p>Possible uses of the <code>didRegistrationMetadata</code> output field:</p>
@@ -424,7 +507,16 @@ https://uniregistrar.io/1.0/deactivate
 </code></pre>
 <p>See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">for an OpenAPI definition</a>.</p>
 <h2 id="normative-references"><a class="toc-anchor" href="#normative-references" >§</a> Normative References</h2>
-<p>[[spec]]</p>
+<p>
+<dl class="reference-list">
+        <dt id="ref:RFC7517">RFC7517</dt>
+        <dd>
+          <cite><a href="https://tools.ietf.org/html/rfc7517">JSON Web Key (JWK)</a></cite>. 
+          M. Jones; 2015-05. <span class="reference-status">Status: Proposed Standard</span>.
+        </dd>
+      
+</dl>
+</p>
 <h2 id="appendix"><a class="toc-anchor" href="#appendix" >§</a> Appendix</h2>
 <h3 id="other-resources"><a class="toc-anchor" href="#other-resources" >§</a> Other Resources</h3>
 <p>The following projects are working on DID registration across different DID methods.</p>
