@@ -256,139 +256,12 @@ is either `finished` or `failed`, and MUST NOT have a null value otherwise.
 This output field contains the current state of the DID operations. It is used to indicate if a DID operation
 is finished, failed, or if a longer-running "job" has been created that requires additional steps.
 
+This specification defines four well-known values for this property: `finished`, `failed`, `action`, `wait`. These
+values are further explained in [States](#states).
+
 The following diagram illustrates the use of the `didState.state` and `jobId` output fields.
 
 ![Diagram showing the flow and states of DID operations](images/diagram-flow.png)
-
-The following sections explain the possible values for `didState.state`.
-
-##### `didState.state=finished`
-
-This state indicates that the DID operation has been completed.
-
-Example:
-
-```json
-{
-	"jobId": null,
-	"didState": {
-		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
-		"state": "finished",
-		"secret": {
-			"keys": [{
-				...
-			}]
-		}
-	},
-	"didRegistrationMetadata": { ... },
-	"didDocumentMetadata": { ... }
-}
-```
-
-##### `didState.state=failed`
-
-This state indicates that the DID operation has failed.
-
-In this state, the [`didState` output field](#didstate) MUST contain a `reason` property, and MAY contain additional
-properties, to explain the reason for the failure.
-
-Example:
-
-```json
-{
-	"jobId": null,
-	"didState": {
-		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
-		"state": "failed",
-		"reason": "networkUnavailable"
-	},
-	"didRegistrationMetadata": { ... },
-	"didDocumentMetadata": { ... }
-}
-```
-
-##### `didState.state=action`
-
-This state indicates that the client needs to perform an action, before the DID operation can be continued.
-
-In this state, the [`didState` output field](#didstate) MUST contain an `action` property, and MAY contain additional
-properties, to specify the nature of the action that has to be taken.
-
-Possible uses for `didState.state==action`:
-
-  * Send coins to fund a wallet
-  * Accept some legal agreement
-  * Perform signature on a byte array
-
-Example 1:
-
-```json
-{
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
-	"didState": {
-		"state": "action",
-		"action": "fundingRequired",
-		"description": "Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."
-	},
-	"didRegistrationMetadata": { ... },
-	"didDocumentMetadata": { ... }
-}
-```
-
-Example 2:
-
-TODO: This is used in Client-managed Secret Mode. Need to specify in more detail how a DID Registrar requests signing, and how the client responds.
-
-```json
-{
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
-	"didState": {
-		"state": "action",
-		"action": "signPayload",
-		"signingRequests": [
-		  {
-		    "payload": "...",
-		    "payloadId": "...",
-		    "signingAlgorithm": "EdDsa",
-		    "keyReference": "... OPTIONAL ..."
-		  },
-		  {
-		    "payload": "...",
-		    "payloadId": "...",
-		    "signingAlgorithm": "EdDsa",
-		    "keyReference": "... OPTIONAL ..."
-		  }
-		]
-	},
-	"didRegistrationMetadata": { ... },
-	"didDocumentMetadata": { ... }
-}
-```
-
-##### `didState.state=wait`
-
-This state indicates that the client needs to wait, before the DID operation can be continued.
-
-In this state, the [`didState` output field](#didstate) MUST contain a `wait` property, and MAY contain additional
-properties, to explain the reason for the failure.
-
-Possible uses for `didState.state==wait`:
-
-  * Wait for confirmation on chain
-  * Wait for approval by someone
-
-```json
-{
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
-	"didState": {
-		"state": "wait",
-		"wait": "Please wait until the transaction is complete.",
-		"waitTime": 3600000
-	},
-	"didRegistrationMetadata": { ... },
-	"didDocumentMetadata": { ... }
-}
-```
 
 #### `didState.did`
 
@@ -528,6 +401,169 @@ Possible uses of the `didDocumentMetadata` output field:
 
 * Hash values, smart contract addresses, blockchain heights, transaction numbers, etc.
 * Proofs added by a DID controller (e.g. to establish control authority).
+
+## States
+
+The following sections explain the possible states of a DID registration process, which are returned as values of the
+[`didState.state` output field](#didstatestate).
+
+### `didState.state="finished"`
+
+This state indicates that the DID operation has been completed.
+
+Example:
+
+```json
+{
+	"jobId": null,
+	"didState": {
+		"state": "finished",
+		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"secret": {
+			"keys": [{
+				...
+			}]
+		},
+		"didDocument": { ... }
+	},
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
+
+### `didState.state="failed"`
+
+This state indicates that the DID operation has failed.
+
+In this state, the [`didState` output field](#didstate) MUST contain a `reason` property that indicates the reason
+for the failure.
+
+The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this state.
+
+Example:
+
+```json
+{
+	"jobId": null,
+	"didState": {
+		"state": "failed",
+		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"reason": "networkUnavailable"
+	},
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
+
+### `didState.state="action"`
+
+This state indicates that the client needs to perform an action, before the DID operation can be continued.
+
+Possible uses for `didState.state="action"`:
+
+* Client needs to perform an action at an external service
+* Client needs to perform a cryptographic operation, e.g. generate a signature
+* Client needs to send coins to fund a wallet
+* Client needs to accept the terms of a legal agreement
+* Client needs to upload a file to a webserver
+
+In this state, the [`didState` output field](#didstate) MUST contain an `action` property that indicates the type of
+action that needs to be performed.
+
+The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this state.
+
+This specification defines two well-known values for the `action` property that may be used in this state:
+
+* [`didState.action="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service
+* [`didState.action="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload
+
+Example:
+
+```json
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"didState": {
+		"state": "action",
+		"action": "fundingRequired",
+		"description": "Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."
+	},
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
+
+#### `didState.action="redirect"`
+
+This action indicates that the client needs to be redirected to a web page, e.g. an onboarding service where the
+DID controller takes certain steps, before the DID operation can be continued.
+
+With this action, the [`didState` output field](#didstate) MUST contain a `redirectUrl` property, which indicates
+the URL of the web page where the client needs to be redirected.
+
+The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
+
+TODO: How does this work exactly if the client is not browser-based?
+
+TODO: Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs,
+nonces, states, etc.?
+
+Example:
+
+```json
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"didState": {
+		"state": "action",
+		"action": "redirect",
+        "redirectUrl" : "https://..."
+	},
+	"registrarMetadata": { ... },
+	"methodMetadata": { ... }
+}
+```
+
+#### `didState.action="signPayload"`
+
+This action indicates that the client needs to generate a signature on a payload, before the DID operation can be
+continued.
+
+This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
+
+With this action, the [`didState` output field](#didstate) MUST contain properties that indicate the payload
+to be signed, as well as additional information such as a key identifier or the signing algorithm to be used.
+
+The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
+
+TODO: Need to specify in more detail how a DID Registrar requests signing, and how the client responds.
+
+TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.
+
+Example:
+
+### `didState.state="wait"`
+
+This state indicates that the client needs to wait, before the DID operation can be continued.
+
+Possible uses for `didState.state="wait"`:
+
+* Client needs to wait for confirmation on chain
+* Client needs to wait for approval by someone
+
+In this state, the [`didState` output field](#didstate) MUST contain a `wait` property, and MAY contain additional
+properties, to explain the reason for the failure.
+
+```json
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"didState": {
+		"state": "wait",
+		"wait": "Please wait until the transaction is complete.",
+		"waitTime": 3600000
+	},
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
 
 ## Implementation Considerations
 
