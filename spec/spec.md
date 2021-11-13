@@ -444,35 +444,9 @@ The [`didState` output field](#didstate) MAY contain additional properties that 
 
 TODO: Need to specify in more detail how a DID Registrar requests signing, and how the client responds.
 
-TODO: How can this re-use the Universal Wallet of WebKMS specifications?
+TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.
 
 Example:
-
-```json
-{
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
-	"didState": {
-		"state": "action",
-		"action": "signPayload",
-		"signingRequests": [
-		  {
-		    "payload": "...",
-		    "payloadId": "...",
-		    "signingAlgorithm": "EdDsa",
-		    "keyId": "... OPTIONAL ..."
-		  },
-		  {
-		    "payload": "...",
-		    "payloadId": "...",
-		    "signingAlgorithm": "EdDsa",
-		    "keyId": "... OPTIONAL ..."
-		  }
-		]
-	},
-	"didRegistrationMetadata": { ... },
-	"didDocumentMetadata": { ... }
-}
-```
 
 ### `didState.state=wait`
 
