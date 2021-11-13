@@ -169,19 +169,19 @@ the client to perform cryptographic operations such as generating signatures.</p
 <img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
 <h2 id="operations"><a class="toc-anchor" href="#operations" >§</a> Operations</h2>
 <h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
-<pre><code>create(method, did, options, secret, didDocument) -&gt; jobId, didState, metadata
+<pre><code>create(method, did, options, secret, didDocument) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function creates a new DID and associated DID document, according to a known DID method, using
 various options and optionally an initial DID document.</p>
 <h3 id="update"><a class="toc-anchor" href="#update" >§</a> <code>update()</code></h3>
-<pre><code>update(did, options, secret, didDocumentOperation, didDocument) -&gt; jobId, didState, metadata
+<pre><code>update(did, options, secret, didDocumentOperation, didDocument) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function updates the DID document associated with the DID, either by completely replacing it, or
 by performing an incremental update (see the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>).</p>
 <h3 id="deactivate"><a class="toc-anchor" href="#deactivate" >§</a> <code>deactivate()</code></h3>
-<pre><code>deactivate(did, options, secret) -&gt; jobId, didState, metadata
+<pre><code>deactivate(did, options, secret) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function deactivates the DID.</p>
@@ -280,21 +280,22 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <h4 id="didstatediddocument"><a class="toc-anchor" href="#didstatediddocument" >§</a> <code>didState.didDocument</code></h4>
 <p>This output field contains the DID document after the DID operation has been successfully executed.</p>
 <p>This output field is OPTIONAL.</p>
-<h3 id="metadata"><a class="toc-anchor" href="#metadata" >§</a> <code>metadata</code></h3>
-<p>This output field contains various metadata about the DID operation.</p>
-<p>Possible uses for the <code>metadata</code> output field:</p>
+<h3 id="didregistrationmetadata"><a class="toc-anchor" href="#didregistrationmetadata" >§</a> <code>didRegistrationMetadata</code></h3>
+<p>This output field contains metadata about the registration process itself.</p>
+<p>Possible uses of the <code>didRegistrationMetadata</code> output field:</p>
 <ul>
-<li>operation metadata
-<ul>
-<li>duration</li>
+<li>Duration of the DID registration process.</li>
+<li>Various URLs, IP addresses or other network information that was used during the DID registration process.</li>
+<li>Current balance or other information about tokens or cryptocurrencies that were used during the DID registration process.</li>
+<li>Information about third parties that were involved in the DID registration process, such as trust anchors, onboarding services, transaction endorsers, etc.</li>
+<li>Proofs added by a DID registrar (e.g. to establish trusted registration).</li>
 </ul>
-</li>
-<li>method metadata
+<h3 id="diddocumentmetadata"><a class="toc-anchor" href="#diddocumentmetadata" >§</a> <code>didDocumentMetadata</code></h3>
+<p>This output field contains metadata about the DID’s associated DID document.</p>
+<p>Possible uses of the <code>didDocumentMetadata</code> output field:</p>
 <ul>
-<li>method-specific hash</li>
-<li>token balance</li>
-</ul>
-</li>
+<li>Hash values, smart contract addresses, blockchain heights, transaction numbers, etc.</li>
+<li>Proofs added by a DID controller (e.g. to establish control authority).</li>
 </ul>
 <h2 id="states"><a class="toc-anchor" href="#states" >§</a> States</h2>
 <p>The following sections explain the possible states of a DID registration process, which are returned as values of the
@@ -314,8 +315,8 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 		<span class="token punctuation">}</span><span class="token punctuation">,</span>
 		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="didstatestatefailed"><a class="toc-anchor" href="#didstatestatefailed" >§</a> <code>didState.state=&quot;failed&quot;</code></h3>
@@ -331,8 +332,8 @@ for the failure.</p>
 		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
 		<span class="token property">"reason"</span><span class="token operator">:</span> <span class="token string">"networkUnavailable"</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="didstatestateaction"><a class="toc-anchor" href="#didstatestateaction" >§</a> <code>didState.state=&quot;action&quot;</code></h3>
@@ -359,8 +360,8 @@ action that needs to be performed.</p>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"fundingRequired"</span><span class="token punctuation">,</span>
 		<span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h4 id="didstateactionredirect"><a class="toc-anchor" href="#didstateactionredirect" >§</a> <code>didState.action=&quot;redirect&quot;</code></h4>
@@ -414,8 +415,8 @@ to be signed, as well as additional information such as a key identifier or the 
 		  <span class="token punctuation">}</span>
 		<span class="token punctuation">]</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=wait</code></h3>
@@ -434,8 +435,8 @@ properties, to explain the reason for the failure.</p>
 		<span class="token property">"wait"</span><span class="token operator">:</span> <span class="token string">"Please wait until the transaction is complete."</span><span class="token punctuation">,</span>
 		<span class="token property">"waitTime"</span><span class="token operator">:</span> <span class="token number">3600000</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="implementation-considerations"><a class="toc-anchor" href="#implementation-considerations" >§</a> Implementation Considerations</h2>
@@ -544,7 +545,8 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#didstatediddocument" ><code>didState.didDocument</code></a></li>
 </ul>
 </li>
-<li><a href="#metadata" ><code>metadata</code></a></li>
+<li><a href="#didregistrationmetadata" ><code>didRegistrationMetadata</code></a></li>
+<li><a href="#diddocumentmetadata" ><code>didDocumentMetadata</code></a></li>
 </ul>
 </li>
 <li><a href="#states" >States</a>
