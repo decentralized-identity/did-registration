@@ -540,6 +540,33 @@ TODO: Mention how this could relate to other specs such as Universal Wallet or W
 
 Example:
 
+{
+	"jobId": "1234",
+	"didState": {
+		"state": "action",
+		"action": "signPayload",
+		"signingRequest": {
+			"signingRequest1": {
+				"payload": {
+					...
+				},
+				"serializedPayload": "<-multibase->",
+				"kid": null,
+				"alg": "EdDsa",
+				"verificationMethod": "..." // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
+				"proofPurpose": ".." // describes the purpose of the requested signature/proof
+			},
+			"signingRequest2": {
+				"payload": "8784566",
+				"kid": null,
+				"alg": "ES256K"
+			}
+		}
+	},
+	"didRegistrationMetadata": {},
+	"didDocumentMetadata": {}
+}
+
 ### `didState.state="wait"`
 
 This state indicates that the client needs to wait, before the DID operation can be continued.

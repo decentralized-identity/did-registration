@@ -481,6 +481,32 @@ to be signed, as well as additional information such as a key identifier or the 
 <p>TODO: Need to specify in more detail how a DID Registrar requests signing, and how the client responds.</p>
 <p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
 <p>Example:</p>
+<p>{
+“jobId”: “1234”,
+“didState”: {
+“state”: “action”,
+“action”: “signPayload”,
+“signingRequest”: {
+“signingRequest1”: {
+“payload”: {
+…
+},
+“serializedPayload”: “&lt;-multibase-&gt;”,
+“kid”: null,
+“alg”: “EdDsa”,
+“verificationMethod”: “…” // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
+“proofPurpose”: “…” // describes the purpose of the requested signature/proof
+},
+“signingRequest2”: {
+“payload”: “8784566”,
+“kid”: null,
+“alg”: “ES256K”
+}
+}
+},
+“didRegistrationMetadata”: {},
+“didDocumentMetadata”: {}
+}</p>
 <h3 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=&quot;wait&quot;</code></h3>
 <p>This state indicates that the client needs to wait, before the DID operation can be continued.</p>
 <p>Possible uses for <code>didState.state=&quot;wait&quot;</code>:</p>
