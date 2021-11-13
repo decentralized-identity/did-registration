@@ -475,7 +475,7 @@ Example:
 {
 	"seed": "bwT5J3lXaclZzMWfvNOFNr5maUHxZajj",
 	"keys": [{
-		"kid": "did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1",
+		"kid": "did:example:123#key-1",
 		"kty": "OKP",
 		"d": "YndUNUozbFhhY2xaek1XZnZOT0ZOcjVtYVVIeFphamo",
 		"crv": "Ed25519",
@@ -497,14 +497,14 @@ Example:
 	"@context": [
 		"https://www.w3.org/ns/did/v1"
 	],
-	"id": "did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g",
+	"id": "did:example:123",
 	"verificationMethod": [{
 		"type": "Ed25519VerificationKey2018",
-		"id": "did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1",
+		"id": "did:example:123#key-1",
 		"publicKeyBase58": "EqRvGzVX3aoLYwZSdKhNd2q5Ez7EVbdPA4DVZW3ngn1U"
 	}],
-	"authentication": ["did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"],
-	"assertionMethod": ["did:sov:danube:SPFrcNGLjb4ysHZwaLwf9g#key-1"]
+	"authentication": ["did:example:123#key-1"],
+	"assertionMethod": ["did:example:123#key-1"]
 }
 ```
 
