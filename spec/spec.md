@@ -410,22 +410,25 @@ It MUST be present if the DID Registrar is operating in [Internal Secret Mode](#
 If present, the `didState.secret` output field MUST contain a JSON object with either a member `verificationMethod`, or
 `keys`, or both.
 
+The `didState.secret` output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.
+
+##### `didState.secret.verificationMethod`
+
 If the `didState.secret` output field contains a member `verificationMethod`, then the value of that member MUST be a
-JSON array, which MAY be empty. Each element of that JSON array MUST be a verification method as defined by [[DID-CORE]],
-with the following differences:
+JSON array, which MAY be empty. Each element of that JSON array MUST be a JSON object based on the verification method
+data model as defined by [[DID-CORE]], with the following differences:
+
 * The `id` property is OPTIONAL.
   * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
     associated DID document, which MAY be returned separately in the
     [`didState.didDocument` output field](#didstatediddocument).
   * If it is absent, then the verification method does not correspond to any verification method in the DID's
     associated DID document. 
+* The JSON object MUST contain a member `purpose`, and the value of that member MUST be a JSON array, which contains
+  verification relationships such as `authentication` or `assertionMethod`.
 * Instead of containing properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material,
   the verification method contains corresponding private key material, using properties such as `privateKeyJwk` or
   `privateKeyMultibase`.
-
-If the `didState.secret` output field contains a member `verificationMethod`, then it SHOULD also contain
-verification relationships such as `authentication` or `assertionMethod`, which contain references to verification
-methods.
 
 Example: 
 
@@ -455,6 +458,8 @@ Example:
 }
 ```
 
+##### `didState.secret.keys`
+
 If the `didState.secret` output field contains a member `keys`, then it MUST be a valid JWK Set (JWKS) according to
 [[spec:RFC7517]]. The value of that member MUST be a JSON array, which MAY be empty. Each element of that JSON array
 MUST be a JWK, with the following rule:
@@ -463,8 +468,6 @@ MUST be a JWK, with the following rule:
   associated DID document, which MAY be returned separately in the
 [`didState.didDocument` output field](#didstatediddocument).
   * If it is absent, then the JWK does not correspond to any verification method in the DID's associated DID document.
-
-The `didState.secret` MAY contain additional members that are considered secrets, such as seeds, passwords, etc.
 
 Example:
 
