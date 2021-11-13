@@ -369,6 +369,14 @@ Example:
 
 This state indicates that the client needs to perform an action, before the DID operation can be continued.
 
+Possible uses for `didState.state="action"`:
+
+* Client needs to perform an action at an external service
+* Client needs to perform a cryptographic operation, e.g. generate a signature
+* Client needs to send coins to fund a wallet
+* Client needs to accept the terms of a legal agreement
+* Client needs to upload a file to a webserver
+
 In this state, the [`didState` output field](#didstate) MUST contain an `action` property that indicates the type of
 action that needs to be performed.
 
@@ -376,14 +384,8 @@ The [`didState` output field](#didstate) MAY contain additional properties that 
 
 This specification defines two well-known values for the `action` property that may be used in this state:
 
-* [`didState.action=="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service
-* [`didState.action=="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload
-
-Possible other uses for this state:
-
-* Client needs to send coins to fund a wallet
-* Client needs to accept the terms of a legal agreement
-* Client needs to upload a file to a webserver
+* [`didState.action="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service
+* [`didState.action="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload
 
 Example:
 
@@ -448,17 +450,17 @@ TODO: Mention how this could relate to other specs such as Universal Wallet or W
 
 Example:
 
-### `didState.state=wait`
+### `didState.state="wait"`
 
 This state indicates that the client needs to wait, before the DID operation can be continued.
 
-In this state, the [`didState` output field](#didstate) MUST contain a `wait` property, and MAY contain additional
-properties, to explain the reason for the failure.
-
-Possible uses for `didState.state==wait`:
+Possible uses for `didState.state="wait"`:
 
 * Client needs to wait for confirmation on chain
 * Client needs to wait for approval by someone
+
+In this state, the [`didState` output field](#didstate) MUST contain a `wait` property, and MAY contain additional
+properties, to explain the reason for the failure.
 
 ```json
 {
