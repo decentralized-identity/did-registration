@@ -373,11 +373,11 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <p>This output field contains an object with DID controller keys and other secrets.</p>
 <p>It MUST be present if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> and the
 <a href="#secretreturning-option" ><code>secretReturning</code> option</a> is set to <code>true</code>, and MUST NOT be present otherwise.</p>
-<p>If present, the <code>didState.secret</code> output field MUST contain a JSON object with either a member <code>verificationMethod</code>, or
+<p>If present, the <code>didState.secret</code> output field MUST contain a JSON object with either a property <code>verificationMethod</code>, or
 <code>keys</code>, or both.</p>
 <p>The <code>didState.secret</code> output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.</p>
 <h5 id="didstatesecretverificationmethod"><a class="toc-anchor" href="#didstatesecretverificationmethod" >§</a> <code>didState.secret.verificationMethod</code></h5>
-<p>If the <code>didState.secret</code> output field contains a member <code>verificationMethod</code>, then the value of that member MUST be a
+<p>If the <code>didState.secret</code> output field contains a property <code>verificationMethod</code>, then the value of that property MUST be a
 JSON array, which MAY be empty. Each element of that JSON array MUST be a JSON object based on the verification method
 data model as defined by [[DID-CORE]], with the following differences:</p>
 <ul>
@@ -390,7 +390,7 @@ associated DID document, which MAY be returned separately in the
 associated DID document.</li>
 </ul>
 </li>
-<li>The JSON object MUST contain a member <code>purpose</code>, and the value of that member MUST be a JSON array, which contains
+<li>The JSON object MUST contain a property <code>purpose</code>, and the value of that property MUST be a JSON array, which contains
 verification relationships such as <code>authentication</code> or <code>assertionMethod</code>.</li>
 <li>Instead of containing properties such as <code>publicKeyJwk</code> or <code>publicKeyMultibase</code> for expressing verification material,
 the verification method contains corresponding private key material, using properties such as <code>privateKeyJwk</code> or
@@ -422,8 +422,8 @@ the verification method contains corresponding private key material, using prope
 <span class="token punctuation">}</span>
 </code></pre>
 <h5 id="didstatesecretkeys"><a class="toc-anchor" href="#didstatesecretkeys" >§</a> <code>didState.secret.keys</code></h5>
-<p>If the <code>didState.secret</code> output field contains a member <code>keys</code>, then it MUST be a valid JWK Set (JWKS) according to
-[<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>]. The value of that member MUST be a JSON array, which MAY be empty. Each element of that JSON array
+<p>If the <code>didState.secret</code> output field contains a property <code>keys</code>, then it MUST be a valid JWK Set (JWKS) according to
+[<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>]. The value of that property MUST be a JSON array, which MAY be empty. Each element of that JSON array
 MUST be a JWK, with the following rule:</p>
 <ul>
 <li>The <code>kid</code> parameter is OPTIONAL.
