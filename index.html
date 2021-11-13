@@ -338,19 +338,21 @@ for the failure.</p>
 </code></pre>
 <h3 id="didstatestateaction"><a class="toc-anchor" href="#didstatestateaction" >§</a> <code>didState.state=&quot;action&quot;</code></h3>
 <p>This state indicates that the client needs to perform an action, before the DID operation can be continued.</p>
+<p>Possible uses for <code>didState.state=&quot;action&quot;</code>:</p>
+<ul>
+<li>Client needs to perform an action at an external service</li>
+<li>Client needs to perform a cryptographic operation, e.g. generate a signature</li>
+<li>Client needs to send coins to fund a wallet</li>
+<li>Client needs to accept the terms of a legal agreement</li>
+<li>Client needs to upload a file to a webserver</li>
+</ul>
 <p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain an <code>action</code> property that indicates the type of
 action that needs to be performed.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this state.</p>
 <p>This specification defines two well-known values for the <code>action</code> property that may be used in this state:</p>
 <ul>
-<li><a href="#didstateactionredirect" ><code>didState.action==&quot;redirect&quot;</code></a> - Client needs to be redirected to a web page, e.g. an onboarding service</li>
-<li><a href="#didstateactionsignpayload" ><code>didState.action==&quot;signPayload&quot;</code></a> - Client needs to generate a signature on a payload</li>
-</ul>
-<p>Possible other uses for this state:</p>
-<ul>
-<li>Client needs to send coins to fund a wallet</li>
-<li>Client needs to accept the terms of a legal agreement</li>
-<li>Client needs to upload a file to a webserver</li>
+<li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a> - Client needs to be redirected to a web page, e.g. an onboarding service</li>
+<li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a> - Client needs to generate a signature on a payload</li>
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -393,41 +395,17 @@ continued.</p>
 to be signed, as well as additional information such as a key identifier or the signing algorithm to be used.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>TODO: Need to specify in more detail how a DID Registrar requests signing, and how the client responds.</p>
-<p>TODO: How can this re-use the Universal Wallet of WebKMS specifications?</p>
+<p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
 <p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
-		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"signPayload"</span><span class="token punctuation">,</span>
-		<span class="token property">"signingRequests"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-		  <span class="token punctuation">{</span>
-		    <span class="token property">"payload"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
-		    <span class="token property">"payloadId"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
-		    <span class="token property">"signingAlgorithm"</span><span class="token operator">:</span> <span class="token string">"EdDsa"</span><span class="token punctuation">,</span>
-		    <span class="token property">"keyId"</span><span class="token operator">:</span> <span class="token string">"... OPTIONAL ..."</span>
-		  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-		  <span class="token punctuation">{</span>
-		    <span class="token property">"payload"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
-		    <span class="token property">"payloadId"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span>
-		    <span class="token property">"signingAlgorithm"</span><span class="token operator">:</span> <span class="token string">"EdDsa"</span><span class="token punctuation">,</span>
-		    <span class="token property">"keyId"</span><span class="token operator">:</span> <span class="token string">"... OPTIONAL ..."</span>
-		  <span class="token punctuation">}</span>
-		<span class="token punctuation">]</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<h3 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=wait</code></h3>
+<h3 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=&quot;wait&quot;</code></h3>
 <p>This state indicates that the client needs to wait, before the DID operation can be continued.</p>
-<p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>wait</code> property, and MAY contain additional
-properties, to explain the reason for the failure.</p>
-<p>Possible uses for <code>didState.state==wait</code>:</p>
+<p>Possible uses for <code>didState.state=&quot;wait&quot;</code>:</p>
 <ul>
 <li>Client needs to wait for confirmation on chain</li>
 <li>Client needs to wait for approval by someone</li>
 </ul>
+<p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>wait</code> property, and MAY contain additional
+properties, to explain the reason for the failure.</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -559,7 +537,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a></li>
 </ul>
 </li>
-<li><a href="#didstatestatewait" ><code>didState.state=wait</code></a></li>
+<li><a href="#didstatestatewait" ><code>didState.state=&quot;wait&quot;</code></a></li>
 </ul>
 </li>
 <li><a href="#implementation-considerations" >Implementation Considerations</a></li>
