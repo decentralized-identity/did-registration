@@ -558,7 +558,7 @@ Example:
 				"proofPurpose": ".." // describes the purpose of the requested signature/proof
 			},
 			"signingRequest2": {
-				"payload": "8784566",
+				"serializedPayload": "<-multibase->",
 				"kid": null,
 				"alg": "ES256K"
 			}
