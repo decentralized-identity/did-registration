@@ -540,6 +540,7 @@ TODO: Mention how this could relate to other specs such as Universal Wallet or W
 
 Example:
 
+```json
 {
 	"jobId": "1234",
 	"didState": {
@@ -566,6 +567,7 @@ Example:
 	"didRegistrationMetadata": {},
 	"didDocumentMetadata": {}
 }
+```
 
 ### `didState.state="wait"`
 
