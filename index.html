@@ -433,10 +433,11 @@ for the failure.</p>
 <p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain an <code>action</code> property that indicates the type of
 action that needs to be performed.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this state.</p>
-<p>This specification defines two well-known values for the <code>action</code> property that may be used in this state:</p>
+<p>This specification defines the following well-known values for the <code>action</code> property that may be used in this state:</p>
 <ul>
-<li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a> - Client needs to be redirected to a web page, e.g. an onboarding service</li>
-<li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a> - Client needs to generate a signature on a payload</li>
+<li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a> - Client needs to be redirected to a web page, e.g. an onboarding service.</li>
+<li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a> - Client needs to generate a signature on a payload.</li>
+<li><a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code></a> - Client needs to decrypt a payload.</li>
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -501,6 +502,39 @@ to be signed, as well as additional information such as a key identifier or the 
 				<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-multibase->"</span><span class="token punctuation">,</span>
 				<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="didstateactiondecryptpayload"><a class="toc-anchor" href="#didstateactiondecryptpayload" >§</a> <code>didState.action=&quot;decryptPayload&quot;</code></h4>
+<p>This action indicates that the client needs to decrypt a payload, before the DID operation can be
+continued.</p>
+<p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
+<p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain properties that indicate the payload
+to be decrypted, as well as additional information such as a key identifier or the decryption algorithm to be used.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
+<p>TODO: Need to specify in more detail how a DID Registrar requests decrypting, and how the client responds.</p>
+<p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"1234"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"decryptPayload"</span><span class="token punctuation">,</span>
+		<span class="token property">"decryptionRequest"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"decryptionRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"encryptedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-multibase->"</span><span class="token punctuation">,</span>
+				<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+				<span class="token property">"enc"</span><span class="token operator">:</span> <span class="token string">"A128GCM"</span><span class="token punctuation">,</span>
+				<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token string">"..."</span> <span class="token comment">// could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.</span>
+			<span class="token punctuation">}</span><span class="token punctuation">,</span>
+			<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"encryptedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-multibase->"</span><span class="token punctuation">,</span>
+				<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+				<span class="token property">"enc"</span><span class="token operator">:</span> <span class="token string">"A256GCM"</span>
 			<span class="token punctuation">}</span>
 		<span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -655,6 +689,7 @@ https://uniregistrar.io/1.0/deactivate
 <ul>
 <li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a></li>
 <li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a></li>
+<li><a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code></a></li>
 </ul>
 </li>
 <li><a href="#didstatestatewait" ><code>didState.state=&quot;wait&quot;</code></a></li>
