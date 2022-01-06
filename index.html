@@ -482,6 +482,33 @@ to be signed, as well as additional information such as a key identifier or the 
 <p>TODO: Need to specify in more detail how a DID Registrar requests signing, and how the client responds.</p>
 <p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
 <p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"1234"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"signPayload"</span><span class="token punctuation">,</span>
+		<span class="token property">"signingRequest"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"payload"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+					...
+				<span class="token punctuation">}</span><span class="token punctuation">,</span>
+				<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-multibase->"</span><span class="token punctuation">,</span>
+				<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDsa"</span><span class="token punctuation">,</span>
+				<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token string">"..."</span> <span class="token comment">// could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.</span>
+				<span class="token property">"proofPurpose"</span><span class="token operator">:</span> <span class="token string">".."</span> <span class="token comment">// describes the purpose of the requested signature/proof</span>
+			<span class="token punctuation">}</span><span class="token punctuation">,</span>
+			<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-multibase->"</span><span class="token punctuation">,</span>
+				<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="didstatestatewait"><a class="toc-anchor" href="#didstatestatewait" >§</a> <code>didState.state=&quot;wait&quot;</code></h3>
 <p>This state indicates that the client needs to wait, before the DID operation can be continued.</p>
 <p>Possible uses for <code>didState.state=&quot;wait&quot;</code>:</p>
