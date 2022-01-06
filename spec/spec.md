@@ -482,10 +482,11 @@ action that needs to be performed.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this state.
 
-This specification defines two well-known values for the `action` property that may be used in this state:
+This specification defines the following well-known values for the `action` property that may be used in this state:
 
-* [`didState.action="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service
-* [`didState.action="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload
+* [`didState.action="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service.
+* [`didState.action="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload.
+* [`didState.action="decryptPayload"`](#didstateactiondecryptpayload) - Client needs to decrypt a payload.
 
 Example:
 
@@ -571,6 +572,49 @@ Example:
 				"serializedPayload": "<-multibase->",
 				"kid": null,
 				"alg": "ES256K"
+			}
+		}
+	},
+	"didRegistrationMetadata": {},
+	"didDocumentMetadata": {}
+}
+```
+
+#### `didState.action="decryptPayload"`
+
+This action indicates that the client needs to decrypt a payload, before the DID operation can be
+continued.
+
+This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
+
+With this action, the [`didState` output field](#didstate) MUST contain properties that indicate the payload
+to be decrypted, as well as additional information such as a key identifier or the decryption algorithm to be used.
+
+The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
+
+TODO: Need to specify in more detail how a DID Registrar requests decrypting, and how the client responds.
+
+TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.
+
+Example:
+
+```json
+{
+	"jobId": "1234",
+	"didState": {
+		"state": "action",
+		"action": "decryptPayload",
+		"decryptionRequest": {
+			"decryptionRequest1": {
+				"encryptedPayload": "<-multibase->",
+				"kid": null,
+				"enc": "A128GCM",
+				"verificationMethod": "..." // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
+			},
+			"signingRequest2": {
+				"encryptedPayload": "<-multibase->",
+				"kid": null,
+				"enc": "A256GCM"
 			}
 		}
 	},
