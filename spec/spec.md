@@ -611,7 +611,7 @@ Example:
 				"enc": "A128GCM",
 				"verificationMethod": "..." // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
 			},
-			"signingRequest2": {
+			"decryptionRequest2": {
 				"encryptedPayload": "<-multibase->",
 				"kid": null,
 				"enc": "A256GCM"
