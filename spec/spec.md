@@ -249,6 +249,17 @@ have to be called multiple times, and the `jobId` is used to keep track of the o
 This output field MUST be absent or have a null value if the value of the [`didState.state` output field](#didstatestate)
 is either `finished` or `failed`, and MUST NOT have a null value otherwise.
 
+Example:
+
+```json
+{
+	"jobId": "2a4b5d3f-7af9-44c8-a5c8-39f893fa0f78",
+	"didState": { ... },
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
+
 ### `didState`
 
 #### `didState.state`
@@ -335,12 +346,11 @@ Example:
 
 If the `didState.secret` output field contains a property `keys`, then it MUST be a valid JWK Set (JWKS) according to
 [[spec:RFC7517]]. The value of that property MUST be a JSON array, which MAY be empty. Each element of that JSON array
-MUST be a JWK, with the following rule:
-* The `kid` parameter is OPTIONAL.
-  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's 
-  associated DID document, which MAY be returned separately in the
-[`didState.didDocument` output field](#didstatediddocument).
-  * If it is absent, then the JWK does not correspond to any verification method in the DID's associated DID document.
+MUST be a JWK.
+
+If a JWK in the JWKS corresponds to a verification method in the DID's associated DID document, then it
+MUST have a `kid` parameter which matches the `id` property of the corresponding verification method. The associated DID
+document MAY be returned separately in the [`didState.didDocument` output field](#didstatediddocument).
 
 Example:
 

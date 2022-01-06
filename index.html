@@ -254,6 +254,14 @@ state might change. In order for a DID operation to complete, the DID create/upd
 have to be called multiple times, and the <code>jobId</code> is used to keep track of the ongoing process.</p>
 <p>This output field MUST be absent or have a null value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a>
 is either <code>finished</code> or <code>failed</code>, and MUST NOT have a null value otherwise.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"2a4b5d3f-7af9-44c8-a5c8-39f893fa0f78"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="didstate"><a class="toc-anchor" href="#didstate" >§</a> <code>didState</code></h3>
 <h4 id="didstatestate"><a class="toc-anchor" href="#didstatestate" >§</a> <code>didState.state</code></h4>
 <p>This output field contains the current state of the DID operations. It is used to indicate if a DID operation
@@ -323,17 +331,10 @@ the verification method contains corresponding private key material, using prope
 <h5 id="didstatesecretkeys"><a class="toc-anchor" href="#didstatesecretkeys" >§</a> <code>didState.secret.keys</code></h5>
 <p>If the <code>didState.secret</code> output field contains a property <code>keys</code>, then it MUST be a valid JWK Set (JWKS) according to
 [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>]. The value of that property MUST be a JSON array, which MAY be empty. Each element of that JSON array
-MUST be a JWK, with the following rule:</p>
-<ul>
-<li>The <code>kid</code> parameter is OPTIONAL.
-<ul>
-<li>If it is present, its value MUST match the <code>id</code> property of the corresponding verification method in the DID’s
-associated DID document, which MAY be returned separately in the
-<a href="#didstatediddocument" ><code>didState.didDocument</code> output field</a>.</li>
-<li>If it is absent, then the JWK does not correspond to any verification method in the DID’s associated DID document.</li>
-</ul>
-</li>
-</ul>
+MUST be a JWK.</p>
+<p>If a JWK in the JWKS corresponds to a verification method in the DID’s associated DID document, then it
+MUST have a <code>kid</code> parameter which matches the <code>id</code> property of the corresponding verification method. The associated DID
+document MAY be returned separately in the <a href="#didstatediddocument" ><code>didState.didDocument</code> output field</a>.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"seed"</span><span class="token operator">:</span> <span class="token string">"bwT5J3lXaclZzMWfvNOFNr5maUHxZajj"</span><span class="token punctuation">,</span>
