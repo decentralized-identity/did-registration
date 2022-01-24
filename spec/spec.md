@@ -234,7 +234,7 @@ transformation between them.
 ### `didDocument`
 
 This input field contains either a complete DID document, or an incremental change (diff) to a DID document, depending
-on the value of the [`didDocumentOperation` input field](#operation).
+on the value of the [`didDocumentOperation` input field](#diddocumentoperation).
 
 For the [`deactivate()` function](#deactivate), this input field is absent.
 
