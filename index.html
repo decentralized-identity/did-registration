@@ -582,12 +582,35 @@ do they have direct access to a blockchain full node?</li>
 different concrete protocols and transports. This section defines a binding based on HTTP POST operations, with inputs
 and outputs sent in the HTTP body, encoded as JSON.</p>
 <p>In this binding, a secure HTTPS connection with at least TLS 1.2 MUST be used.</p>
-<p>For example, the abstract interfaces can be deployed at the following HTTPS endpoints:</p>
+<p>Each one of the three <a href="#operations" >operations</a> can be invoked via a separate HTTPS endpoint, for example:</p>
 <pre><code>https://uniregistrar.io/1.0/create
 https://uniregistrar.io/1.0/update
 https://uniregistrar.io/1.0/deactivate
 </code></pre>
-<p>See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">for an OpenAPI definition</a>.</p>
+<p>The following HTTP status codes are used for the <a href="#create" ><code>create()</code> function</a>:</p>
+<ul>
+<li><strong>200</strong>, if the request was successful, but the DID may not be fully created yet, as indicated by the
+<a href="#didstatestate" ><code>didState.state</code> output field</a>.</li>
+<li><strong>201</strong>, if the DID has been successfully created, as indicated by the
+<a href="#didstatestate" ><code>didState.state</code> output field</a>.</li>
+<li><strong>400</strong>, if a problem with the input fields has occurred.</li>
+<li><strong>500</strong>, if an internal error has occurred.</li>
+</ul>
+<p>The following HTTP status codes are used for the <a href="#update" ><code>update()</code> function</a>:</p>
+<ul>
+<li><strong>200</strong>, if request was successful, and the DID may or may not be fully updated yet, as indicated by the
+<a href="#didstatestate" ><code>didState.state</code> output field</a>.</li>
+<li><strong>400</strong>, if a problem with the input fields has occurred.</li>
+<li><strong>500</strong>, if an internal error has occurred.</li>
+</ul>
+<p>The following HTTP status codes are used for the <a href="#deactivate" ><code>deactivate()</code> function</a> operation:</p>
+<ul>
+<li><strong>200</strong>, if request was successful, and the DID may or may not be fully deactivated yet, as indicated by the
+<a href="#didstatestate" ><code>didState.state</code> output field</a>.</li>
+<li><strong>400</strong>, if a problem with the input fields has occurred.</li>
+<li><strong>500</strong>, if an internal error has occurred.</li>
+</ul>
+<p>See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">here</a> for an OpenAPI definition.</p>
 <h2 id="normative-references"><a class="toc-anchor" href="#normative-references" >§</a> Normative References</h2>
 <p>
 <dl class="reference-list">

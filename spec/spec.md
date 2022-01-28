@@ -672,7 +672,7 @@ and outputs sent in the HTTP body, encoded as JSON.
 
 In this binding, a secure HTTPS connection with at least TLS 1.2 MUST be used.
 
-For example, the abstract interfaces can be deployed at the following HTTPS endpoints:
+Each one of the three [operations](#operations) can be invoked via a separate HTTPS endpoint, for example:
 
 ```
 https://uniregistrar.io/1.0/create
@@ -680,7 +680,30 @@ https://uniregistrar.io/1.0/update
 https://uniregistrar.io/1.0/deactivate
 ```
 
-See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">for an OpenAPI definition</a>.
+The following HTTP status codes are used for the [`create()` function](#create):
+
+* **200**, if the request was successful, but the DID may not be fully created yet, as indicated by the
+  [`didState.state` output field](#didstatestate).
+* **201**, if the DID has been successfully created, as indicated by the
+  [`didState.state` output field](#didstatestate).
+* **400**, if a problem with the input fields has occurred.
+* **500**, if an internal error has occurred.
+
+The following HTTP status codes are used for the [`update()` function](#update):
+
+* **200**, if request was successful, and the DID may or may not be fully updated yet, as indicated by the
+  [`didState.state` output field](#didstatestate).
+* **400**, if a problem with the input fields has occurred.
+* **500**, if an internal error has occurred.
+
+The following HTTP status codes are used for the [`deactivate()` function](#deactivate) operation:
+
+* **200**, if request was successful, and the DID may or may not be fully deactivated yet, as indicated by the
+  [`didState.state` output field](#didstatestate).
+* **400**, if a problem with the input fields has occurred.
+* **500**, if an internal error has occurred.
+
+See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">here</a> for an OpenAPI definition.
 
 ## Normative References
 
