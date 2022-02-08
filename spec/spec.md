@@ -564,7 +564,7 @@ Example:
 				},
 				"serializedPayload": "<-multibase->",
 				"kid": null,
-				"alg": "EdDsa",
+				"alg": "EdDSA",
 				"verificationMethod": "..." // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
 				"proofPurpose": ".." // describes the purpose of the requested signature/proof
 			},
