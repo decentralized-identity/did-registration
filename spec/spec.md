@@ -635,6 +635,8 @@ Possible uses for `didState.state="wait"`:
 In this state, the [`didState` output field](#didstate) MUST contain a `wait` property, and MAY contain additional
 properties, to explain the reason for the failure.
 
+Example:
+
 ```json
 {
 	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
