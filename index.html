@@ -289,7 +289,7 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <h5 id="didstatesecretverificationmethod"><a class="toc-anchor" href="#didstatesecretverificationmethod" >§</a> <code>didState.secret.verificationMethod</code></h5>
 <p>If the <code>didState.secret</code> output field contains a property <code>verificationMethod</code>, then the value of that property MUST be a
 JSON array, which MAY be empty. Each element of that JSON array MUST be a JSON object based on the verification method
-data model as defined by [[DID-CORE]], with the following differences:</p>
+data model as defined by [<a class="spec-reference" href="#ref:DID-CORE">DID-CORE</a>], with the following differences:</p>
 <ul>
 <li>The <code>id</code> property is OPTIONAL.
 <ul>
@@ -715,6 +715,12 @@ https://uniregistrar.io/1.0/deactivate
 <h2 id="normative-references"><a class="toc-anchor" href="#normative-references" >§</a> Normative References</h2>
 <p>
 <dl class="reference-list">
+        <dt id="ref:DID-CORE">DID-CORE</dt>
+        <dd>
+          <cite><a href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DIDs) v1.0</a></cite>. 
+          Drummond Reed; Manu Sporny; Markus Sabadello; Dave Longley; Christopher Allen; Jonathan Holt; 2020-09-07. <span class="reference-status">Status: WD</span>.
+        </dd>
+      
         <dt id="ref:RFC7515">RFC7515</dt>
         <dd>
           <cite><a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature (JWS)</a></cite>. 

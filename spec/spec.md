@@ -304,7 +304,7 @@ The `didState.secret` output field MAY contain additional properties that are co
 
 If the `didState.secret` output field contains a property `verificationMethod`, then the value of that property MUST be a
 JSON array, which MAY be empty. Each element of that JSON array MUST be a JSON object based on the verification method
-data model as defined by [[DID-CORE]], with the following differences:
+data model as defined by [[spec:DID-CORE]], with the following differences:
 
 * The `id` property is OPTIONAL.
   * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
