@@ -191,16 +191,71 @@ Possible keys and values:
 * `network=mainnet`
 * ... others ...
 
+Example:
+
+```json
+{
+	"did": null,
+	"options": {
+		"network": "mainnet"
+	},
+	"secret": { ... },
+	"didDocument": { ... }
+}
+```
+
 ### `secret`
 
 This input field contains an object with DID controller keys and other secrets.
 
-In [Client-managed Secret Mode](#client-managed-secret-mode), this input field MAY contain a [Signing Response Set](#signing-response-set) and/or a
-[Decryption Response Set](#decryption-response-set) as a response to a [Signing Request Set](#signing-request-set) and/or [Decryption Request Set](#decryption-request-set) which may have been
-previously received by the client.
-
 This input field MAY contain a `verificationMethod` and/or `keys` property which MUST follow the same rules as in the
 [`didState.secret` output field](#didstatesecret).
+
+Example:
+
+```json
+{
+	"did": "did:example:123",
+	"options": { ... },
+	"secret": {
+		"verificationMethod": [{
+			"id": "did:example:123#key-0",
+			"type": "JsonWebKey2020",
+			"controller": "did:example:123",
+			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+			"privateKeyJwk": {
+				"kty": "EC",
+				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
+				"crv": "secp256k1",
+				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+			}
+		}]
+	},
+	"didDocument": { ... }
+}
+```
+
+In [Client-managed Secret Mode](#client-managed-secret-mode), this input field MAY also contain one or more of the following:
+* A `signingResponse` property with a [Signing Response Set](#signing-response-set) data structure as a response to a [Signing Request Set](#signing-request-set) from the DID Registrar.
+* A `decryptionResponse` property with a [Decryption Response Set](#decryption-response-set) data structure as a response to a [Decryption Request Set](#decryption-request-set) from the DID Registrar.
+
+Example:
+
+```json
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"did": null,
+	"options": { ... },
+	"secret": {
+		"signingResponse": {
+			"signingRequest1": {
+				"signature": "<-- base64 encoded -->"
+			}
+		},
+		"didDocument": { ... }
+	}
+```
 
 ### `didDocumentOperation`
 
@@ -544,9 +599,6 @@ continued.
 
 This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
 
-With this action, the [`didState` output field](#didstate) MUST contain properties that indicate the payload
-to be signed, as well as additional information such as a key identifier or the signing algorithm to be used.
-
 The [`didState` output field](#didstate) MUST contain a property `signingRequest` with a [Signing Request Set](#signing-request-set) data structure.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
@@ -590,12 +642,9 @@ continued.
 
 This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
 
-With this action, the [`didState` output field](#didstate) MUST contain properties that indicate the payload
-to be decrypted, as well as additional information such as a key identifier or the decryption algorithm to be used.
+The [`didState` output field](#didstate) MUST contain a property `decryptionRequest` with a [Decryption Request Set](#decryption-request-set) data structure.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
-
-The [`didState` output field](#didstate) MUST contain a property `decryptionRequest` with a [Decryption Request Set](#decryption-request-set) data structure.
 
 TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.
 
