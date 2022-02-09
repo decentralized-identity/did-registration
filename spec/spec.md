@@ -771,7 +771,7 @@ Example decryption response set containing two decryption responses:
 	"decryptionRequest1": {
 		"signature": "<-base64->"
 	},
-	"signingRequest2": {
+	"decryptionRequest2": {
 		"signature": "<-base64->"
 	}
 }
