@@ -215,8 +215,8 @@ should be created.</p>
 </ul>
 <h3 id="secret"><a class="toc-anchor" href="#secret" >§</a> <code>secret</code></h3>
 <p>This input field contains an object with DID controller keys and other secrets.</p>
-<p>In [Client-managed Secret Mode], this input field MAY contain a [Signing Response Set] and/or a
-[Decryption Response Set] as a response to a [Signing Request Set] and/or [Decryption Request Set] which may have been
+<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, this input field MAY contain a <a href="#signing-response-set" >Signing Response Set</a> and/or a
+<a href="#decryption-response-set" >Decryption Response Set</a> as a response to a <a href="#signing-request-set" >Signing Request Set</a> and/or <a href="#decryption-request-set" >Decryption Request Set</a> which may have been
 previously received by the client.</p>
 <p>This input field MAY contain a <code>verificationMethod</code> and/or <code>keys</code> property which MUST follow the same rules as in the
 <a href="#didstatesecret" ><code>didState.secret</code> output field</a>.</p>
@@ -482,7 +482,7 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain properties that indicate the payload
 to be signed, as well as additional information such as a key identifier or the signing algorithm to be used.</p>
-<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>signingRequest</code> with a [Signing Request Set] data structure.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>signingRequest</code> with a <a href="#signing-request-set" >Signing Request Set</a> data structure.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
 <p>Example:</p>
@@ -519,7 +519,7 @@ continued.</p>
 <p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain properties that indicate the payload
 to be decrypted, as well as additional information such as a key identifier or the decryption algorithm to be used.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>decryptionRequest</code> with a [Decryption Request Set] data structure.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>decryptionRequest</code> with a <a href="#decryption-request-set" >Decryption Request Set</a> data structure.</p>
 <p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -649,7 +649,7 @@ which is called the <em>decryption request</em>.</p>
 <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code> output field</a>.</p>
 <p>A decryption response set is a JSON object. Each property in that JSON object is called a <em>decryption response ID</em>, and the corresponding value MUST be a JSON object
 which is called the <em>decryption response</em>.</p>
-<p>Each <em>decryption response ID</em> MUST match a <em>decryption request ID</em> which was previously received by the client in a [Decryption Request Set](#decryption-request-set.</p>
+<p>Each <em>decryption response ID</em> MUST match a <em>decryption request ID</em> which was previously received by the client in a <a href="#decryption-request-set" >Decryption Request Set</a>.</p>
 <p>A decryption response contains the following properties:</p>
 <ul>
 <li><code>decryptedPayload</code>: The Base64-encoded byte array that represents the decrypted payload. This property is REQUIRED.</li>

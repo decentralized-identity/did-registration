@@ -195,8 +195,8 @@ Possible keys and values:
 
 This input field contains an object with DID controller keys and other secrets.
 
-In [Client-managed Secret Mode], this input field MAY contain a [Signing Response Set] and/or a
-[Decryption Response Set] as a response to a [Signing Request Set] and/or [Decryption Request Set] which may have been
+In [Client-managed Secret Mode](#client-managed-secret-mode), this input field MAY contain a [Signing Response Set](#signing-response-set) and/or a
+[Decryption Response Set](#decryption-response-set) as a response to a [Signing Request Set](#signing-request-set) and/or [Decryption Request Set](#decryption-request-set) which may have been
 previously received by the client.
 
 This input field MAY contain a `verificationMethod` and/or `keys` property which MUST follow the same rules as in the
@@ -547,7 +547,7 @@ This action is used in [Client Managed Secret Mode](#client-managed-secret-mode)
 With this action, the [`didState` output field](#didstate) MUST contain properties that indicate the payload
 to be signed, as well as additional information such as a key identifier or the signing algorithm to be used.
 
-The [`didState` output field](#didstate) MUST contain a property `signingRequest` with a [Signing Request Set] data structure.
+The [`didState` output field](#didstate) MUST contain a property `signingRequest` with a [Signing Request Set](#signing-request-set) data structure.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
 
@@ -595,7 +595,7 @@ to be decrypted, as well as additional information such as a key identifier or t
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
 
-The [`didState` output field](#didstate) MUST contain a property `decryptionRequest` with a [Decryption Request Set] data structure.
+The [`didState` output field](#didstate) MUST contain a property `decryptionRequest` with a [Decryption Request Set](#decryption-request-set) data structure.
 
 TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.
 
@@ -760,7 +760,7 @@ This data structure is used in [Client-managed Secret Mode](#client-managed-secr
 A decryption response set is a JSON object. Each property in that JSON object is called a _decryption response ID_, and the corresponding value MUST be a JSON object
 which is called the _decryption response_.
 
-Each _decryption response ID_ MUST match a _decryption request ID_ which was previously received by the client in a [Decryption Request Set](#decryption-request-set.
+Each _decryption response ID_ MUST match a _decryption request ID_ which was previously received by the client in a [Decryption Request Set](#decryption-request-set).
 
 A decryption response contains the following properties:
 
