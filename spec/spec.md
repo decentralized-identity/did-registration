@@ -562,14 +562,14 @@ Example:
 				"payload": {
 					...
 				},
-				"serializedPayload": "<-multibase->",
+				"serializedPayload": "<-base64->",
 				"kid": null,
 				"alg": "EdDSA",
 				"verificationMethod": "..." // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
 				"proofPurpose": ".." // describes the purpose of the requested signature/proof
 			},
 			"signingRequest2": {
-				"serializedPayload": "<-multibase->",
+				"serializedPayload": "<-base64->",
 				"kid": null,
 				"alg": "ES256K"
 			}
@@ -606,13 +606,13 @@ Example:
 		"action": "decryptPayload",
 		"decryptionRequest": {
 			"decryptionRequest1": {
-				"encryptedPayload": "<-multibase->",
+				"encryptedPayload": "<-base64->",
 				"kid": null,
 				"enc": "A128GCM",
 				"verificationMethod": "..." // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
 			},
 			"decryptionRequest2": {
-				"encryptedPayload": "<-multibase->",
+				"encryptedPayload": "<-base64->",
 				"kid": null,
 				"enc": "A256GCM"
 			}
