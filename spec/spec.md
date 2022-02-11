@@ -618,13 +618,13 @@ Example:
 				"payload": {
 					...
 				},
-				"serializedPayload": "<-multibase->",
+				"serializedPayload": "<-base64->",
 				"kid": "did:example:123#key-0",
 				"alg": "EdDSA",
 				"purpose": ".." // describes the purpose of the requested signature
 			},
 			"signingRequest2": {
-				"serializedPayload": "<-multibase->",
+				"serializedPayload": "<-base64->",
 				"kid": null,
 				"alg": "ES256K"
 			}
@@ -658,12 +658,12 @@ Example:
 		"action": "decryptPayload",
 		"decryptionRequest": {
 			"decryptionRequest1": {
-				"encryptedPayload": "<-multibase->",
+				"encryptedPayload": "<-base64->",
 				"kid": null,
 				"enc": "A128GCM"
 			},
 			"decryptionRequest2": {
-				"encryptedPayload": "<-multibase->",
+				"encryptedPayload": "<-base64->",
 				"kid": null,
 				"enc": "A256GCM"
 			}
