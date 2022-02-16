@@ -818,10 +818,10 @@ Example decryption response set containing two decryption responses:
 ```json
 {
 	"decryptionRequest1": {
-		"signature": "<-base64->"
+		"decryptedPayload": "<-base64->"
 	},
 	"decryptionRequest2": {
-		"signature": "<-base64->"
+		"decryptedPayload": "<-base64->"
 	}
 }
 ```
