@@ -191,12 +191,71 @@ Possible keys and values:
 * `network=mainnet`
 * ... others ...
 
+Example:
+
+```json
+{
+	"did": null,
+	"options": {
+		"network": "mainnet"
+	},
+	"secret": { ... },
+	"didDocument": { ... }
+}
+```
+
 ### `secret`
 
 This input field contains an object with DID controller keys and other secrets.
 
-If present, the structure of this input field MUST follow the same rules as the
-[`didState.secret` output field](#didstatesecret)
+This input field MAY contain a `verificationMethod` and/or `keys` property which MUST follow the same rules as in the
+[`didState.secret` output field](#didstatesecret).
+
+Example:
+
+```json
+{
+	"did": "did:example:123",
+	"options": { ... },
+	"secret": {
+		"verificationMethod": [{
+			"id": "did:example:123#key-0",
+			"type": "JsonWebKey2020",
+			"controller": "did:example:123",
+			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+			"privateKeyJwk": {
+				"kty": "EC",
+				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
+				"crv": "secp256k1",
+				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+			}
+		}]
+	},
+	"didDocument": { ... }
+}
+```
+
+In [Client-managed Secret Mode](#client-managed-secret-mode), this input field MAY also contain one or more of the following:
+* A `signingResponse` property with a [Signing Response Set](#signing-response-set) data structure as a response to a [Signing Request Set](#signing-request-set) from the DID Registrar.
+* A `decryptionResponse` property with a [Decryption Response Set](#decryption-response-set) data structure as a response to a [Decryption Request Set](#decryption-request-set) from the DID Registrar.
+
+Example:
+
+```json
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"did": null,
+	"options": { ... },
+	"secret": {
+		"signingResponse": {
+			"signingRequest1": {
+				"signature": "<-- base64 encoded -->"
+			}
+		},
+		"didDocument": { ... }
+	}
+```
 
 ### `didDocumentOperation`
 
@@ -540,12 +599,9 @@ continued.
 
 This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
 
-With this action, the [`didState` output field](#didstate) MUST contain properties that indicate the payload
-to be signed, as well as additional information such as a key identifier or the signing algorithm to be used.
+The [`didState` output field](#didstate) MUST contain a property `signingRequest` with a [Signing Request Set](#signing-request-set) data structure.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
-
-TODO: Need to specify in more detail how a DID Registrar requests signing, and how the client responds.
 
 TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.
 
@@ -563,10 +619,9 @@ Example:
 					...
 				},
 				"serializedPayload": "<-base64->",
-				"kid": null,
+				"kid": "did:example:123#key-0",
 				"alg": "EdDSA",
-				"verificationMethod": "..." // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
-				"proofPurpose": ".." // describes the purpose of the requested signature/proof
+				"purpose": ".." // describes the purpose of the requested signature
 			},
 			"signingRequest2": {
 				"serializedPayload": "<-base64->",
@@ -587,12 +642,9 @@ continued.
 
 This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
 
-With this action, the [`didState` output field](#didstate) MUST contain properties that indicate the payload
-to be decrypted, as well as additional information such as a key identifier or the decryption algorithm to be used.
+The [`didState` output field](#didstate) MUST contain a property `decryptionRequest` with a [Decryption Request Set](#decryption-request-set) data structure.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
-
-TODO: Need to specify in more detail how a DID Registrar requests decrypting, and how the client responds.
 
 TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.
 
@@ -608,8 +660,7 @@ Example:
 			"decryptionRequest1": {
 				"encryptedPayload": "<-base64->",
 				"kid": null,
-				"enc": "A128GCM",
-				"verificationMethod": "..." // could point to a verificationMethod, incl. VerifiableConditions with threshold, etc.
+				"enc": "A128GCM"
 			},
 			"decryptionRequest2": {
 				"encryptedPayload": "<-base64->",
@@ -647,6 +698,131 @@ Example:
 	},
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
+}
+```
+
+## Data Structures
+
+This specification defines a number of data structures that appear in the [input fields](#input-fields) and [output fields](#output-fields).
+
+### Signing Request Set
+
+This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the DID Registrar responds to a client request with a
+[`didState.action="signPayload"` output field](#didstateactionsignpayload).
+
+A signing request set is a JSON object. Each property name in that JSON object is called a _signing request ID_, and
+the corresponding property value MUST be a JSON object which is called the _signing request_.
+
+A signing request contains the following properties:
+
+* `payload`: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.
+* `serializedPayload`: The Base64-encoded byte array that represents the serialized payload to be signed. This property is REQUIRED.
+* `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that should be used for signing. Example value: `did:example:123#key-0`. This property is OPTIONAL.
+* `alg`: This property is interpreted as in [[spec:RFC7515]] to indicate the cryptographic algorithm to be used to sign the payload. Example values: `EdDSA`, `ES256K`, `PS256`. This property is REQUIRED.
+* `purpose`: This property indicates the specific intent of the signature. Example value: `authentication`. This property is OPTIONAL.
+
+Example signing request set containing two signing requests with IDs `signingRequest1` and `signingRequest2`:
+
+```json
+{
+	"signingRequest1": {
+		"payload": {
+			...
+		},
+		"serializedPayload": "<-base64->",
+		"kid": "did:example:123#key-0",
+		"alg": "EdDSA",
+		"purpose": ".." // describes the purpose of the requested signature
+	},
+	"signingRequest2": {
+		"serializedPayload": "<-base64->",
+		"kid": null,
+		"alg": "ES256K"
+	}
+}
+```
+
+### Signing Response Set
+
+This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the client invokes the DID Registrar again after it received a
+[`didState.action="signPayload"` output field](#didstateactionsignpayload).
+
+A signing response set is a JSON object. Each property name MUST match a _signing request ID_ which was previously received by the
+client in a [Signing Request Set](#signing-request-set). The corresponding property value MUST be a JSON object
+which is called the _signing response_.
+
+A signing response contains the following properties:
+
+* `signature`: The Base64-encoded byte array that represents the signature of a payload. This property is REQUIRED.
+
+Example signing response set containing two signing responses:
+
+```json
+{
+	"signingRequest1": {
+		"signature": "<-base64->"
+	},
+	"signingRequest2": {
+		"signature": "<-base64->"
+	}
+}
+```
+
+### Decryption Request Set
+
+This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the DID Registrar responds to a client request with a
+[`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
+
+A decryption request set is a JSON object. Each property name in that JSON object is called a _decryption request ID_, and
+the corresponding property value MUST be a JSON object which is called the _decryption request_.
+
+A decryption request contains the following properties:
+
+* `payload`: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.
+* `encryptedPayload`: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This property is REQUIRED.
+* `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that should be used for decryption. Example value: `did:example:123#key-0`. This property is OPTIONAL.
+* `enc`: This property is interpreted as in [[spec:RFC7516]] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: `A128GCM`, `A256GCM`. This property is REQUIRED.
+
+Example decryption request set containing two decryption requests with IDs `decryptionRequest1` and `decryptionRequest2`:
+
+```json
+{
+	"decryptionRequest1": {
+		"encryptedPayload": "<-base64->",
+		"kid": null,
+		"enc": "A128GCM"
+	},
+	"decryptionRequest2": {
+		"encryptedPayload": "<-base64->",
+		"kid": null,
+		"enc": "A256GCM"
+	}
+}
+```
+
+### Decryption Response Set
+
+This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the client invokes the DID Registrar again after it received a
+[`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
+
+A decryption response set is a JSON object. Each property name MUST match a _decryption request ID_ which was previously received by the
+client in a [Decryption Request Set](#decryption-request-set). The corresponding property value MUST be a JSON object
+which is called the _decryption response_.
+
+A decryption response contains the following properties:
+
+* `decryptedPayload`: The Base64-encoded byte array that represents the decrypted payload. This property is REQUIRED.
+
+Example decryption response set containing two decryption responses:
+
+```json
+{
+	"decryptionRequest1": {
+		"signature": "<-base64->"
+	},
+	"decryptionRequest2": {
+		"signature": "<-base64->"
+	}
 }
 ```
 
