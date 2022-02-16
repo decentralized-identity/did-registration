@@ -355,77 +355,6 @@ If present, the `didState.secret` output field MUST contain a JSON object with e
 
 The `didState.secret` output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.
 
-##### `didState.secret.verificationMethod`
-
-If the `didState.secret` output field contains a property `verificationMethod`, then the value of that property MUST be a
-JSON array, which MAY be empty. Each element of that JSON array MUST be a JSON object based on the verification method
-data model as defined by [[spec:DID-CORE]], with the following differences:
-
-* The `id` property is OPTIONAL.
-  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
-    associated DID document, which MAY be returned separately in the
-    [`didState.didDocument` output field](#didstatediddocument).
-  * If it is absent, then the verification method does not correspond to any verification method in the DID's
-    associated DID document. 
-* The JSON object MUST contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
-  verification relationships such as `authentication` or `assertionMethod`.
-* Instead of containing properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material,
-  the verification method contains corresponding private key material, using properties such as `privateKeyJwk` or
-  `privateKeyMultibase`.
-
-Example: 
-
-```json
-{
-	"verificationMethod": [{
-			"id": "did:example:123#key-0",
-			"type": "JsonWebKey2020",
-			"controller": "did:example:123",
-			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
-			"privateKeyJwk": {
-				"kty": "EC",
-				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
-				"crv": "secp256k1",
-				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
-				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
-			}
-		},
-		{
-			"id": "did:example:123#key-1",
-			"type": "Ed25519VerificationKey2020",
-			"controller": "did:example:123",
-			"purpose": ["authentication"],
-			"privateKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
-		}
-	]
-}
-```
-
-##### `didState.secret.keys`
-
-If the `didState.secret` output field contains a property `keys`, then it MUST be a valid JWK Set (JWKS) according to
-[[spec:RFC7517]]. The value of that property MUST be a JSON array, which MAY be empty. Each element of that JSON array
-MUST be a JWK.
-
-If a JWK in the JWKS corresponds to a verification method in the DID's associated DID document, then it
-MUST have a `kid` parameter which matches the `id` property of the corresponding verification method. The associated DID
-document MAY be returned separately in the [`didState.didDocument` output field](#didstatediddocument).
-
-Example:
-
-```json
-{
-	"seed": "bwT5J3lXaclZzMWfvNOFNr5maUHxZajj",
-	"keys": [{
-		"kid": "did:example:123#key-1",
-		"kty": "OKP",
-		"d": "YndUNUozbFhhY2xaek1XZnZOT0ZOcjVtYVVIeFphamo",
-		"crv": "Ed25519",
-		"x": "zY_7_5gb3AJ033yM9HG5D0tP_ypk0Ozr7x2vzgE279c"
-	}]
-}
-```
-
 #### `didState.didDocument`
 
 This output field contains the DID document after the DID operation has been successfully executed.
@@ -544,6 +473,8 @@ The [`didState` output field](#didstate) MAY contain additional properties that 
 This specification defines the following well-known values for the `action` property that may be used in this state:
 
 * [`didState.action="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service.
+* [`didState.action="generateVerificationMethod"`](#didstateactiongenerateverificationmethod) - Client needs to generate a new verification method.
+* [`didState.action="retrieveVerificationMethod"`](#didstateactionretrieveverificationmethod) - Client needs to retrieve an existing verification method.
 * [`didState.action="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload.
 * [`didState.action="decryptPayload"`](#didstateactiondecryptpayload) - Client needs to decrypt a payload.
 
@@ -591,6 +522,28 @@ Example:
 	"methodMetadata": { ... }
 }
 ```
+
+#### `didState.action="generateVerificationMethod"`
+
+This action indicates that the client needs to generate a new verification method, before the DID operation can be
+continued.
+
+This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
+
+TODO: uses verification method template
+
+TODO: new VM must then be included in either "secret" or "didDocument" in next request.
+
+#### `didState.action="retrieveVerificationMethod"`
+
+This action indicates that the client needs to retrieve an existing verification method, before the DID operation can be
+continued.
+
+This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
+
+TODO: uses verification method template
+
+TODO: new VM must then be included in either "secret" or "didDocument" in next request.
 
 #### `didState.action="signPayload"`
 
@@ -704,6 +657,57 @@ Example:
 ## Data Structures
 
 This specification defines a number of data structures that appear in the [input fields](#input-fields) and [output fields](#output-fields).
+
+### Verification Method Public Data
+
+This data structure is used in ...
+
+A verification method public data is a JSON object based on the verification method
+data model as defined by [[spec:DID-CORE]], with the following differences:
+
+* The `id` property is OPTIONAL.
+  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
+    associated DID document, which MAY be returned separately in the
+    [`didState.didDocument` output field](#didstatediddocument).
+  * If it is absent, then the verification method does not correspond to any verification method in the DID's
+    associated DID document.
+* The JSON object MUST contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
+  verification relationships such as `authentication` or `assertionMethod`.
+* Instead of containing properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material,
+  the verification method contains corresponding private key material, using properties such as `privateKeyJwk` or
+  `privateKeyMultibase`.
+
+Example:
+
+```json
+{
+	"verificationMethod": [{
+			"id": "did:example:123#key-0",
+			"type": "JsonWebKey2020",
+			"controller": "did:example:123",
+			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+			"privateKeyJwk": {
+				"kty": "EC",
+				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
+				"crv": "secp256k1",
+				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+			}
+		},
+		{
+			"id": "did:example:123#key-1",
+			"type": "Ed25519VerificationKey2020",
+			"controller": "did:example:123",
+			"purpose": ["authentication"],
+			"privateKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
+		}
+	]
+}
+```
+
+### Verification Method Private Data
+
+### Verification Method Template
 
 ### Signing Request Set
 
