@@ -738,7 +738,7 @@ which is called the <em>signing response</em>.</p>
 <h3 id="decryption-request-set"><a class="toc-anchor" href="#decryption-request-set" >§</a> Decryption Request Set</h3>
 <p>This data structure is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> when the DID Registrar responds to a client request with a
 <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code> output field</a>.</p>
-<p>A <strong>Decryption Request Set</strong> is a JSON object. Each property name in that JSON object is called a <em>decryption request ID</em>, and
+<p>A <strong>Decryption Request Set</strong> structure is a JSON object. Each property name in that JSON object is called a <em>decryption request ID</em>, and
 the corresponding property value MUST be a JSON object which is called the <em>decryption request</em>.</p>
 <p>A <em>decryption request</em> contains the following properties:</p>
 <ul>
@@ -764,7 +764,7 @@ the corresponding property value MUST be a JSON object which is called the <em>d
 <h3 id="decryption-response-set"><a class="toc-anchor" href="#decryption-response-set" >§</a> Decryption Response Set</h3>
 <p>This data structure is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> when the client invokes the DID Registrar again after it received a
 <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code> output field</a>.</p>
-<p>A <strong>Decryption Response Set</strong> is a JSON object. Each property name MUST match a <em>decryption request ID</em> which was previously received by the
+<p>A <strong>Decryption Response Set</strong> structure is a JSON object. Each property name MUST match a <em>decryption request ID</em> which was previously received by the
 client in a <a href="#decryption-request-set" >Decryption Request Set</a>. The corresponding property value MUST be a JSON object
 which is called the <em>decryption response</em>.</p>
 <p>A <em>decryption response</em> contains the following properties:</p>

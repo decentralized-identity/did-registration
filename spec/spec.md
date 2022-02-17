@@ -871,7 +871,7 @@ Example **Signing Response Set** containing two _signing responses_:
 This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the DID Registrar responds to a client request with a
 [`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
 
-A **Decryption Request Set** is a JSON object. Each property name in that JSON object is called a _decryption request ID_, and
+A **Decryption Request Set** structure is a JSON object. Each property name in that JSON object is called a _decryption request ID_, and
 the corresponding property value MUST be a JSON object which is called the _decryption request_.
 
 A _decryption request_ contains the following properties:
@@ -903,7 +903,7 @@ Example **Decryption Request Set** containing two _decryption requests_ with IDs
 This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the client invokes the DID Registrar again after it received a
 [`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
 
-A **Decryption Response Set** is a JSON object. Each property name MUST match a _decryption request ID_ which was previously received by the
+A **Decryption Response Set** structure is a JSON object. Each property name MUST match a _decryption request ID_ which was previously received by the
 client in a [Decryption Request Set](#decryption-request-set). The corresponding property value MUST be a JSON object
 which is called the _decryption response_.
 
