@@ -249,11 +249,44 @@ should be created.</p>
 	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
+<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this input field MAY also contain one or more of the following</p>
+<ul>
+<li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-private-data" >Verification Method Private Data</a> objects.</li>
+</ul>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-- base64 encoded -->"</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+</code></pre>
 <p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, this input field MAY also contain one or more of the following:</p>
 <ul>
+<li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-public-data" >Verification Method Public Data</a> objects.</li>
 <li>A <code>signingResponse</code> property with a <a href="#signing-response-set" >Signing Response Set</a> data structure as a response to a <a href="#signing-request-set" >Signing Request Set</a> from the DID Registrar.</li>
 <li>A <code>decryptionResponse</code> property with a <a href="#decryption-response-set" >Decryption Response Set</a> data structure as a response to a <a href="#decryption-request-set" >Decryption Request Set</a> from the DID Registrar.</li>
 </ul>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-- base64 encoded -->"</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+</code></pre>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
@@ -466,14 +499,45 @@ nonces, states, etc.?</p>
 <p>This action indicates that the client needs to generate a new verification method, before the DID operation can be
 continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
-<p>TODO: uses verification method template</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethod</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>TODO: new VM must then be included in either “secret” or “didDocument” in next request.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"1234"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"generateVerificationMethod"</span><span class="token punctuation">,</span>
+		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#key-1"</span><span class="token punctuation">,</span>
+            <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey"</span>
+		<span class="token punctuation">}</span><span class="token punctuation">]</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"1234"</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"generateVerificationMethod"</span><span class="token punctuation">,</span>
+		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+            <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"EcdsaSecp256k1VerificationKey2019"</span>
+		<span class="token punctuation">}</span><span class="token punctuation">]</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="didstateactionretrieveverificationmethod"><a class="toc-anchor" href="#didstateactionretrieveverificationmethod" >§</a> <code>didState.action=&quot;retrieveVerificationMethod&quot;</code></h4>
 <p>This action indicates that the client needs to retrieve an existing verification method, before the DID operation can be
 continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>TODO: uses verification method template</p>
-<p>TODO: new VM must then be included in either “secret” or “didDocument” in next request.</p>
+<p>TODO: retrieved VM must then be included in either “secret” or “didDocument” in next request.</p>
 <h4 id="didstateactionsignpayload"><a class="toc-anchor" href="#didstateactionsignpayload" >§</a> <code>didState.action=&quot;signPayload&quot;</code></h4>
 <p>This action indicates that the client needs to generate a signature on a payload, before the DID operation can be
 continued.</p>
@@ -563,7 +627,7 @@ properties, to explain the reason for the failure.</p>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
 <h3 id="verification-method-public-data"><a class="toc-anchor" href="#verification-method-public-data" >§</a> Verification Method Public Data</h3>
 <p>This data structure is used in …</p>
-<p>A verification method public data is a JSON object based on the verification method
+<p>A <strong>Verification Method Public Data</strong> structure is a JSON object based on the verification method
 data model as defined by [<a class="spec-reference" href="#ref:DID-CORE">DID-CORE</a>], with the following differences:</p>
 <ul>
 <li>The <code>id</code> property is OPTIONAL.
@@ -608,12 +672,24 @@ the verification method contains corresponding private key material, using prope
 </code></pre>
 <h3 id="verification-method-private-data"><a class="toc-anchor" href="#verification-method-private-data" >§</a> Verification Method Private Data</h3>
 <h3 id="verification-method-template"><a class="toc-anchor" href="#verification-method-template" >§</a> Verification Method Template</h3>
+<p>Example verification method template containing properties <code>id</code> and <code>type</code>:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#key-1"</span><span class="token punctuation">,</span>
+	<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Example verification method template containing properties <code>purpose</code> and <code>type</code>:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"EcdsaSecp256k1VerificationKey2019"</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="signing-request-set"><a class="toc-anchor" href="#signing-request-set" >§</a> Signing Request Set</h3>
 <p>This data structure is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> when the DID Registrar responds to a client request with a
 <a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code> output field</a>.</p>
-<p>A signing request set is a JSON object. Each property name in that JSON object is called a <em>signing request ID</em>, and
+<p>A <strong>Signing Request Set</strong> structure is a JSON object. Each property name in that JSON object is called a <em>signing request ID</em>, and
 the corresponding property value MUST be a JSON object which is called the <em>signing request</em>.</p>
-<p>A signing request contains the following properties:</p>
+<p>A <em>signing request</em> contains the following properties:</p>
 <ul>
 <li><code>payload</code>: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.</li>
 <li><code>serializedPayload</code>: The Base64-encoded byte array that represents the serialized payload to be signed. This property is REQUIRED.</li>
@@ -621,7 +697,7 @@ the corresponding property value MUST be a JSON object which is called the <em>s
 <li><code>alg</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7515">RFC7515</a>] to indicate the cryptographic algorithm to be used to sign the payload. Example values: <code>EdDSA</code>, <code>ES256K</code>, <code>PS256</code>. This property is REQUIRED.</li>
 <li><code>purpose</code>: This property indicates the specific intent of the signature. Example value: <code>authentication</code>. This property is OPTIONAL.</li>
 </ul>
-<p>Example signing request set containing two signing requests with IDs <code>signingRequest1</code> and <code>signingRequest2</code>:</p>
+<p>Example <strong>Signing Request Set</strong> containing two <em>signing requests</em> with IDs <code>signingRequest1</code> and <code>signingRequest2</code>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"payload"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -642,14 +718,14 @@ the corresponding property value MUST be a JSON object which is called the <em>s
 <h3 id="signing-response-set"><a class="toc-anchor" href="#signing-response-set" >§</a> Signing Response Set</h3>
 <p>This data structure is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> when the client invokes the DID Registrar again after it received a
 <a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code> output field</a>.</p>
-<p>A signing response set is a JSON object. Each property name MUST match a <em>signing request ID</em> which was previously received by the
+<p>A <strong>Signing Response Set</strong> structure is a JSON object. Each property name MUST match a <em>signing request ID</em> which was previously received by the
 client in a <a href="#signing-request-set" >Signing Request Set</a>. The corresponding property value MUST be a JSON object
 which is called the <em>signing response</em>.</p>
-<p>A signing response contains the following properties:</p>
+<p>A <em>signing response</em> contains the following properties:</p>
 <ul>
 <li><code>signature</code>: The Base64-encoded byte array that represents the signature of a payload. This property is REQUIRED.</li>
 </ul>
-<p>Example signing response set containing two signing responses:</p>
+<p>Example <strong>Signing Response Set</strong> containing two <em>signing responses</em>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span>
@@ -662,16 +738,16 @@ which is called the <em>signing response</em>.</p>
 <h3 id="decryption-request-set"><a class="toc-anchor" href="#decryption-request-set" >§</a> Decryption Request Set</h3>
 <p>This data structure is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> when the DID Registrar responds to a client request with a
 <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code> output field</a>.</p>
-<p>A decryption request set is a JSON object. Each property name in that JSON object is called a <em>decryption request ID</em>, and
+<p>A <strong>Decryption Request Set</strong> is a JSON object. Each property name in that JSON object is called a <em>decryption request ID</em>, and
 the corresponding property value MUST be a JSON object which is called the <em>decryption request</em>.</p>
-<p>A decryption request contains the following properties:</p>
+<p>A <em>decryption request</em> contains the following properties:</p>
 <ul>
 <li><code>payload</code>: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.</li>
 <li><code>encryptedPayload</code>: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This property is REQUIRED.</li>
 <li><code>kid</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>] to indicate a specific key that should be used for decryption. Example value: <code>did:example:123#key-0</code>. This property is OPTIONAL.</li>
 <li><code>enc</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7516">RFC7516</a>] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: <code>A128GCM</code>, <code>A256GCM</code>. This property is REQUIRED.</li>
 </ul>
-<p>Example decryption request set containing two decryption requests with IDs <code>decryptionRequest1</code> and <code>decryptionRequest2</code>:</p>
+<p>Example <strong>Decryption Request Set</strong> containing two <em>decryption requests</em> with IDs <code>decryptionRequest1</code> and <code>decryptionRequest2</code>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"decryptionRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"encryptedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
@@ -688,14 +764,14 @@ the corresponding property value MUST be a JSON object which is called the <em>d
 <h3 id="decryption-response-set"><a class="toc-anchor" href="#decryption-response-set" >§</a> Decryption Response Set</h3>
 <p>This data structure is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> when the client invokes the DID Registrar again after it received a
 <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code> output field</a>.</p>
-<p>A decryption response set is a JSON object. Each property name MUST match a <em>decryption request ID</em> which was previously received by the
+<p>A <strong>Decryption Response Set</strong> is a JSON object. Each property name MUST match a <em>decryption request ID</em> which was previously received by the
 client in a <a href="#decryption-request-set" >Decryption Request Set</a>. The corresponding property value MUST be a JSON object
 which is called the <em>decryption response</em>.</p>
-<p>A decryption response contains the following properties:</p>
+<p>A <em>decryption response</em> contains the following properties:</p>
 <ul>
 <li><code>decryptedPayload</code>: The Base64-encoded byte array that represents the decrypted payload. This property is REQUIRED.</li>
 </ul>
-<p>Example decryption response set containing two decryption responses:</p>
+<p>Example <strong>Decryption Response Set</strong> containing two <em>decryption responses</em>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"decryptionRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"decryptedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span>
