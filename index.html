@@ -225,18 +225,19 @@ should be created.</p>
 </code></pre>
 <h3 id="secret"><a class="toc-anchor" href="#secret" >§</a> <code>secret</code></h3>
 <p>This input field contains an object with DID controller keys and other secrets.</p>
-<p>This input field MAY contain a <code>verificationMethod</code> and/or <code>keys</code> property which MUST follow the same rules as in the
-<a href="#didstatesecret" ><code>didState.secret</code> output field</a>.</p>
+<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this input field MAY contain one or more of the following</p>
+<ul>
+<li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-private-data" >Verification Method Private Data</a> objects.</li>
+</ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
 			<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
-			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">,</span> <span class="token string">"capabilityDelegation"</span><span class="token punctuation">,</span> <span class="token string">"capabilityInvocation"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">,</span> <span class="token string">"capabilityDelegation"</span><span class="token punctuation">,</span> <span class="token string">"capabilityInvocation"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
 			<span class="token property">"privateKeyJwk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 				<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"EC"</span><span class="token punctuation">,</span>
 				<span class="token property">"d"</span><span class="token operator">:</span> <span class="token string">"-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4"</span><span class="token punctuation">,</span>
@@ -244,30 +245,12 @@ should be created.</p>
 				<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0"</span><span class="token punctuation">,</span>
 				<span class="token property">"y"</span><span class="token operator">:</span> <span class="token string">"RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"</span>
 			<span class="token punctuation">}</span>
-		<span class="token punctuation">}</span><span class="token punctuation">]</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this input field MAY also contain one or more of the following</p>
-<ul>
-<li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-private-data" >Verification Method Private Data</a> objects.</li>
-</ul>
-<p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
-	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
-	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-				<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-- base64 encoded -->"</span>
-			<span class="token punctuation">}</span>
-		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, this input field MAY also contain one or more of the following:</p>
+<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, this input field MAY contain one or more of the following:</p>
 <ul>
 <li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-public-data" >Verification Method Public Data</a> objects.</li>
 <li>A <code>signingResponse</code> property with a <a href="#signing-response-set" >Signing Response Set</a> data structure as a response to a <a href="#signing-request-set" >Signing Request Set</a> from the DID Registrar.</li>
@@ -275,6 +258,26 @@ should be created.</p>
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
+			<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">,</span> <span class="token string">"capabilityDelegation"</span><span class="token punctuation">,</span> <span class="token string">"capabilityInvocation"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+			<span class="token property">"publicKeyJwk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"EC"</span><span class="token punctuation">,</span>
+				<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"secp256k1"</span><span class="token punctuation">,</span>
+				<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0"</span><span class="token punctuation">,</span>
+				<span class="token property">"y"</span><span class="token operator">:</span> <span class="token string">"RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -293,9 +296,9 @@ should be created.</p>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-				<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-- base64 encoded -->"</span>
+		<span class="token property">"decryptionResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"decryptionRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				<span class="token property">"decryptedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-- base64 encoded -->"</span>
 			<span class="token punctuation">}</span>
 		<span class="token punctuation">}</span><span class="token punctuation">,</span>
 		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
@@ -626,7 +629,15 @@ properties, to explain the reason for the failure.</p>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
 <h3 id="verification-method-public-data"><a class="toc-anchor" href="#verification-method-public-data" >§</a> Verification Method Public Data</h3>
-<p>This data structure is used in …</p>
+<p>This data structure is used when public data about a verification method is exchanged between the client and the DID Registrar, for example:</p>
+<ul>
+<li>In <a href="#client-managed-secret-mode" >Internal Secret Mode</a>, when …</li>
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, when …</li>
+<li>When the client invokes the DID Registrar again after it received a
+<a href="#didstateactiongenerateverificationmethod" ><code>didState.action=&quot;generateVerificationMethod&quot;</code> output field</a>.</li>
+<li>When the client invokes the DID Registrar again after it received a
+<a href="#didstateactionretrieveverificationmethod" ><code>didState.action=&quot;retrieveVerificationMethod&quot;</code> output field</a>.</li>
+</ul>
 <p>A <strong>Verification Method Public Data</strong> structure is a JSON object based on the verification method
 data model as defined by [<a class="spec-reference" href="#ref:DID-CORE">DID-CORE</a>], with the following differences:</p>
 <ul>
@@ -639,46 +650,98 @@ associated DID document, which MAY be returned separately in the
 associated DID document.</li>
 </ul>
 </li>
-<li>The JSON object MUST contain a property <code>purpose</code>, and the value of that property MUST be a JSON array, which contains
+<li>The JSON object MAY contain a property <code>purpose</code>, and the value of that property MUST be a JSON array, which contains
 verification relationships such as <code>authentication</code> or <code>assertionMethod</code>.</li>
+</ul>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
+	<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
+	<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">,</span> <span class="token string">"capabilityDelegation"</span><span class="token punctuation">,</span> <span class="token string">"capabilityInvocation"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"publicKeyJwk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"EC"</span><span class="token punctuation">,</span>
+		<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"secp256k1"</span><span class="token punctuation">,</span>
+		<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0"</span><span class="token punctuation">,</span>
+		<span class="token property">"y"</span><span class="token operator">:</span> <span class="token string">"RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2020"</span><span class="token punctuation">,</span>
+	<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"publicKeyMultibase"</span><span class="token operator">:</span> <span class="token string">"z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="verification-method-private-data"><a class="toc-anchor" href="#verification-method-private-data" >§</a> Verification Method Private Data</h3>
+<p>This data structure is used when private data about a verification method is exchanged between the client and the DID Registrar, for example:</p>
+<ul>
+<li>In <a href="#client-managed-secret-mode" >Internal Secret Mode</a>, when …</li>
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, when …</li>
+<li>When the client invokes the DID Registrar again after it received a
+<a href="#didstateactiongenerateverificationmethod" ><code>didState.action=&quot;generateVerificationMethod&quot;</code> output field</a>.</li>
+<li>When the client invokes the DID Registrar again after it received a
+<a href="#didstateactionretrieveverificationmethod" ><code>didState.action=&quot;retrieveVerificationMethod&quot;</code> output field</a>.</li>
+</ul>
+<p>A <strong>Verification Method Private Data</strong> structure is a JSON object based on the <a href="#verification-method-public-data" >Verification Method Public Data</a>
+structure, with the following difference:</p>
+<ul>
 <li>Instead of containing properties such as <code>publicKeyJwk</code> or <code>publicKeyMultibase</code> for expressing verification material,
 the verification method contains corresponding private key material, using properties such as <code>privateKeyJwk</code> or
 <code>privateKeyMultibase</code>.</li>
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
-			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
-			<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
-			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">,</span> <span class="token string">"capabilityDelegation"</span><span class="token punctuation">,</span> <span class="token string">"capabilityInvocation"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-			<span class="token property">"privateKeyJwk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-				<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"EC"</span><span class="token punctuation">,</span>
-				<span class="token property">"d"</span><span class="token operator">:</span> <span class="token string">"-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4"</span><span class="token punctuation">,</span>
-				<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"secp256k1"</span><span class="token punctuation">,</span>
-				<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0"</span><span class="token punctuation">,</span>
-				<span class="token property">"y"</span><span class="token operator">:</span> <span class="token string">"RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"</span>
-			<span class="token punctuation">}</span>
-		<span class="token punctuation">}</span><span class="token punctuation">,</span>
-		<span class="token punctuation">{</span>
-			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-1"</span><span class="token punctuation">,</span>
-			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2020"</span><span class="token punctuation">,</span>
-			<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
-			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-			<span class="token property">"privateKeyMultibase"</span><span class="token operator">:</span> <span class="token string">"z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"</span>
-		<span class="token punctuation">}</span>
-	<span class="token punctuation">]</span>
+	<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
+	<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
+	<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">,</span> <span class="token string">"capabilityDelegation"</span><span class="token punctuation">,</span> <span class="token string">"capabilityInvocation"</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"privateKeyJwk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"EC"</span><span class="token punctuation">,</span>
+		<span class="token property">"d"</span><span class="token operator">:</span> <span class="token string">"-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4"</span><span class="token punctuation">,</span>
+		<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"secp256k1"</span><span class="token punctuation">,</span>
+		<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0"</span><span class="token punctuation">,</span>
+		<span class="token property">"y"</span><span class="token operator">:</span> <span class="token string">"RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"</span>
+	<span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h3 id="verification-method-private-data"><a class="toc-anchor" href="#verification-method-private-data" >§</a> Verification Method Private Data</h3>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2020"</span><span class="token punctuation">,</span>
+	<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"privateKeyMultibase"</span><span class="token operator">:</span> <span class="token string">"z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h3 id="verification-method-template"><a class="toc-anchor" href="#verification-method-template" >§</a> Verification Method Template</h3>
-<p>Example verification method template containing properties <code>id</code> and <code>type</code>:</p>
+<p>This data structure is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> when the DID Registrar responds to a client request with a
+<a href="#didstateactiongenerateverificationmethod" ><code>didState.action=&quot;generateVerificationMethod&quot;</code> output field</a> or a
+<a href="#didstateactionretrieveverificationmethod" ><code>didState.action=&quot;retrieveVerificationMethod&quot;</code> output field</a>.</p>
+<p>A <strong>Verification Method Template</strong> structure is a JSON object based on the verification method
+data model as defined by [<a class="spec-reference" href="#ref:DID-CORE">DID-CORE</a>], with the following differences:</p>
+<ul>
+<li>The <code>id</code> property is OPTIONAL.
+<ul>
+<li>If it is present, its value MUST match the <code>id</code> property of the corresponding verification method in the DID’s
+associated DID document, which MAY be returned separately in the
+<a href="#didstatediddocument" ><code>didState.didDocument</code> output field</a>.</li>
+<li>If it is absent, then the verification method does not correspond to any verification method in the DID’s
+associated DID document.</li>
+</ul>
+</li>
+<li>The JSON object MAY contain a property <code>purpose</code>, and the value of that property MUST be a JSON array, which contains
+verification relationships such as <code>authentication</code> or <code>assertionMethod</code>.</li>
+<li>The JSON object does not contain properties such as <code>publicKeyJwk</code> or <code>publicKeyMultibase</code> for expressing verification material.</li>
+</ul>
+<p>Example <strong>Verification Method Template</strong> containing properties <code>id</code> and <code>type</code>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#key-1"</span><span class="token punctuation">,</span>
 	<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey"</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>Example verification method template containing properties <code>purpose</code> and <code>type</code>:</p>
+<p>Example <strong>Verification Method Template</strong> containing properties <code>purpose</code> and <code>type</code>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 	<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"EcdsaSecp256k1VerificationKey2019"</span>

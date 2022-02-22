@@ -208,21 +208,20 @@ Example:
 
 This input field contains an object with DID controller keys and other secrets.
 
-This input field MAY contain a `verificationMethod` and/or `keys` property which MUST follow the same rules as in the
-[`didState.secret` output field](#didstatesecret).
+In [Internal Secret Mode](#internal-secret-mode), this input field MAY contain one or more of the following
+* A `verificationMethod` property with a JSON array containing one or more [Verification Method Private Data](#verification-method-private-data) objects.
 
 Example:
 
 ```json
 {
-	"did": "did:example:123",
+	"did": null,
 	"options": { ... },
 	"secret": {
 		"verificationMethod": [{
-			"id": "did:example:123#key-0",
 			"type": "JsonWebKey2020",
 			"controller": "did:example:123",
-			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+			"purpose": [ "authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation" ],
 			"privateKeyJwk": {
 				"kty": "EC",
 				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
@@ -230,33 +229,13 @@ Example:
 				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
 				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
 			}
-		}]
-	},
-	"didDocument": { ... }
+		}],
+		"didDocument": { ... }
+	}
 }
 ```
 
-In [Internal Secret Mode](#internal-secret-mode), this input field MAY also contain one or more of the following
-* A `verificationMethod` property with a JSON array containing one or more [Verification Method Private Data](#verification-method-private-data) objects.
-
-Example:
-
-```json
-{
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
-	"did": null,
-	"options": { ... },
-	"secret": {
-		"signingResponse": {
-			"signingRequest1": {
-				"signature": "<-- base64 encoded -->"
-			}
-		},
-		"didDocument": { ... }
-	}
-```
-
-In [Client-managed Secret Mode](#client-managed-secret-mode), this input field MAY also contain one or more of the following:
+In [Client-managed Secret Mode](#client-managed-secret-mode), this input field MAY contain one or more of the following:
 * A `verificationMethod` property with a JSON array containing one or more [Verification Method Public Data](#verification-method-public-data) objects.
 * A `signingResponse` property with a [Signing Response Set](#signing-response-set) data structure as a response to a [Signing Request Set](#signing-request-set) from the DID Registrar.
 * A `decryptionResponse` property with a [Decryption Response Set](#decryption-response-set) data structure as a response to a [Decryption Request Set](#decryption-request-set) from the DID Registrar.
@@ -265,6 +244,29 @@ Example:
 
 ```json
 {
+	"did": null,
+	"options": { ... },
+	"secret": {
+		"verificationMethod": [{
+			"type": "JsonWebKey2020",
+			"controller": "did:example:123",
+			"purpose": [ "authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation" ],
+			"publicKeyJwk": {
+				"kty": "EC",
+				"crv": "secp256k1",
+				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+			}
+		}],
+		"didDocument": { ... }
+	}
+}
+```
+
+Example:
+
+```json
+{
 	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"did": null,
 	"options": { ... },
@@ -286,9 +288,9 @@ Example:
 	"did": null,
 	"options": { ... },
 	"secret": {
-		"signingResponse": {
-			"signingRequest1": {
-				"signature": "<-- base64 encoded -->"
+		"decryptionResponse": {
+			"decryptionRequest1": {
+				"decryptedPayload": "<-- base64 encoded -->"
 			}
 		},
 		"didDocument": { ... }
@@ -736,7 +738,13 @@ This specification defines a number of data structures that appear in the [input
 
 ### Verification Method Public Data
 
-This data structure is used in ...
+This data structure is used when public data about a verification method is exchanged between the client and the DID Registrar, for example:
+- In [Internal Secret Mode](#client-managed-secret-mode), when ...
+- In [Client-managed Secret Mode](#client-managed-secret-mode), when ...
+- When the client invokes the DID Registrar again after it received a
+  [`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod).
+- When the client invokes the DID Registrar again after it received a
+  [`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
 
 A **Verification Method Public Data** structure is a JSON object based on the verification method
 data model as defined by [[spec:DID-CORE]], with the following differences:
@@ -747,8 +755,50 @@ data model as defined by [[spec:DID-CORE]], with the following differences:
     [`didState.didDocument` output field](#didstatediddocument).
   * If it is absent, then the verification method does not correspond to any verification method in the DID's
     associated DID document.
-* The JSON object MUST contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
+* The JSON object MAY contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
   verification relationships such as `authentication` or `assertionMethod`.
+
+Example:
+
+```json
+{
+	"id": "did:example:123#key-0",
+	"type": "JsonWebKey2020",
+	"controller": "did:example:123",
+	"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+	"publicKeyJwk": {
+		"kty": "EC",
+		"crv": "secp256k1",
+		"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+		"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+	}
+}
+```
+
+Example:
+
+```json
+{
+	"type": "Ed25519VerificationKey2020",
+	"controller": "did:example:123",
+	"purpose": ["recovery"],
+	"publicKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
+}
+```
+
+### Verification Method Private Data
+
+This data structure is used when private data about a verification method is exchanged between the client and the DID Registrar, for example:
+- In [Internal Secret Mode](#client-managed-secret-mode), when ...
+- In [Client-managed Secret Mode](#client-managed-secret-mode), when ...
+- When the client invokes the DID Registrar again after it received a
+  [`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod).
+- When the client invokes the DID Registrar again after it received a
+  [`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
+
+A **Verification Method Private Data** structure is a JSON object based on the [Verification Method Public Data](#verification-method-public-data)
+structure, with the following difference:
+
 * Instead of containing properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material,
   the verification method contains corresponding private key material, using properties such as `privateKeyJwk` or
   `privateKeyMultibase`.
@@ -757,35 +807,51 @@ Example:
 
 ```json
 {
-	"verificationMethod": [{
-			"id": "did:example:123#key-0",
-			"type": "JsonWebKey2020",
-			"controller": "did:example:123",
-			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
-			"privateKeyJwk": {
-				"kty": "EC",
-				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
-				"crv": "secp256k1",
-				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
-				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
-			}
-		},
-		{
-			"id": "did:example:123#key-1",
-			"type": "Ed25519VerificationKey2020",
-			"controller": "did:example:123",
-			"purpose": ["authentication"],
-			"privateKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
-		}
-	]
+	"id": "did:example:123#key-0",
+	"type": "JsonWebKey2020",
+	"controller": "did:example:123",
+	"purpose": [ "authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation" ],
+	"privateKeyJwk": {
+		"kty": "EC",
+		"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
+		"crv": "secp256k1",
+		"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+		"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+	}
 }
 ```
 
-### Verification Method Private Data
+Example:
+
+```json
+{
+	"type": "Ed25519VerificationKey2020",
+	"controller": "did:example:123",
+	"purpose": ["recovery"],
+	"privateKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
+}
+```
 
 ### Verification Method Template
 
-Example verification method template containing properties `id` and `type`:
+This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the DID Registrar responds to a client request with a
+[`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod) or a
+[`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
+
+A **Verification Method Template** structure is a JSON object based on the verification method
+data model as defined by [[spec:DID-CORE]], with the following differences:
+
+* The `id` property is OPTIONAL.
+  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
+    associated DID document, which MAY be returned separately in the
+    [`didState.didDocument` output field](#didstatediddocument).
+  * If it is absent, then the verification method does not correspond to any verification method in the DID's
+    associated DID document.
+* The JSON object MAY contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
+  verification relationships such as `authentication` or `assertionMethod`.
+* The JSON object does not contain properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material.
+
+Example **Verification Method Template** containing properties `id` and `type`:
 
 ```json
 {
@@ -794,7 +860,7 @@ Example verification method template containing properties `id` and `type`:
 }
 ```
 
-Example verification method template containing properties `purpose` and `type`:
+Example **Verification Method Template** containing properties `purpose` and `type`:
 
 ```json
 {
