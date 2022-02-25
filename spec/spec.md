@@ -619,7 +619,7 @@ Example:
 	"didState": {
 		"state": "action",
 		"action": "redirect",
-        "redirectUrl" : "https://..."
+		"redirectUrl" : "https://..."
 	},
 	"registrarMetadata": { ... },
 	"methodMetadata": { ... }
@@ -649,7 +649,7 @@ Example:
 		"action": "generateVerificationMethod",
 		"verificationMethod": [{
 			"id": "#key-1",
-            "type": "Ed25519VerificationKey"
+			"type": "Ed25519VerificationKey"
 		}]
 	},
 	"didRegistrationMetadata": {},
@@ -667,7 +667,7 @@ Example:
 		"action": "generateVerificationMethod",
 		"verificationMethod": [{
 			"purpose": ["recovery"],
-            "type": "EcdsaSecp256k1VerificationKey2019"
+			"type": "EcdsaSecp256k1VerificationKey2019"
 		}]
 	},
 	"didRegistrationMetadata": {},
@@ -698,7 +698,7 @@ Example:
 		"action": "retrieveVerificationMethod",
 		"verificationMethod": [{
 			"id": "#key-1",
-            "type": "Ed25519VerificationKey"
+			"type": "Ed25519VerificationKey"
 		}]
 	},
 	"didRegistrationMetadata": {},
@@ -716,7 +716,7 @@ Example:
 		"action": "retrieveVerificationMethod",
 		"verificationMethod": [{
 			"purpose": ["recovery"],
-            "type": "EcdsaSecp256k1VerificationKey2019"
+			"type": "EcdsaSecp256k1VerificationKey2019"
 		}]
 	},
 	"didRegistrationMetadata": {},
