@@ -643,7 +643,7 @@ Example:
 
 ```json
 {
-	"jobId": "1234",
+	"jobId": null,
 	"didState": {
 		"state": "action",
 		"action": "generateVerificationMethod",
@@ -661,7 +661,7 @@ Example:
 
 ```json
 {
-	"jobId": "1234",
+	"jobId": null,
 	"didState": {
 		"state": "action",
 		"action": "generateVerificationMethod",
@@ -692,7 +692,7 @@ Example:
 
 ```json
 {
-	"jobId": "1234",
+	"jobId": null,
 	"didState": {
 		"state": "action",
 		"action": "retrieveVerificationMethod",
@@ -710,7 +710,7 @@ Example:
 
 ```json
 {
-	"jobId": "1234",
+	"jobId": null,
 	"didState": {
 		"state": "action",
 		"action": "retrieveVerificationMethod",
