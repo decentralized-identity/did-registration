@@ -558,7 +558,7 @@ nonces, states, etc.?</p>
 <p>This action indicates that the client needs to generate a new verification method, before the DID operation can be
 continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
-<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethod</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>TODO: Generated VM must then be included in either “secret” or “didDocument” in next request.</p>
 <p>Example:</p>
@@ -567,7 +567,7 @@ continued.</p>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"generateVerificationMethod"</span><span class="token punctuation">,</span>
-		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"verificationMethodTemplate"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#key-1"</span><span class="token punctuation">,</span>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey"</span>
 		<span class="token punctuation">}</span><span class="token punctuation">]</span>
@@ -582,7 +582,7 @@ continued.</p>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"generateVerificationMethod"</span><span class="token punctuation">,</span>
-		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"verificationMethodTemplate"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"EcdsaSecp256k1VerificationKey2019"</span>
 		<span class="token punctuation">}</span><span class="token punctuation">]</span>
@@ -595,7 +595,7 @@ continued.</p>
 <p>This action indicates that the client needs to retrieve an existing verification method, before the DID operation can be
 continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
-<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethod</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>TODO: Retrieved VM must then be included in either “secret” or “didDocument” in next request.</p>
 <p>Example:</p>
@@ -604,7 +604,7 @@ continued.</p>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"retrieveVerificationMethod"</span><span class="token punctuation">,</span>
-		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"verificationMethodTemplate"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#key-1"</span><span class="token punctuation">,</span>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey"</span>
 		<span class="token punctuation">}</span><span class="token punctuation">]</span>
@@ -619,7 +619,7 @@ continued.</p>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"retrieveVerificationMethod"</span><span class="token punctuation">,</span>
-		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"verificationMethodTemplate"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"EcdsaSecp256k1VerificationKey2019"</span>
 		<span class="token punctuation">}</span><span class="token punctuation">]</span>

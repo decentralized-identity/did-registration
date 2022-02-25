@@ -633,7 +633,7 @@ continued.
 
 This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
 
-The [`didState` output field](#didstate) MUST contain a property `verificationMethod` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
+The [`didState` output field](#didstate) MUST contain a property `verificationMethodTemplate` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
 
@@ -647,7 +647,7 @@ Example:
 	"didState": {
 		"state": "action",
 		"action": "generateVerificationMethod",
-		"verificationMethod": [{
+		"verificationMethodTemplate": [{
 			"id": "#key-1",
 			"type": "Ed25519VerificationKey"
 		}]
@@ -665,7 +665,7 @@ Example:
 	"didState": {
 		"state": "action",
 		"action": "generateVerificationMethod",
-		"verificationMethod": [{
+		"verificationMethodTemplate": [{
 			"purpose": ["recovery"],
 			"type": "EcdsaSecp256k1VerificationKey2019"
 		}]
@@ -682,7 +682,7 @@ continued.
 
 This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
 
-The [`didState` output field](#didstate) MUST contain a property `verificationMethod` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
+The [`didState` output field](#didstate) MUST contain a property `verificationMethodTemplate` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
 
@@ -696,7 +696,7 @@ Example:
 	"didState": {
 		"state": "action",
 		"action": "retrieveVerificationMethod",
-		"verificationMethod": [{
+		"verificationMethodTemplate": [{
 			"id": "#key-1",
 			"type": "Ed25519VerificationKey"
 		}]
@@ -714,7 +714,7 @@ Example:
 	"didState": {
 		"state": "action",
 		"action": "retrieveVerificationMethod",
-		"verificationMethod": [{
+		"verificationMethodTemplate": [{
 			"purpose": ["recovery"],
 			"type": "EcdsaSecp256k1VerificationKey2019"
 		}]
