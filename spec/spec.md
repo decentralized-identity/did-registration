@@ -268,6 +268,9 @@ If it is absent or has a null value, it is implied to have a value of `"setDidDo
 
 For the [`deactivate()` function](#deactivate), this input field MUST be absent.
 
+This input field MUST contain either a single string value, or a JSON array of string values (if multiple
+DID document operations should be performed).
+
 This specification defines several standard values for this operation. Individual DID methods MAY specify other
 ways of executing an [`update()` function](#update).
 
@@ -277,6 +280,73 @@ Possible values:
 - `"addToDidDocument"`: The [`didDocument` input field](#didDocument) contains properties to be added to the current DID document of the DID after the DID operation is executed.
 - `"removeFromDidDocument"`: The [`didDocument` input field](#didDocument) contains properties to be removed from the current DID document of the DID after the DID operation is executed.
 - ... other DID method-specific DID document operations ...
+
+Example:
+
+```json
+{
+	"options": {
+		"network": "mainnet"
+	},
+	"didDocumentOperation": "setDidDocument",
+	"didDocument": {
+		"@context": [
+			"https://www.w3.org/ns/did/v1",
+			"https://w3id.org/security/suites/jws-2020/v1"
+		],
+		"id": "did:example:123",
+		"verificationMethod": [{
+			"id": "did:example:123#key-1",
+			"type": "JsonWebKey2020",
+			"controller": "did:example:123",
+			"publicKeyJwk": {
+				"kty": "OKP",
+				"crv": "Ed25519",
+				"x": "VCpo2LMLhn6iWku8MKvSLg2ZAoC-nlOyPVQaO3FxVeQ"
+			}
+		}]
+	}
+}
+```
+
+Example:
+
+```json
+{
+	"options": {
+		"network": "mainnet"
+	},
+	"didDocumentOperation": "addToDidDocument",
+	"didDocument": {
+		"verificationMethod": [{
+			"id": "did:example:123#key-2",
+			"type": "JsonWebKey2020",
+			"controller": "did:example:123",
+			"publicKeyJwk": {
+				"kty": "OKP",
+				"crv": "Ed25519",
+				"x": "eylT8wroHZUY8Qv6tlMYQWFe88U0Mi5_lI8eud9xgPg"
+			}
+		}]
+	}
+}
+```
+
+Example:
+
+```json
+{
+	"options": {
+		"network": "mainnet"
+	},
+	"didDocumentOperation": "removeFromDidDocument",
+	"didDocument": {
+		"verificationMethod": [{
+			"id": "did:example:123#key-1"
+		}]
+	}
+}
+```
 
 Note that some of the above update operations can be internally transformed into others, e.g.:
 
@@ -292,8 +362,11 @@ transformation between them.
 
 ### `didDocument`
 
-This input field contains either a complete DID document, or an incremental change (diff) to a DID document, depending
-on the value of the [`didDocumentOperation` input field](#diddocumentoperation).
+This input field contains either a complete DID document, or incremental changes in a DID document,
+depending on the value of the [`didDocumentOperation` input field](#diddocumentoperation).
+
+This input field MUST contain either a single JSON object value, or a JSON array of JSON object values (if multiple
+DID document operations should be performed).
 
 For the [`deactivate()` function](#deactivate), this input field is absent.
 
