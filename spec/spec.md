@@ -587,8 +587,8 @@ Example:
 		"action": "redirect",
         "redirectUrl" : "https://..."
 	},
-	"registrarMetadata": { ... },
-	"methodMetadata": { ... }
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
 }
 ```
 
