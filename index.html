@@ -141,7 +141,7 @@ etc. MUST be used.</p>
 and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
 example, if a <code>create()</code> operation is executed, then a subsequent <code>update()</code> or <code>deactivate()</code> operation will
 be able to use existing DID controller keys stored in the DID Registrar.</p>
-<p>TODO: Mention potential import/export of keys, and how this could relate to other specs such as Universal Wallet or WebKMS.</p>
+<p>TODO: Mention potential import/export of keys, and how this could relate to other specs such as <a path-0="w3c-ccg.github.io"path-1="universal-wallet-interop-spec"path-2=""href="https://w3c-ccg.github.io/universal-wallet-interop-spec/" >Universal Wallet</a> or <a path-0="w3c-ccg.github.io"path-1="webkms"path-2=""href="https://w3c-ccg.github.io/webkms/" >WebKMS</a> or the <a path-0="w3c.github.io"path-1="webcrypto"path-2="#subtlecrypto-interface"href="https://w3c.github.io/webcrypto/#subtlecrypto-interface" >WebCrypto API</a>.</p>
 <h4 id="secretreturning-option"><a class="toc-anchor" href="#secretreturning-option" >§</a> secretReturning Option</h4>
 <p>If the secretReturning option is set to <code>true</code>, then the DID Registrar will return generated DID controller keys
 to the client.</p>
@@ -160,7 +160,7 @@ with option <code>secretStoring=true</code> can be simulated by building a “wr
 <h3 id="external-secret-mode"><a class="toc-anchor" href="#external-secret-mode" >§</a> External Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it has a way
 of accessing an external wallet in order to perform cryptographic operations such as generating signatures.</p>
-<p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
+<p>TODO: Mention how this could relate to other specs such as <a path-0="w3c-ccg.github.io"path-1="universal-wallet-interop-spec"path-2=""href="https://w3c-ccg.github.io/universal-wallet-interop-spec/" >Universal Wallet</a> or <a path-0="w3c-ccg.github.io"path-1="webkms"path-2=""href="https://w3c-ccg.github.io/webkms/" >WebKMS</a> or the <a path-0="w3c.github.io"path-1="webcrypto"path-2="#subtlecrypto-interface"href="https://w3c.github.io/webcrypto/#subtlecrypto-interface" >WebCrypto API</a>.</p>
 <img alt="Diagram showing External Secret Mode" src="images/diagram-mode-external-secret.png">
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
@@ -550,8 +550,8 @@ nonces, states, etc.?</p>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"redirect"</span><span class="token punctuation">,</span>
 		<span class="token property">"redirectUrl"</span> <span class="token operator">:</span> <span class="token string">"https://..."</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"registrarMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"methodMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h4 id="didstateactiongenerateverificationmethod"><a class="toc-anchor" href="#didstateactiongenerateverificationmethod" >§</a> <code>didState.action=&quot;generateVerificationMethod&quot;</code></h4>
@@ -634,7 +634,7 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>signingRequest</code> with a <a href="#signing-request-set" >Signing Request Set</a> data structure.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
+<p>TODO: Mention how this could relate to other specs such as <a path-0="w3c-ccg.github.io"path-1="universal-wallet-interop-spec"path-2=""href="https://w3c-ccg.github.io/universal-wallet-interop-spec/" >Universal Wallet</a> or <a path-0="w3c-ccg.github.io"path-1="webkms"path-2=""href="https://w3c-ccg.github.io/webkms/" >WebKMS</a> or the <a path-0="w3c.github.io"path-1="webcrypto"path-2="#subtlecrypto-interface"href="https://w3c.github.io/webcrypto/#subtlecrypto-interface" >WebCrypto API</a>.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"1234"</span><span class="token punctuation">,</span>
@@ -668,7 +668,7 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>decryptionRequest</code> with a <a href="#decryption-request-set" >Decryption Request Set</a> data structure.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<p>TODO: Mention how this could relate to other specs such as Universal Wallet or WebKMS.</p>
+<p>TODO: Mention how this could relate to other specs such as <a path-0="w3c-ccg.github.io"path-1="universal-wallet-interop-spec"path-2=""href="https://w3c-ccg.github.io/universal-wallet-interop-spec/" >Universal Wallet</a> or <a path-0="w3c-ccg.github.io"path-1="webkms"path-2=""href="https://w3c-ccg.github.io/webkms/" >WebKMS</a> or the <a path-0="w3c.github.io"path-1="webcrypto"path-2="#subtlecrypto-interface"href="https://w3c.github.io/webcrypto/#subtlecrypto-interface" >WebCrypto API</a>.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"1234"</span><span class="token punctuation">,</span>
