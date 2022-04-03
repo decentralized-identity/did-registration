@@ -208,18 +208,18 @@ Example:
 
 This input field contains an object with DID controller keys and other secrets.
 
-This input field MAY contain a `verificationMethod` and/or `keys` property which MUST follow the same rules as in the
-[`didState.secret` output field](#didstatesecret).
+In [Internal Secret Mode](#internal-secret-mode), this input field MAY contain one or more of the following:
+
+* A `verificationMethod` property with a JSON array containing one or more [Verification Method Private Data](#verification-method-private-data) objects.
 
 Example:
 
 ```json
 {
-	"did": "did:example:123",
+	"did": null,
 	"options": { ... },
 	"secret": {
 		"verificationMethod": [{
-			"id": "did:example:123#key-0",
 			"type": "JsonWebKey2020",
 			"controller": "did:example:123",
 			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
@@ -236,9 +236,34 @@ Example:
 }
 ```
 
-In [Client-managed Secret Mode](#client-managed-secret-mode), this input field MAY also contain one or more of the following:
+In [Client-managed Secret Mode](#client-managed-secret-mode), this input field MAY contain one or more of the following:
+
+* A `verificationMethod` property with a JSON array containing one or more [Verification Method Public Data](#verification-method-public-data) objects.
 * A `signingResponse` property with a [Signing Response Set](#signing-response-set) data structure as a response to a [Signing Request Set](#signing-request-set) from the DID Registrar.
 * A `decryptionResponse` property with a [Decryption Response Set](#decryption-response-set) data structure as a response to a [Decryption Request Set](#decryption-request-set) from the DID Registrar.
+
+Example:
+
+```json
+{
+	"did": null,
+	"options": { ... },
+	"secret": {
+		"verificationMethod": [{
+			"type": "JsonWebKey2020",
+			"controller": "did:example:123",
+			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+			"publicKeyJwk": {
+				"kty": "EC",
+				"crv": "secp256k1",
+				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+			}
+		}]
+	},
+	"didDocument": { ... }
+}
+```
 
 Example:
 
@@ -252,9 +277,28 @@ Example:
 			"signingRequest1": {
 				"signature": "<-- base64 encoded -->"
 			}
-		},
-		"didDocument": { ... }
-	}
+		}
+	},
+	"didDocument": { ... }
+}
+```
+
+Example:
+
+```json
+{
+	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"did": null,
+	"options": { ... },
+	"secret": {
+		"decryptionResponse": {
+			"decryptionRequest1": {
+				"decryptedPayload": "<-- base64 encoded -->"
+			}
+		}
+	},
+	"didDocument": { ... }
+}
 ```
 
 ### `didDocumentOperation`
@@ -402,7 +446,7 @@ is finished, failed, or if a longer-running "job" has been created that requires
 This specification defines four well-known values for this property: `finished`, `failed`, `action`, `wait`. These
 values are further explained in [States](#states).
 
-The following diagram illustrates the use of the `didState.state` and `jobId` output fields.
+The following diagram illustrates the use of the [`didState.state` output field](#didstatestate) and [`jobId` output field](#jobid) output fields.
 
 ![Diagram showing the flow and states of DID operations](images/diagram-flow.png)
 
@@ -423,81 +467,73 @@ This output field contains an object with DID controller keys and other secrets.
 It MUST be present if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode) and the
 [`secretReturning` option](#secretreturning-option) is set to `true`, and MUST NOT be present otherwise.
 
-If present, the `didState.secret` output field MUST contain a JSON object with either a property `verificationMethod`, or
-`keys`, or both.
+In [Internal Secret Mode](#internal-secret-mode), this output field MAY contain one or more of the following:
 
-The `didState.secret` output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.
-
-##### `didState.secret.verificationMethod`
-
-If the `didState.secret` output field contains a property `verificationMethod`, then the value of that property MUST be a
-JSON array, which MAY be empty. Each element of that JSON array MUST be a JSON object based on the verification method
-data model as defined by [[spec:DID-CORE]], with the following differences:
-
-* The `id` property is OPTIONAL.
-  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
-    associated DID document, which MAY be returned separately in the
-    [`didState.didDocument` output field](#didstatediddocument).
-  * If it is absent, then the verification method does not correspond to any verification method in the DID's
-    associated DID document. 
-* The JSON object MUST contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
-  verification relationships such as `authentication` or `assertionMethod`.
-* Instead of containing properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material,
-  the verification method contains corresponding private key material, using properties such as `privateKeyJwk` or
-  `privateKeyMultibase`.
-
-Example: 
-
-```json
-{
-	"verificationMethod": [{
-			"id": "did:example:123#key-0",
-			"type": "JsonWebKey2020",
-			"controller": "did:example:123",
-			"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
-			"privateKeyJwk": {
-				"kty": "EC",
-				"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
-				"crv": "secp256k1",
-				"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
-				"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
-			}
-		},
-		{
-			"id": "did:example:123#key-1",
-			"type": "Ed25519VerificationKey2020",
-			"controller": "did:example:123",
-			"purpose": ["authentication"],
-			"privateKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
-		}
-	]
-}
-```
-
-##### `didState.secret.keys`
-
-If the `didState.secret` output field contains a property `keys`, then it MUST be a valid JWK Set (JWKS) according to
-[[spec:RFC7517]]. The value of that property MUST be a JSON array, which MAY be empty. Each element of that JSON array
-MUST be a JWK.
-
-If a JWK in the JWKS corresponds to a verification method in the DID's associated DID document, then it
-MUST have a `kid` parameter which matches the `id` property of the corresponding verification method. The associated DID
-document MAY be returned separately in the [`didState.didDocument` output field](#didstatediddocument).
+* A `verificationMethod` property with a JSON array containing one or more [Verification Method Private Data](#verification-method-private-data) objects.
 
 Example:
 
 ```json
 {
-	"seed": "bwT5J3lXaclZzMWfvNOFNr5maUHxZajj",
-	"keys": [{
-		"kid": "did:example:123#key-1",
-		"kty": "OKP",
-		"d": "YndUNUozbFhhY2xaek1XZnZOT0ZOcjVtYVVIeFphamo",
-		"crv": "Ed25519",
-		"x": "zY_7_5gb3AJ033yM9HG5D0tP_ypk0Ozr7x2vzgE279c"
-	}]
+	"jobId": null,
+	"didState": {
+		"state": "finished",
+		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"secret": {
+			"verificationMethod": [{
+				"type": "JsonWebKey2020",
+				"controller": "did:example:123",
+				"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+				"privateKeyJwk": {
+					"kty": "EC",
+					"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
+					"crv": "secp256k1",
+					"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+					"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+				}
+			}]
+		},
+		"didDocument": { ... }
+	},
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
 }
 ```
+
+In [Client-managed Secret Mode](#client-managed-secret-mode), this output field MAY contain one or more of the following:
+
+* A `verificationMethod` property with a JSON array containing one or more [Verification Method Public Data](#verification-method-public-data) objects.
+
+Example:
+
+```json
+
+{
+	"jobId": null,
+	"didState": {
+		"state": "finished",
+		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"secret": {
+			"verificationMethod": [{
+				"type": "JsonWebKey2020",
+				"controller": "did:example:123",
+				"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+				"publicKeyJwk": {
+					"kty": "EC",
+					"crv": "secp256k1",
+					"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+					"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+				}
+			}]
+		},
+		"didDocument": { ... }
+	},
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
+
+The `didState.secret` output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.
 
 #### `didState.didDocument`
 
@@ -561,11 +597,7 @@ Example:
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
-		"secret": {
-			"keys": [{
-				...
-			}]
-		},
+		"secret": { ... },
 		"didDocument": { ... }
 	},
 	"didRegistrationMetadata": { ... },
@@ -617,6 +649,8 @@ The [`didState` output field](#didstate) MAY contain additional properties that 
 This specification defines the following well-known values for the `action` property that may be used in this state:
 
 * [`didState.action="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service.
+* [`didState.action="generateVerificationMethod"`](#didstateactiongenerateverificationmethod) - Client needs to generate a new verification method.
+* [`didState.action="retrieveVerificationMethod"`](#didstateactionretrieveverificationmethod) - Client needs to retrieve an existing verification method.
 * [`didState.action="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload.
 * [`didState.action="decryptPayload"`](#didstateactiondecryptpayload) - Client needs to decrypt a payload.
 
@@ -658,10 +692,108 @@ Example:
 	"didState": {
 		"state": "action",
 		"action": "redirect",
-        "redirectUrl" : "https://..."
+		"redirectUrl" : "https://..."
 	},
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
+}
+```
+
+#### `didState.action="generateVerificationMethod"`
+
+This action indicates that the client needs to generate a new verification method, before the DID operation can be
+continued.
+
+This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
+
+The [`didState` output field](#didstate) MUST contain a property `verificationMethodTemplate` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
+
+The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
+
+TODO: Generated VM must then be included in either "secret" or "didDocument" in next request.
+
+Example:
+
+```json
+{
+	"jobId": null,
+	"didState": {
+		"state": "action",
+		"action": "generateVerificationMethod",
+		"verificationMethodTemplate": [{
+			"id": "#key-1",
+			"type": "Ed25519VerificationKey"
+		}]
+	},
+	"didRegistrationMetadata": {},
+	"didDocumentMetadata": {}
+}
+```
+
+Example:
+
+```json
+{
+	"jobId": null,
+	"didState": {
+		"state": "action",
+		"action": "generateVerificationMethod",
+		"verificationMethodTemplate": [{
+			"purpose": ["recovery"],
+			"type": "EcdsaSecp256k1VerificationKey2019"
+		}]
+	},
+	"didRegistrationMetadata": {},
+	"didDocumentMetadata": {}
+}
+```
+
+#### `didState.action="retrieveVerificationMethod"`
+
+This action indicates that the client needs to retrieve an existing verification method, before the DID operation can be
+continued.
+
+This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
+
+The [`didState` output field](#didstate) MUST contain a property `verificationMethodTemplate` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
+
+The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
+
+TODO: Retrieved VM must then be included in either "secret" or "didDocument" in next request.
+
+Example:
+
+```json
+{
+	"jobId": null,
+	"didState": {
+		"state": "action",
+		"action": "retrieveVerificationMethod",
+		"verificationMethodTemplate": [{
+			"id": "#key-1",
+			"type": "Ed25519VerificationKey"
+		}]
+	},
+	"didRegistrationMetadata": {},
+	"didDocumentMetadata": {}
+}
+```
+
+Example:
+
+```json
+{
+	"jobId": null,
+	"didState": {
+		"state": "action",
+		"action": "retrieveVerificationMethod",
+		"verificationMethodTemplate": [{
+			"purpose": ["recovery"],
+			"type": "EcdsaSecp256k1VerificationKey2019"
+		}]
+	},
+	"didRegistrationMetadata": {},
+	"didDocumentMetadata": {}
 }
 ```
 
@@ -778,15 +910,152 @@ Example:
 
 This specification defines a number of data structures that appear in the [input fields](#input-fields) and [output fields](#output-fields).
 
+### Verification Method Public Data
+
+This data structure is used when public data about a verification method is exchanged between the client and the DID Registrar, as follows:
+
+- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`secret` input field](#secret),
+  when the client invokes the DID Registrar again after it received a [`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod)
+  or a [`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
+- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.secret` output field](#didstatesecret),
+  when the DID Registrar responds to a client request.
+
+A **Verification Method Public Data** structure is a JSON object based on the verification method
+data model as defined by [[spec:DID-CORE]], with the following differences:
+
+* The `id` property is OPTIONAL.
+  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
+    associated DID document, which MAY be returned separately in the
+    [`didState.didDocument` output field](#didstatediddocument).
+  * If it is absent, then the verification method does not correspond to any verification method in the DID's
+    associated DID document.
+* The JSON object MAY contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
+  verification relationships such as `authentication` or `assertionMethod`.
+
+Example:
+
+```json
+{
+	"id": "did:example:123#key-0",
+	"type": "JsonWebKey2020",
+	"controller": "did:example:123",
+	"purpose": ["authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation"],
+	"publicKeyJwk": {
+		"kty": "EC",
+		"crv": "secp256k1",
+		"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+		"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+	}
+}
+```
+
+Example:
+
+```json
+{
+	"type": "Ed25519VerificationKey2020",
+	"controller": "did:example:123",
+	"purpose": ["recovery"],
+	"publicKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
+}
+```
+
+### Verification Method Private Data
+
+This data structure is used when private data about a verification method is exchanged between the client and the DID Registrar, as follows:
+
+- In [Internal Secret Mode](#internal-secret-mode) inside the [`secret` input field](#secret),
+  when the client invokes the DID Registrar again after it received a [`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod)
+  or a [`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
+- In [Internal Secret Mode](#internal-secret-mode) inside the [`didState.secret` output field](#didstatesecret),
+  when the DID Registrar responds to a client request.
+
+A **Verification Method Private Data** structure is a JSON object based on the [Verification Method Public Data](#verification-method-public-data)
+structure, with the following difference:
+
+* Instead of containing properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material,
+  the verification method contains corresponding private key material, using properties such as `privateKeyJwk` or
+  `privateKeyMultibase`.
+
+Example:
+
+```json
+{
+	"id": "did:example:123#key-0",
+	"type": "JsonWebKey2020",
+	"controller": "did:example:123",
+	"purpose": [ "authentication", "assertionMethod", "capabilityDelegation", "capabilityInvocation" ],
+	"privateKeyJwk": {
+		"kty": "EC",
+		"d": "-s-PwFdfgcdBPTDbJwZuiAFHCuI8r9vR13OGHo14--4",
+		"crv": "secp256k1",
+		"x": "htusHse5FMBnT_4266kn9T2yMmjDllwWvVSc_I2-WZ0",
+		"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
+	}
+}
+```
+
+Example:
+
+```json
+{
+	"type": "Ed25519VerificationKey2020",
+	"controller": "did:example:123",
+	"purpose": ["recovery"],
+	"privateKeyMultibase": "z5TVraf9itbKXrRvt2DSS95Gw4vqU3CHAdetoufdcKazA"
+}
+```
+
+### Verification Method Template
+
+This data structure is used as follows:
+
+- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.state` output field](#didstatestate),
+  when the DID Registrar responds to a client request with a [`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod)
+  or a [`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
+
+A **Verification Method Template** structure is a JSON object based on the verification method
+data model as defined by [[spec:DID-CORE]], with the following differences:
+
+* The `id` property is OPTIONAL.
+  * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
+    associated DID document, which MAY be returned separately in the
+    [`didState.didDocument` output field](#didstatediddocument).
+  * If it is absent, then the verification method does not correspond to any verification method in the DID's
+    associated DID document.
+* The JSON object MAY contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
+  verification relationships such as `authentication` or `assertionMethod`.
+* The JSON object does not contain properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material.
+
+Example **Verification Method Template** containing properties `id` and `type`:
+
+```json
+{
+	"id": "#key-1",
+	"type": "Ed25519VerificationKey"
+}
+```
+
+Example **Verification Method Template** containing properties `purpose` and `type`:
+
+```json
+{
+	"purpose": ["recovery"],
+	"type": "EcdsaSecp256k1VerificationKey2019"
+}
+```
+
 ### Signing Request Set
 
-This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the DID Registrar responds to a client request with a
-[`didState.action="signPayload"` output field](#didstateactionsignpayload).
+This data structure is used as follows:
+
+- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.state` output field](#didstatestate),
+  when the DID Registrar responds to a client request with a [`didState.action="signPayload"` output field](#didstateactionsignpayload).
 
 A **Signing Request Set** structure is a JSON object. Each property name in that JSON object is called a _signing request ID_, and
-the corresponding property value MUST be a JSON object which is called the _signing request_.
+the corresponding property value MUST be a JSON object which is called the **Signing Request**.
 
-A _signing request_ contains the following properties:
+A **Signing Request** contains the following properties:
 
 * `payload`: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.
 * `serializedPayload`: The Base64-encoded byte array that represents the serialized payload to be signed. This property is REQUIRED.
@@ -794,7 +1063,7 @@ A _signing request_ contains the following properties:
 * `alg`: This property is interpreted as in [[spec:RFC7515]] to indicate the cryptographic algorithm to be used to sign the payload. Example values: `EdDSA`, `ES256K`, `PS256`. This property is REQUIRED.
 * `purpose`: This property indicates the specific intent of the signature. Example value: `authentication`. This property is OPTIONAL.
 
-Example **Signing Request Set** containing two _signing requests_ with IDs `signingRequest1` and `signingRequest2`:
+Example **Signing Request Set** containing two **Signing Requests** with IDs `signingRequest1` and `signingRequest2`:
 
 ```json
 {
@@ -817,18 +1086,20 @@ Example **Signing Request Set** containing two _signing requests_ with IDs `sign
 
 ### Signing Response Set
 
-This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the client invokes the DID Registrar again after it received a
-[`didState.action="signPayload"` output field](#didstateactionsignpayload).
+This data structure is used as follows:
+
+- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`secret` input field](#secret),
+  when the client invokes the DID Registrar again after it received a [`didState.action="signPayload"` output field](#didstateactionsignpayload).
 
 A **Signing Response Set** structure is a JSON object. Each property name MUST match a _signing request ID_ which was previously received by the
 client in a [Signing Request Set](#signing-request-set). The corresponding property value MUST be a JSON object
-which is called the _signing response_.
+which is called the **Signing Response**.
 
-A _signing response_ contains the following properties:
+A **Signing Response** contains the following properties:
 
 * `signature`: The Base64-encoded byte array that represents the signature of a payload. This property is REQUIRED.
 
-Example **Signing Response Set** containing two _signing responses_:
+Example **Signing Response Set** containing two **Signing Responses**:
 
 ```json
 {
@@ -843,20 +1114,22 @@ Example **Signing Response Set** containing two _signing responses_:
 
 ### Decryption Request Set
 
-This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the DID Registrar responds to a client request with a
-[`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
+This data structure is used as follows:
+
+- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.state` output field](#didstatestate),
+  when the DID Registrar responds to a client request with a [`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
 
 A **Decryption Request Set** structure is a JSON object. Each property name in that JSON object is called a _decryption request ID_, and
-the corresponding property value MUST be a JSON object which is called the _decryption request_.
+the corresponding property value MUST be a JSON object which is called the **Decryption Request**.
 
-A _decryption request_ contains the following properties:
+A **Decryption Request** contains the following properties:
 
 * `payload`: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.
 * `encryptedPayload`: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This property is REQUIRED.
 * `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that should be used for decryption. Example value: `did:example:123#key-0`. This property is OPTIONAL.
 * `enc`: This property is interpreted as in [[spec:RFC7516]] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: `A128GCM`, `A256GCM`. This property is REQUIRED.
 
-Example **Decryption Request Set** containing two _decryption requests_ with IDs `decryptionRequest1` and `decryptionRequest2`:
+Example **Decryption Request Set** containing two **Decryption Requests** with IDs `decryptionRequest1` and `decryptionRequest2`:
 
 ```json
 {
@@ -875,18 +1148,20 @@ Example **Decryption Request Set** containing two _decryption requests_ with IDs
 
 ### Decryption Response Set
 
-This data structure is used in [Client-managed Secret Mode](#client-managed-secret-mode) when the client invokes the DID Registrar again after it received a
-[`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
+This data structure is used as follows:
+
+- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`secret` input field](#secret), 
+  when the client invokes the DID Registrar again after it received a [`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
 
 A **Decryption Response Set** structure is a JSON object. Each property name MUST match a _decryption request ID_ which was previously received by the
 client in a [Decryption Request Set](#decryption-request-set). The corresponding property value MUST be a JSON object
-which is called the _decryption response_.
+which is called the **Decryption Response**.
 
-A _decryption response_ contains the following properties:
+A **Decryption Response** contains the following properties:
 
 * `decryptedPayload`: The Base64-encoded byte array that represents the decrypted payload. This property is REQUIRED.
 
-Example **Decryption Response Set** containing two _decryption responses_:
+Example **Decryption Response Set** containing two **Decryption Responses**:
 
 ```json
 {
