@@ -722,7 +722,7 @@ Example:
 		"action": "generateVerificationMethod",
 		"verificationMethodTemplate": [{
 			"id": "#key-1",
-			"type": "Ed25519VerificationKey"
+			"type": "Ed25519VerificationKey2018"
 		}]
 	},
 	"didRegistrationMetadata": {},
@@ -771,7 +771,7 @@ Example:
 		"action": "retrieveVerificationMethod",
 		"verificationMethodTemplate": [{
 			"id": "#key-1",
-			"type": "Ed25519VerificationKey"
+			"type": "Ed25519VerificationKey2018"
 		}]
 	},
 	"didRegistrationMetadata": {},
@@ -1032,7 +1032,7 @@ Example **Verification Method Template** containing properties `id` and `type`:
 ```json
 {
 	"id": "#key-1",
-	"type": "Ed25519VerificationKey"
+	"type": "Ed25519VerificationKey2018"
 }
 ```
 
