@@ -330,8 +330,8 @@ Example:
 	"options": {
 		"network": "mainnet"
 	},
-	"didDocumentOperation": "setDidDocument",
-	"didDocument": {
+	"didDocumentOperation": ["setDidDocument"],
+	"didDocument": [{
 		"@context": [
 			"https://www.w3.org/ns/did/v1",
 			"https://w3id.org/security/suites/jws-2020/v1"
@@ -347,7 +347,7 @@ Example:
 				"x": "VCpo2LMLhn6iWku8MKvSLg2ZAoC-nlOyPVQaO3FxVeQ"
 			}
 		}]
-	}
+	}]
 }
 ```
 
