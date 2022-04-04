@@ -305,15 +305,13 @@ Example:
 
 This input field indicates which update operation should be applied to a DID's associated DID document.
 
-For the [`create()` function](#create), this input field MUST be absent, and is implied to have a value of `setDidDocument`.
+For the [`create()` function](#create), this input field MUST be absent, and is implied to have a single value of `setDidDocument`.
 
-For the [`update()` function](#update), this input field is OPTIONAL.
-If it is absent or has a null value, it is implied to have a value of `"setDidDocument"`.
+For the [`update()` function](#update), this input field is OPTIONAL. If present, it MUST contain a JSON array of string
+values to indicate one or more DID document operations that should be performed.
+If it is absent, it is implied to have a single value of `"setDidDocument"`.
 
 For the [`deactivate()` function](#deactivate), this input field MUST be absent.
-
-This input field MUST contain either a single string value, or a JSON array of string values (if multiple
-DID document operations should be performed).
 
 This specification defines several standard values for this operation. Individual DID methods MAY specify other
 ways of executing an [`update()` function](#update).
@@ -360,46 +358,36 @@ Example:
 	"options": {
 		"network": "mainnet"
 	},
-	"didDocumentOperation": "addToDidDocument",
-	"didDocument": {
-		"verificationMethod": [{
-			"id": "did:example:123#key-2",
-			"type": "JsonWebKey2020",
-			"controller": "did:example:123",
-			"publicKeyJwk": {
-				"kty": "OKP",
-				"crv": "Ed25519",
-				"x": "eylT8wroHZUY8Qv6tlMYQWFe88U0Mi5_lI8eud9xgPg"
-			}
-		}]
-	}
-}
-```
-
-Example:
-
-```json
-{
-	"options": {
-		"network": "mainnet"
-	},
-	"didDocumentOperation": "removeFromDidDocument",
-	"didDocument": {
-		"verificationMethod": [{
-			"id": "did:example:123#key-1"
-		}]
-	}
+	"didDocumentOperation": ["addToDidDocument", "removeFromDidDocument"],
+	"didDocument": [{
+			"verificationMethod": [{
+				"id": "did:example:123#key-1"
+			}]
+		},
+		{
+			"verificationMethod": [{
+				"id": "did:example:123#key-2",
+				"type": "JsonWebKey2020",
+				"controller": "did:example:123",
+				"publicKeyJwk": {
+					"kty": "OKP",
+					"crv": "Ed25519",
+					"x": "eylT8wroHZUY8Qv6tlMYQWFe88U0Mi5_lI8eud9xgPg"
+				}
+			}]
+		}
+	]
 }
 ```
 
 Note that some of the above update operations can be internally transformed into others, e.g.:
 
-- If the update operation is `"setDidDocument"`, then it may be transformed into either `"addToDidDocument"`
-  or `"removeFromDidDocument"`, by first resolving the current DID document, and then calculating an incremental
-  change (diff) between the resolved DID document and the value of the [`didDocument` input field](#didDocument).
+- If the update operation is `"setDidDocument"`, then it may be transformed into a combination of `"addToDidDocument"`
+  and `"removeFromDidDocument"`, by first resolving the current DID document, and then calculating incremental
+  changes (diffs) between the resolved DID document and the value of the [`didDocument` input field](#didDocument).
 - If the update operation is either `"addToDidDocument"` or `"removeFromDidDocument"`, then it may be transformed
   into `"setDidDocument"`, by first resolving the current DID document, and then calculating the updated complete
-  DID document after applying the incremental change (diff) in the [`didDocument` input field](#didDocument).
+  DID document after applying the incremental changes (diffs) in the [`didDocument` input field](#didDocument).
 
 A DID Registrar may or may not support certain update operations, and it may or may not support internal
 transformation between them.
@@ -409,10 +397,11 @@ transformation between them.
 This input field contains either a complete DID document, or incremental changes in a DID document,
 depending on the value of the [`didDocumentOperation` input field](#diddocumentoperation).
 
-This input field MUST contain either a single JSON object value, or a JSON array of JSON object values (if multiple
-DID document operations should be performed).
+For the [`create()` function](#create), this input field MUST contain a single JSON object value.
 
-For the [`deactivate()` function](#deactivate), this input field is absent.
+For the [`update()` function](#update), this input field is OPTIONAL. If present, it MUST contain a JSON array of JSON object values.
+
+For the [`deactivate()` function](#deactivate), this input field MUST be absent.
 
 ## Output Fields
 

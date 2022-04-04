@@ -308,12 +308,11 @@ should be created.</p>
 </code></pre>
 <h3 id="diddocumentoperation"><a class="toc-anchor" href="#diddocumentoperation" >§</a> <code>didDocumentOperation</code></h3>
 <p>This input field indicates which update operation should be applied to a DID’s associated DID document.</p>
-<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be absent, and is implied to have a value of <code>setDidDocument</code>.</p>
-<p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL.
-If it is absent or has a null value, it is implied to have a value of <code>&quot;setDidDocument&quot;</code>.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be absent, and is implied to have a single value of <code>setDidDocument</code>.</p>
+<p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL. If present, it MUST contain a JSON array of string
+values to indicate one or more DID document operations that should be performed.
+If it is absent, it is implied to have a single value of <code>&quot;setDidDocument&quot;</code>.</p>
 <p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
-<p>This input field MUST contain either a single string value, or a JSON array of string values (if multiple
-DID document operations should be performed).</p>
 <p>This specification defines several standard values for this operation. Individual DID methods MAY specify other
 ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 <p>Possible values:</p>
@@ -353,51 +352,44 @@ ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"network"</span><span class="token operator">:</span> <span class="token string">"mainnet"</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token string">"addToDidDocument"</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-2"</span><span class="token punctuation">,</span>
-			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
-			<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
-			<span class="token property">"publicKeyJwk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-				<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"OKP"</span><span class="token punctuation">,</span>
-				<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"Ed25519"</span><span class="token punctuation">,</span>
-				<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"eylT8wroHZUY8Qv6tlMYQWFe88U0Mi5_lI8eud9xgPg"</span>
-			<span class="token punctuation">}</span>
-		<span class="token punctuation">}</span><span class="token punctuation">]</span>
-	<span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"network"</span><span class="token operator">:</span> <span class="token string">"mainnet"</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token string">"removeFromDidDocument"</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-1"</span>
-		<span class="token punctuation">}</span><span class="token punctuation">]</span>
-	<span class="token punctuation">}</span>
+	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"addToDidDocument"</span><span class="token punctuation">,</span> <span class="token string">"removeFromDidDocument"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+			<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+				<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-1"</span>
+			<span class="token punctuation">}</span><span class="token punctuation">]</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token punctuation">{</span>
+			<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+				<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-2"</span><span class="token punctuation">,</span>
+				<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
+				<span class="token property">"controller"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+				<span class="token property">"publicKeyJwk"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+					<span class="token property">"kty"</span><span class="token operator">:</span> <span class="token string">"OKP"</span><span class="token punctuation">,</span>
+					<span class="token property">"crv"</span><span class="token operator">:</span> <span class="token string">"Ed25519"</span><span class="token punctuation">,</span>
+					<span class="token property">"x"</span><span class="token operator">:</span> <span class="token string">"eylT8wroHZUY8Qv6tlMYQWFe88U0Mi5_lI8eud9xgPg"</span>
+				<span class="token punctuation">}</span>
+			<span class="token punctuation">}</span><span class="token punctuation">]</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">]</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <p>Note that some of the above update operations can be internally transformed into others, e.g.:</p>
 <ul>
-<li>If the update operation is <code>&quot;setDidDocument&quot;</code>, then it may be transformed into either <code>&quot;addToDidDocument&quot;</code>
-or <code>&quot;removeFromDidDocument&quot;</code>, by first resolving the current DID document, and then calculating an incremental
-change (diff) between the resolved DID document and the value of the <a href="#didDocument" ><code>didDocument</code> input field</a>.</li>
+<li>If the update operation is <code>&quot;setDidDocument&quot;</code>, then it may be transformed into a combination of <code>&quot;addToDidDocument&quot;</code>
+and <code>&quot;removeFromDidDocument&quot;</code>, by first resolving the current DID document, and then calculating incremental
+changes (diffs) between the resolved DID document and the value of the <a href="#didDocument" ><code>didDocument</code> input field</a>.</li>
 <li>If the update operation is either <code>&quot;addToDidDocument&quot;</code> or <code>&quot;removeFromDidDocument&quot;</code>, then it may be transformed
 into <code>&quot;setDidDocument&quot;</code>, by first resolving the current DID document, and then calculating the updated complete
-DID document after applying the incremental change (diff) in the <a href="#didDocument" ><code>didDocument</code> input field</a>.</li>
+DID document after applying the incremental changes (diffs) in the <a href="#didDocument" ><code>didDocument</code> input field</a>.</li>
 </ul>
 <p>A DID Registrar may or may not support certain update operations, and it may or may not support internal
 transformation between them.</p>
 <h3 id="diddocument"><a class="toc-anchor" href="#diddocument" >§</a> <code>didDocument</code></h3>
 <p>This input field contains either a complete DID document, or incremental changes in a DID document,
 depending on the value of the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>.</p>
-<p>This input field MUST contain either a single JSON object value, or a JSON array of JSON object values (if multiple
-DID document operations should be performed).</p>
-<p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field is absent.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST contain a single JSON object value.</p>
+<p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL. If present, it MUST contain a JSON array of JSON object values.</p>
+<p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
 <h2 id="output-fields"><a class="toc-anchor" href="#output-fields" >§</a> Output Fields</h2>
 <h3 id="jobid"><a class="toc-anchor" href="#jobid" >§</a> <code>jobId</code></h3>
 <p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
