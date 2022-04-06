@@ -638,8 +638,7 @@ The [`didState` output field](#didstate) MAY contain additional properties that 
 This specification defines the following well-known values for the `action` property that may be used in this state:
 
 * [`didState.action="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service.
-* [`didState.action="generateVerificationMethod"`](#didstateactiongenerateverificationmethod) - Client needs to generate a new verification method.
-* [`didState.action="retrieveVerificationMethod"`](#didstateactionretrieveverificationmethod) - Client needs to retrieve an existing verification method.
+* [`didState.action="getVerificationMethod"`](#didstateactiongetverificationmethod) - Client needs to provide a newly generated or already existing verification method.
 * [`didState.action="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload.
 * [`didState.action="decryptPayload"`](#didstateactiondecryptpayload) - Client needs to decrypt a payload.
 
@@ -688,9 +687,9 @@ Example:
 }
 ```
 
-#### `didState.action="generateVerificationMethod"`
+#### `didState.action="getVerificationMethod"`
 
-This action indicates that the client needs to generate a new verification method, before the DID operation can be
+This action indicates that the client needs to provide a newly generated or already existing verification method, before the DID operation can be
 continued.
 
 This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
@@ -708,7 +707,7 @@ Example:
 	"jobId": null,
 	"didState": {
 		"state": "action",
-		"action": "generateVerificationMethod",
+		"action": "getVerificationMethod",
 		"verificationMethodTemplate": [{
 			"id": "#key-1",
 			"type": "Ed25519VerificationKey2018"
@@ -726,56 +725,7 @@ Example:
 	"jobId": null,
 	"didState": {
 		"state": "action",
-		"action": "generateVerificationMethod",
-		"verificationMethodTemplate": [{
-			"purpose": ["recovery"],
-			"type": "EcdsaSecp256k1VerificationKey2019"
-		}]
-	},
-	"didRegistrationMetadata": {},
-	"didDocumentMetadata": {}
-}
-```
-
-#### `didState.action="retrieveVerificationMethod"`
-
-This action indicates that the client needs to retrieve an existing verification method, before the DID operation can be
-continued.
-
-This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
-
-The [`didState` output field](#didstate) MUST contain a property `verificationMethodTemplate` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
-
-The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
-
-TODO: Retrieved VM must then be included in either "secret" or "didDocument" in next request.
-
-Example:
-
-```json
-{
-	"jobId": null,
-	"didState": {
-		"state": "action",
-		"action": "retrieveVerificationMethod",
-		"verificationMethodTemplate": [{
-			"id": "#key-1",
-			"type": "Ed25519VerificationKey2018"
-		}]
-	},
-	"didRegistrationMetadata": {},
-	"didDocumentMetadata": {}
-}
-```
-
-Example:
-
-```json
-{
-	"jobId": null,
-	"didState": {
-		"state": "action",
-		"action": "retrieveVerificationMethod",
+		"action": "getVerificationMethod",
 		"verificationMethodTemplate": [{
 			"purpose": ["recovery"],
 			"type": "EcdsaSecp256k1VerificationKey2019"
@@ -904,8 +854,7 @@ This specification defines a number of data structures that appear in the [input
 This data structure is used when public data about a verification method is exchanged between the client and the DID Registrar, as follows:
 
 - In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`secret` input field](#secret),
-  when the client invokes the DID Registrar again after it received a [`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod)
-  or a [`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
+  when the client invokes the DID Registrar again after it received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
 - In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.secret` output field](#didstatesecret),
   when the DID Registrar responds to a client request.
 
@@ -954,8 +903,7 @@ Example:
 This data structure is used when private data about a verification method is exchanged between the client and the DID Registrar, as follows:
 
 - In [Internal Secret Mode](#internal-secret-mode) inside the [`secret` input field](#secret),
-  when the client invokes the DID Registrar again after it received a [`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod)
-  or a [`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
+  when the client invokes the DID Registrar again after it received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
 - In [Internal Secret Mode](#internal-secret-mode) inside the [`didState.secret` output field](#didstatesecret),
   when the DID Registrar responds to a client request.
 
@@ -1000,8 +948,7 @@ Example:
 This data structure is used as follows:
 
 - In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.state` output field](#didstatestate),
-  when the DID Registrar responds to a client request with a [`didState.action="generateVerificationMethod"` output field](#didstateactiongenerateverificationmethod)
-  or a [`didState.action="retrieveVerificationMethod"` output field](#didstateactionretrieveverificationmethod).
+  when the DID Registrar responds to a client request with a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
 
 A **Verification Method Template** structure is a JSON object based on the verification method
 data model as defined by [[spec:DID-CORE]], with the following differences:

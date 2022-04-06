@@ -570,8 +570,7 @@ action that needs to be performed.</p>
 <p>This specification defines the following well-known values for the <code>action</code> property that may be used in this state:</p>
 <ul>
 <li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a> - Client needs to be redirected to a web page, e.g. an onboarding service.</li>
-<li><a href="#didstateactiongenerateverificationmethod" ><code>didState.action=&quot;generateVerificationMethod&quot;</code></a> - Client needs to generate a new verification method.</li>
-<li><a href="#didstateactionretrieveverificationmethod" ><code>didState.action=&quot;retrieveVerificationMethod&quot;</code></a> - Client needs to retrieve an existing verification method.</li>
+<li><a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code></a> - Client needs to provide a newly generated or already existing verification method.</li>
 <li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a> - Client needs to generate a signature on a payload.</li>
 <li><a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code></a> - Client needs to decrypt a payload.</li>
 </ul>
@@ -608,8 +607,8 @@ nonces, states, etc.?</p>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h4 id="didstateactiongenerateverificationmethod"><a class="toc-anchor" href="#didstateactiongenerateverificationmethod" >§</a> <code>didState.action=&quot;generateVerificationMethod&quot;</code></h4>
-<p>This action indicates that the client needs to generate a new verification method, before the DID operation can be
+<h4 id="didstateactiongetverificationmethod"><a class="toc-anchor" href="#didstateactiongetverificationmethod" >§</a> <code>didState.action=&quot;getVerificationMethod&quot;</code></h4>
+<p>This action indicates that the client needs to provide a newly generated or already existing verification method, before the DID operation can be
 continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
@@ -620,7 +619,7 @@ continued.</p>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
-		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"generateVerificationMethod"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"getVerificationMethod"</span><span class="token punctuation">,</span>
 		<span class="token property">"verificationMethodTemplate"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#key-1"</span><span class="token punctuation">,</span>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span>
@@ -635,44 +634,7 @@ continued.</p>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
-		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"generateVerificationMethod"</span><span class="token punctuation">,</span>
-		<span class="token property">"verificationMethodTemplate"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
-			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"EcdsaSecp256k1VerificationKey2019"</span>
-		<span class="token punctuation">}</span><span class="token punctuation">]</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<h4 id="didstateactionretrieveverificationmethod"><a class="toc-anchor" href="#didstateactionretrieveverificationmethod" >§</a> <code>didState.action=&quot;retrieveVerificationMethod&quot;</code></h4>
-<p>This action indicates that the client needs to retrieve an existing verification method, before the DID operation can be
-continued.</p>
-<p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
-<p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
-<p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<p>TODO: Retrieved VM must then be included in either “secret” or “didDocument” in next request.</p>
-<p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
-		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"retrieveVerificationMethod"</span><span class="token punctuation">,</span>
-		<span class="token property">"verificationMethodTemplate"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#key-1"</span><span class="token punctuation">,</span>
-			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span>
-		<span class="token punctuation">}</span><span class="token punctuation">]</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
-		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"retrieveVerificationMethod"</span><span class="token punctuation">,</span>
+		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"getVerificationMethod"</span><span class="token punctuation">,</span>
 		<span class="token property">"verificationMethodTemplate"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"recovery"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"EcdsaSecp256k1VerificationKey2019"</span>
@@ -773,8 +735,7 @@ properties, to explain the reason for the failure.</p>
 <p>This data structure is used when public data about a verification method is exchanged between the client and the DID Registrar, as follows:</p>
 <ul>
 <li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#secret" ><code>secret</code> input field</a>,
-when the client invokes the DID Registrar again after it received a <a href="#didstateactiongenerateverificationmethod" ><code>didState.action=&quot;generateVerificationMethod&quot;</code> output field</a>
-or a <a href="#didstateactionretrieveverificationmethod" ><code>didState.action=&quot;retrieveVerificationMethod&quot;</code> output field</a>.</li>
+when the client invokes the DID Registrar again after it received a <a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code> output field</a>.</li>
 <li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#didstatesecret" ><code>didState.secret</code> output field</a>,
 when the DID Registrar responds to a client request.</li>
 </ul>
@@ -819,8 +780,7 @@ verification relationships such as <code>authentication</code> or <code>assertio
 <p>This data structure is used when private data about a verification method is exchanged between the client and the DID Registrar, as follows:</p>
 <ul>
 <li>In <a href="#internal-secret-mode" >Internal Secret Mode</a> inside the <a href="#secret" ><code>secret</code> input field</a>,
-when the client invokes the DID Registrar again after it received a <a href="#didstateactiongenerateverificationmethod" ><code>didState.action=&quot;generateVerificationMethod&quot;</code> output field</a>
-or a <a href="#didstateactionretrieveverificationmethod" ><code>didState.action=&quot;retrieveVerificationMethod&quot;</code> output field</a>.</li>
+when the client invokes the DID Registrar again after it received a <a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code> output field</a>.</li>
 <li>In <a href="#internal-secret-mode" >Internal Secret Mode</a> inside the <a href="#didstatesecret" ><code>didState.secret</code> output field</a>,
 when the DID Registrar responds to a client request.</li>
 </ul>
@@ -858,8 +818,7 @@ the verification method contains corresponding private key material, using prope
 <p>This data structure is used as follows:</p>
 <ul>
 <li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#didstatestate" ><code>didState.state</code> output field</a>,
-when the DID Registrar responds to a client request with a <a href="#didstateactiongenerateverificationmethod" ><code>didState.action=&quot;generateVerificationMethod&quot;</code> output field</a>
-or a <a href="#didstateactionretrieveverificationmethod" ><code>didState.action=&quot;retrieveVerificationMethod&quot;</code> output field</a>.</li>
+when the DID Registrar responds to a client request with a <a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code> output field</a>.</li>
 </ul>
 <p>A <strong>Verification Method Template</strong> structure is a JSON object based on the verification method
 data model as defined by [<a class="spec-reference" href="#ref:DID-CORE">DID-CORE</a>], with the following differences:</p>
@@ -1165,8 +1124,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a>
 <ul>
 <li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a></li>
-<li><a href="#didstateactiongenerateverificationmethod" ><code>didState.action=&quot;generateVerificationMethod&quot;</code></a></li>
-<li><a href="#didstateactionretrieveverificationmethod" ><code>didState.action=&quot;retrieveVerificationMethod&quot;</code></a></li>
+<li><a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code></a></li>
 <li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a></li>
 <li><a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code></a></li>
 </ul>
