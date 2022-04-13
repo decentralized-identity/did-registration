@@ -862,7 +862,7 @@ the corresponding property value MUST be a JSON object which is called the <stro
 <li><code>serializedPayload</code>: The Base64-encoded byte array that represents the serialized payload to be signed. This property is REQUIRED.</li>
 <li><code>kid</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>] to indicate a specific key that should be used for signing. Example value: <code>did:example:123#key-0</code>. This property is OPTIONAL.</li>
 <li><code>alg</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7515">RFC7515</a>] to indicate the cryptographic algorithm to be used to sign the payload. Example values: <code>EdDSA</code>, <code>ES256K</code>, <code>PS256</code>. This property is REQUIRED.</li>
-<li><code>purpose</code>: This property indicates the specific intent of the signature. Example value: <code>authentication</code>. This property is OPTIONAL.</li>
+<li><code>purpose</code>: This property indicates the specific intent of the signing process. Example value: <code>authentication</code>. This property is OPTIONAL.</li>
 </ul>
 <p>Example <strong>Signing Request Set</strong> containing two <strong>Signing Requests</strong> with IDs <code>signingRequest1</code> and <code>signingRequest2</code>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -919,6 +919,7 @@ the corresponding property value MUST be a JSON object which is called the <stro
 <li><code>encryptedPayload</code>: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This property is REQUIRED.</li>
 <li><code>kid</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>] to indicate a specific key that should be used for decryption. Example value: <code>did:example:123#key-0</code>. This property is OPTIONAL.</li>
 <li><code>enc</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7516">RFC7516</a>] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: <code>A128GCM</code>, <code>A256GCM</code>. This property is REQUIRED.</li>
+<li><code>purpose</code>: This property indicates the specific intent of the decryption process. Example value: <code>parsing</code>. This property is OPTIONAL.</li>
 </ul>
 <p>Example <strong>Decryption Request Set</strong> containing two <strong>Decryption Requests</strong> with IDs <code>decryptionRequest1</code> and <code>decryptionRequest2</code>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>

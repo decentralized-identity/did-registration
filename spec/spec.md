@@ -997,7 +997,7 @@ A **Signing Request** contains the following properties:
 * `serializedPayload`: The Base64-encoded byte array that represents the serialized payload to be signed. This property is REQUIRED.
 * `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that should be used for signing. Example value: `did:example:123#key-0`. This property is OPTIONAL.
 * `alg`: This property is interpreted as in [[spec:RFC7515]] to indicate the cryptographic algorithm to be used to sign the payload. Example values: `EdDSA`, `ES256K`, `PS256`. This property is REQUIRED.
-* `purpose`: This property indicates the specific intent of the signature. Example value: `authentication`. This property is OPTIONAL.
+* `purpose`: This property indicates the specific intent of the signing process. Example value: `authentication`. This property is OPTIONAL.
 
 Example **Signing Request Set** containing two **Signing Requests** with IDs `signingRequest1` and `signingRequest2`:
 
@@ -1064,6 +1064,7 @@ A **Decryption Request** contains the following properties:
 * `encryptedPayload`: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This property is REQUIRED.
 * `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that should be used for decryption. Example value: `did:example:123#key-0`. This property is OPTIONAL.
 * `enc`: This property is interpreted as in [[spec:RFC7516]] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: `A128GCM`, `A256GCM`. This property is REQUIRED.
+* `purpose`: This property indicates the specific intent of the decryption process. Example value: `parsing`. This property is OPTIONAL.
 
 Example **Decryption Request Set** containing two **Decryption Requests** with IDs `decryptionRequest1` and `decryptionRequest2`:
 
