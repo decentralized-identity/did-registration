@@ -863,8 +863,7 @@ data model as defined by [[spec:DID-CORE]], with the following differences:
 
 * The `id` property is OPTIONAL.
   * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
-    associated DID document, which MAY be returned separately in the
-    [`didState.didDocument` output field](#didstatediddocument).
+    associated DID document.
   * If it is absent, then the verification method does not correspond to any verification method in the DID's
     associated DID document.
 * The JSON object MAY contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
@@ -955,8 +954,7 @@ data model as defined by [[spec:DID-CORE]], with the following differences:
 
 * The `id` property is OPTIONAL.
   * If it is present, its value MUST match the `id` property of the corresponding verification method in the DID's
-    associated DID document, which MAY be returned separately in the
-    [`didState.didDocument` output field](#didstatediddocument).
+    associated DID document.
   * If it is absent, then the verification method does not correspond to any verification method in the DID's
     associated DID document.
 * The `type` property is OPTIONAL.
