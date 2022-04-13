@@ -959,6 +959,8 @@ data model as defined by [[spec:DID-CORE]], with the following differences:
     [`didState.didDocument` output field](#didstatediddocument).
   * If it is absent, then the verification method does not correspond to any verification method in the DID's
     associated DID document.
+* The `type` property is OPTIONAL.
+* The `controller` property is OPTIONAL.
 * The JSON object MAY contain a property `purpose`, and the value of that property MUST be a JSON array, which contains
   verification relationships such as `authentication` or `assertionMethod`.
 * The JSON object does not contain properties such as `publicKeyJwk` or `publicKeyMultibase` for expressing verification material.
