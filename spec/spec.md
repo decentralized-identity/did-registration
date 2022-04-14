@@ -74,34 +74,32 @@ etc. MUST be used.
 
 This mode has two options that control how DID controller keys are handled.
 
-#### secretStoring Option
+#### storeSecrets Option
 
-If the `secretStoring` option is set to `true`, then the DID Registrar maintains an internal wallet where DIDs
+If the `storeSecrets` option is set to `true`, then the DID Registrar maintains an internal wallet where DIDs
 and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
 example, if a `create()` operation is executed, then a subsequent `update()` or `deactivate()` operation will
 be able to use existing DID controller keys stored in the DID Registrar.
 
 TODO: Mention potential import/export of keys, and how this could relate to other specs such as [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/) or [WebKMS](https://w3c-ccg.github.io/webkms/) or the [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface).
 
-#### secretReturning Option
+#### returnSecrets Option
 
-If the secretReturning option is set to `true`, then the DID Registrar will return generated DID controller keys
+If the `returnSecrets` option is set to `true`, then the DID Registrar will return generated DID controller keys
 to the client.
 
 #### Considerations
 
-The `secretStoring` and `secretReturning` options can be enabled or disabled independently. A DID Registrar
+The `storeSecrets` and `returnSecrets` options can be enabled or disabled independently. A DID Registrar
 may define default values for these options, and/or it may allow a client to set them via
 the [`options` input field](#options).
-
-If `secretReturning==false`, then the 
 
 Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
 operating in [Internal Secret Mode](#internal-secret-mode) will generate DID controller keys internally, but it will
 neither store them nor return them to a client.
 
-If a DID Registrar is configured with options `secretStoring=false` and `secretReturning=true`, then a DID Registrar
-with option `secretStoring=true` can be simulated by building a "wrapping DID Registrar" around an
+If a DID Registrar is configured with options `storeSecrets=false` and `returnSecrets=true`, then a DID Registrar
+with option `storeSecrets=true` can be simulated by building a "wrapping DID Registrar" around an
 "inner DID Registrar".
 
 <img alt="Diagram showing Internal Secret Mode" src="images/diagram-mode-internal-secret.png">
@@ -454,7 +452,7 @@ be null, and its value MUST match the [`did` input field](#did) that was used wh
 This output field contains an object with DID controller keys and other secrets.
 
 It MUST be present if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode) and the
-[`secretReturning` option](#secretreturning-option) is set to `true`, and MUST NOT be present otherwise.
+[`returnSecrets` option](#returnsecrets-option) is set to `true`, and MUST NOT be present otherwise.
 
 In [Internal Secret Mode](#internal-secret-mode), this output field MAY contain one or more of the following:
 

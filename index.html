@@ -136,25 +136,24 @@ means  that the DID Registrar is considered a highly trusted component which sho
 DID controller. If it is operated as a remotely hosted service, secure connection protocols such as TLS, DIDComm,
 etc. MUST be used.</p>
 <p>This mode has two options that control how DID controller keys are handled.</p>
-<h4 id="secretstoring-option"><a class="toc-anchor" href="#secretstoring-option" >§</a> secretStoring Option</h4>
-<p>If the <code>secretStoring</code> option is set to <code>true</code>, then the DID Registrar maintains an internal wallet where DIDs
+<h4 id="storesecrets-option"><a class="toc-anchor" href="#storesecrets-option" >§</a> storeSecrets Option</h4>
+<p>If the <code>storeSecrets</code> option is set to <code>true</code>, then the DID Registrar maintains an internal wallet where DIDs
 and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
 example, if a <code>create()</code> operation is executed, then a subsequent <code>update()</code> or <code>deactivate()</code> operation will
 be able to use existing DID controller keys stored in the DID Registrar.</p>
 <p>TODO: Mention potential import/export of keys, and how this could relate to other specs such as <a path-0="w3c-ccg.github.io"path-1="universal-wallet-interop-spec"path-2=""href="https://w3c-ccg.github.io/universal-wallet-interop-spec/" >Universal Wallet</a> or <a path-0="w3c-ccg.github.io"path-1="webkms"path-2=""href="https://w3c-ccg.github.io/webkms/" >WebKMS</a> or the <a path-0="w3c.github.io"path-1="webcrypto"path-2="#subtlecrypto-interface"href="https://w3c.github.io/webcrypto/#subtlecrypto-interface" >WebCrypto API</a>.</p>
-<h4 id="secretreturning-option"><a class="toc-anchor" href="#secretreturning-option" >§</a> secretReturning Option</h4>
-<p>If the secretReturning option is set to <code>true</code>, then the DID Registrar will return generated DID controller keys
+<h4 id="returnsecrets-option"><a class="toc-anchor" href="#returnsecrets-option" >§</a> returnSecrets Option</h4>
+<p>If the <code>returnSecrets</code> option is set to <code>true</code>, then the DID Registrar will return generated DID controller keys
 to the client.</p>
 <h4 id="considerations"><a class="toc-anchor" href="#considerations" >§</a> Considerations</h4>
-<p>The <code>secretStoring</code> and <code>secretReturning</code> options can be enabled or disabled independently. A DID Registrar
+<p>The <code>storeSecrets</code> and <code>returnSecrets</code> options can be enabled or disabled independently. A DID Registrar
 may define default values for these options, and/or it may allow a client to set them via
 the <a href="#options" ><code>options</code> input field</a>.</p>
-<p>If <code>secretReturning==false</code>, then the</p>
 <p>Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
 operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> will generate DID controller keys internally, but it will
 neither store them nor return them to a client.</p>
-<p>If a DID Registrar is configured with options <code>secretStoring=false</code> and <code>secretReturning=true</code>, then a DID Registrar
-with option <code>secretStoring=true</code> can be simulated by building a “wrapping DID Registrar” around an
+<p>If a DID Registrar is configured with options <code>storeSecrets=false</code> and <code>returnSecrets=true</code>, then a DID Registrar
+with option <code>storeSecrets=true</code> can be simulated by building a “wrapping DID Registrar” around an
 “inner DID Registrar”.</p>
 <img alt="Diagram showing Internal Secret Mode" src="images/diagram-mode-internal-secret.png">
 <h3 id="external-secret-mode"><a class="toc-anchor" href="#external-secret-mode" >§</a> External Secret Mode</h3>
@@ -422,7 +421,7 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <h4 id="didstatesecret"><a class="toc-anchor" href="#didstatesecret" >§</a> <code>didState.secret</code></h4>
 <p>This output field contains an object with DID controller keys and other secrets.</p>
 <p>It MUST be present if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> and the
-<a href="#secretreturning-option" ><code>secretReturning</code> option</a> is set to <code>true</code>, and MUST NOT be present otherwise.</p>
+<a href="#returnsecrets-option" ><code>returnSecrets</code> option</a> is set to <code>true</code>, and MUST NOT be present otherwise.</p>
 <p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this output field MAY contain one or more of the following:</p>
 <ul>
 <li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-private-data" >Verification Method Private Data</a> objects.</li>
@@ -1077,8 +1076,8 @@ https://uniregistrar.io/1.0/deactivate
 <ul>
 <li><a href="#internal-secret-mode" >Internal Secret Mode</a>
 <ul>
-<li><a href="#secretstoring-option" >secretStoring Option</a></li>
-<li><a href="#secretreturning-option" >secretReturning Option</a></li>
+<li><a href="#storesecrets-option" >storeSecrets Option</a></li>
+<li><a href="#returnsecrets-option" >returnSecrets Option</a></li>
 <li><a href="#considerations" >Considerations</a></li>
 </ul>
 </li>
