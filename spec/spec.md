@@ -127,7 +127,7 @@ TODO: Discuss how the did:ion use case fits in, where the client supplies the pu
 ### `create()`
 
 ```
-create(method, did, options, secret, didDocument) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
+create(method, options, secret, didDocument) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
 ```
 ___
 This function creates a new DID and associated DID document, according to a known DID method, using
