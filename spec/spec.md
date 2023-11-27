@@ -72,35 +72,8 @@ means  that the DID Registrar is considered a highly trusted component which sho
 DID controller. If it is operated as a remotely hosted service, secure connection protocols such as TLS, DIDComm,
 etc. MUST be used.
 
-This mode has two options that control how DID controller keys are handled.
-
-#### storeSecrets Option
-
-If the `storeSecrets` option is set to `true`, then the DID Registrar maintains an internal wallet where DIDs
-and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
-example, if a `create()` operation is executed, then a subsequent `update()` or `deactivate()` operation will
-be able to use existing DID controller keys stored in the DID Registrar.
-
-TODO: Mention potential import/export of keys, and how this could relate to other specs such as [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/) or [WebKMS](https://w3c-ccg.github.io/webkms/) or the [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface).
-
-#### returnSecrets Option
-
-If the `returnSecrets` option is set to `true`, then the DID Registrar will return generated DID controller keys
-to the client.
-
-#### Considerations
-
-The `storeSecrets` and `returnSecrets` options can be enabled or disabled independently. A DID Registrar
-may define default values for these options, and/or it may allow a client to set them via
-the [`options` input field](#options).
-
-Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
-operating in [Internal Secret Mode](#internal-secret-mode) will generate DID controller keys internally, but it will
-neither store them nor return them to a client.
-
-If a DID Registrar is configured with options `storeSecrets=false` and `returnSecrets=true`, then a DID Registrar
-with option `storeSecrets=true` can be simulated by building a "wrapping DID Registrar" around an
-"inner DID Registrar".
+This mode has two options that control how DID controller keys are handled:
+[`storeSecrets`](#storesecrets) and [`returnSecrets`](#returnsecrets).
 
 <img alt="Diagram showing Internal Secret Mode" src="images/diagram-mode-internal-secret.png">
 
@@ -119,6 +92,9 @@ In this mode, the DID Registrar does not itself have access to the secrets used 
 the client to perform cryptographic operations such as generating signatures.
 
 TODO: Discuss how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.
+
+This mode has one option that controls how DID controller keys are handled:
+[`clientSecretMode`](#clientsecretmode).
 
 <img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
 
@@ -182,12 +158,11 @@ For the [`update()` function](#update) and [`deactivate()` function](#deactivate
 ### `options`
  
 This input field contains an object with various options for the DID operation, such as the network where the DID
-should be created.
+should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
+applicable across all DID methods.
 
-Possible keys and values:
-
-* `network=mainnet`
-* ... others ...
+This specification defines four DID method-independent properties for this field: `storeSecrets`, `returnSecrets`,
+`clientSecretMode`, `requestVerificationMethod`.
 
 Example:
 
@@ -195,12 +170,56 @@ Example:
 {
 	"did": null,
 	"options": {
+        "clientSecretMode": true,
 		"network": "mainnet"
 	},
 	"secret": { ... },
 	"didDocument": { ... }
 }
 ```
+
+#### `storeSecrets`
+
+In [Internal Secret Mode](#internal-secret-mode), if the `storeSecrets` option is set to `true`, then the DID Registrar maintains an internal wallet where DIDs
+and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
+example, if a `create()` operation is executed, then a subsequent `update()` or `deactivate()` operation will
+be able to use existing DID controller keys stored in the DID Registrar.
+
+TODO: Mention potential import/export of keys, and how this could relate to other specs such as [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/) or [WebKMS](https://w3c-ccg.github.io/webkms/) or the [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface).
+
+#### `returnSecrets`
+
+In [Internal Secret Mode](#internal-secret-mode), if the `returnSecrets` option is set to `true`, then the DID Registrar will return generated DID controller keys
+to the client.
+
+#### `clientSecretMode`
+
+In [Client-managed Secret Mode](#client-managed-secret-mode), if the `clientSecretMode` option is set to `true`, then the DID Registrar will
+enable client-managed secret mode and let the client perform cryptographic operations such as generating signatures.
+
+#### `requestVerificationMethod`
+
+Normally, when creating or updating a DID, only cryptographic keys that are required by the applicable DID method itself
+are generated, in other words, keys that are needed for DID operations themselves. Depending on the DID method,
+these keys may or may not appear in the DID document.
+
+Irrespective of DID method-specific differences with regard to keys, it may sometimes be useful to add additional keys
+to a DID document. This can be done by adding a `requestVerificationMethod` option. This option MUST contain a JSON array
+containing one or more [Verification Method Template](#verification-method-template) data structures.
+
+#### Considerations
+
+The `storeSecrets` and `returnSecrets` options can be enabled or disabled independently. A DID Registrar
+may define default values for these options, and/or it may allow a client to set them via
+the [`options` input field](#options).
+
+Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
+operating in [Internal Secret Mode](#internal-secret-mode) will generate DID controller keys internally, but it will
+neither store them nor return them to a client.
+
+If a DID Registrar is configured with options `storeSecrets=false` and `returnSecrets=true`, then a DID Registrar
+with option `storeSecrets=true` can be simulated by building a "wrapping DID Registrar" around an
+"inner DID Registrar".
 
 ### `secret`
 
@@ -566,6 +585,11 @@ Possible uses of the `didDocumentMetadata` output field:
 
 * Hash values, smart contract addresses, blockchain heights, transaction numbers, etc.
 * Proofs added by a DID controller (e.g. to establish control authority).
+
+## Options
+
+The following sections explain well-defined options, which can be included in the
+[`options` input field](#options).
 
 ## States
 

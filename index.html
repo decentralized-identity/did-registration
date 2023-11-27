@@ -135,26 +135,8 @@ since they typically involve the generation and use of private keys and other se
 means  that the DID Registrar is considered a highly trusted component which should be fully under the control of a
 DID controller. If it is operated as a remotely hosted service, secure connection protocols such as TLS, DIDComm,
 etc. MUST be used.</p>
-<p>This mode has two options that control how DID controller keys are handled.</p>
-<h4 id="storesecrets-option"><a class="toc-anchor" href="#storesecrets-option" >§</a> storeSecrets Option</h4>
-<p>If the <code>storeSecrets</code> option is set to <code>true</code>, then the DID Registrar maintains an internal wallet where DIDs
-and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
-example, if a <code>create()</code> operation is executed, then a subsequent <code>update()</code> or <code>deactivate()</code> operation will
-be able to use existing DID controller keys stored in the DID Registrar.</p>
-<p>TODO: Mention potential import/export of keys, and how this could relate to other specs such as <a path-0="w3c-ccg.github.io"path-1="universal-wallet-interop-spec"path-2=""href="https://w3c-ccg.github.io/universal-wallet-interop-spec/" >Universal Wallet</a> or <a path-0="w3c-ccg.github.io"path-1="webkms"path-2=""href="https://w3c-ccg.github.io/webkms/" >WebKMS</a> or the <a path-0="w3c.github.io"path-1="webcrypto"path-2="#subtlecrypto-interface"href="https://w3c.github.io/webcrypto/#subtlecrypto-interface" >WebCrypto API</a>.</p>
-<h4 id="returnsecrets-option"><a class="toc-anchor" href="#returnsecrets-option" >§</a> returnSecrets Option</h4>
-<p>If the <code>returnSecrets</code> option is set to <code>true</code>, then the DID Registrar will return generated DID controller keys
-to the client.</p>
-<h4 id="considerations"><a class="toc-anchor" href="#considerations" >§</a> Considerations</h4>
-<p>The <code>storeSecrets</code> and <code>returnSecrets</code> options can be enabled or disabled independently. A DID Registrar
-may define default values for these options, and/or it may allow a client to set them via
-the <a href="#options" ><code>options</code> input field</a>.</p>
-<p>Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
-operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> will generate DID controller keys internally, but it will
-neither store them nor return them to a client.</p>
-<p>If a DID Registrar is configured with options <code>storeSecrets=false</code> and <code>returnSecrets=true</code>, then a DID Registrar
-with option <code>storeSecrets=true</code> can be simulated by building a “wrapping DID Registrar” around an
-“inner DID Registrar”.</p>
+<p>This mode has two options that control how DID controller keys are handled:
+<a href="#storesecrets" ><code>storeSecrets</code></a> and <a href="#returnsecrets" ><code>returnSecrets</code></a>.</p>
 <img alt="Diagram showing Internal Secret Mode" src="images/diagram-mode-internal-secret.png">
 <h3 id="external-secret-mode"><a class="toc-anchor" href="#external-secret-mode" >§</a> External Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it has a way
@@ -165,10 +147,12 @@ of accessing an external wallet in order to perform cryptographic operations suc
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
 <p>TODO: Discuss how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<p>This mode has one option that controls how DID controller keys are handled:
+<a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
 <img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
 <h2 id="operations"><a class="toc-anchor" href="#operations" >§</a> Operations</h2>
 <h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
-<pre><code>create(method, did, options, secret, didDocument) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
+<pre><code>create(method, options, secret, didDocument) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function creates a new DID and associated DID document, according to a known DID method, using
@@ -206,22 +190,50 @@ restrict how this input field is used.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST NOT be null.</p>
 <h3 id="options"><a class="toc-anchor" href="#options" >§</a> <code>options</code></h3>
 <p>This input field contains an object with various options for the DID operation, such as the network where the DID
-should be created.</p>
-<p>Possible keys and values:</p>
-<ul>
-<li><code>network=mainnet</code></li>
-<li>… others …</li>
-</ul>
+should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
+applicable across all DID methods.</p>
+<p>This specification defines four DID method-independent properties for this field: <code>storeSecrets</code>, <code>returnSecrets</code>,
+<code>clientSecretMode</code>, <code>requestVerificationMethod</code>.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"clientSecretMode"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
 		<span class="token property">"network"</span><span class="token operator">:</span> <span class="token string">"mainnet"</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
+<h4 id="storesecrets"><a class="toc-anchor" href="#storesecrets" >§</a> <code>storeSecrets</code></h4>
+<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <code>storeSecrets</code> option is set to <code>true</code>, then the DID Registrar maintains an internal wallet where DIDs
+and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
+example, if a <code>create()</code> operation is executed, then a subsequent <code>update()</code> or <code>deactivate()</code> operation will
+be able to use existing DID controller keys stored in the DID Registrar.</p>
+<p>TODO: Mention potential import/export of keys, and how this could relate to other specs such as <a path-0="w3c-ccg.github.io"path-1="universal-wallet-interop-spec"path-2=""href="https://w3c-ccg.github.io/universal-wallet-interop-spec/" >Universal Wallet</a> or <a path-0="w3c-ccg.github.io"path-1="webkms"path-2=""href="https://w3c-ccg.github.io/webkms/" >WebKMS</a> or the <a path-0="w3c.github.io"path-1="webcrypto"path-2="#subtlecrypto-interface"href="https://w3c.github.io/webcrypto/#subtlecrypto-interface" >WebCrypto API</a>.</p>
+<h4 id="returnsecrets"><a class="toc-anchor" href="#returnsecrets" >§</a> <code>returnSecrets</code></h4>
+<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <code>returnSecrets</code> option is set to <code>true</code>, then the DID Registrar will return generated DID controller keys
+to the client.</p>
+<h4 id="clientsecretmode"><a class="toc-anchor" href="#clientsecretmode" >§</a> <code>clientSecretMode</code></h4>
+<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, if the <code>clientSecretMode</code> option is set to <code>true</code>, then the DID Registrar will
+enable client-managed secret mode and let the client perform cryptographic operations such as generating signatures.</p>
+<h4 id="requestverificationmethod"><a class="toc-anchor" href="#requestverificationmethod" >§</a> <code>requestVerificationMethod</code></h4>
+<p>Normally, when creating or updating a DID, only cryptographic keys that are required by the applicable DID method itself
+are generated, in other words, keys that are needed for DID operations themselves. Depending on the DID method,
+these keys may or may not appear in the DID document.</p>
+<p>Irrespective of DID method-specific differences with regard to keys, it may sometimes be useful to add additional keys
+to a DID document. This can be done by adding a <code>requestVerificationMethod</code> option. This option MUST contain a JSON array
+containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
+<h4 id="considerations"><a class="toc-anchor" href="#considerations" >§</a> Considerations</h4>
+<p>The <code>storeSecrets</code> and <code>returnSecrets</code> options can be enabled or disabled independently. A DID Registrar
+may define default values for these options, and/or it may allow a client to set them via
+the <a href="#options" ><code>options</code> input field</a>.</p>
+<p>Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
+operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> will generate DID controller keys internally, but it will
+neither store them nor return them to a client.</p>
+<p>If a DID Registrar is configured with options <code>storeSecrets=false</code> and <code>returnSecrets=true</code>, then a DID Registrar
+with option <code>storeSecrets=true</code> can be simulated by building a “wrapping DID Registrar” around an
+“inner DID Registrar”.</p>
 <h3 id="secret"><a class="toc-anchor" href="#secret" >§</a> <code>secret</code></h3>
 <p>This input field contains an object with DID controller keys and other secrets.</p>
 <p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this input field MAY contain one or more of the following:</p>
@@ -518,6 +530,9 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <li>Hash values, smart contract addresses, blockchain heights, transaction numbers, etc.</li>
 <li>Proofs added by a DID controller (e.g. to establish control authority).</li>
 </ul>
+<h2 id="options-2"><a class="toc-anchor" href="#options-2" >§</a> Options</h2>
+<p>The following sections explain well-defined options, which can be included in the
+<a href="#options" ><code>options</code> input field</a>.</p>
 <h2 id="states"><a class="toc-anchor" href="#states" >§</a> States</h2>
 <p>The following sections explain the possible states of a DID registration process, which are returned as values of the
 <a href="#didstatestate" ><code>didState.state</code> output field</a>.</p>
@@ -1077,13 +1092,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#terminology" >Terminology</a></li>
 <li><a href="#architecture-modes" >Architecture Modes</a>
 <ul>
-<li><a href="#internal-secret-mode" >Internal Secret Mode</a>
-<ul>
-<li><a href="#storesecrets-option" >storeSecrets Option</a></li>
-<li><a href="#returnsecrets-option" >returnSecrets Option</a></li>
-<li><a href="#considerations" >Considerations</a></li>
-</ul>
-</li>
+<li><a href="#internal-secret-mode" >Internal Secret Mode</a></li>
 <li><a href="#external-secret-mode" >External Secret Mode</a></li>
 <li><a href="#client-managed-secret-mode" >Client-managed Secret Mode</a></li>
 </ul>
@@ -1099,7 +1108,15 @@ https://uniregistrar.io/1.0/deactivate
 <ul>
 <li><a href="#method" ><code>method</code></a></li>
 <li><a href="#did" ><code>did</code></a></li>
-<li><a href="#options" ><code>options</code></a></li>
+<li><a href="#options" ><code>options</code></a>
+<ul>
+<li><a href="#storesecrets" ><code>storeSecrets</code></a></li>
+<li><a href="#returnsecrets" ><code>returnSecrets</code></a></li>
+<li><a href="#clientsecretmode" ><code>clientSecretMode</code></a></li>
+<li><a href="#requestverificationmethod" ><code>requestVerificationMethod</code></a></li>
+<li><a href="#considerations" >Considerations</a></li>
+</ul>
+</li>
 <li><a href="#secret" ><code>secret</code></a></li>
 <li><a href="#diddocumentoperation" ><code>didDocumentOperation</code></a></li>
 <li><a href="#diddocument" ><code>didDocument</code></a></li>
@@ -1120,6 +1137,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#diddocumentmetadata" ><code>didDocumentMetadata</code></a></li>
 </ul>
 </li>
+<li><a href="#options-2" >Options</a></li>
 <li><a href="#states" >States</a>
 <ul>
 <li><a href="#didstatestatefinished" ><code>didState.state=&quot;finished&quot;</code></a></li>
