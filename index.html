@@ -198,7 +198,7 @@ applicable across all DID methods.</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"clientSecretMode"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+		<span class="token property">"clientSecretMode"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
 		<span class="token property">"network"</span><span class="token operator">:</span> <span class="token string">"mainnet"</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -678,13 +678,12 @@ continued.</p>
 				<span class="token punctuation">}</span><span class="token punctuation">,</span>
 				<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
 				<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
-				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span><span class="token punctuation">,</span>
-				<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">".."</span> <span class="token comment">// describes the purpose of the requested signature</span>
+				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span>
 			<span class="token punctuation">}</span><span class="token punctuation">,</span>
 			<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 				<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-				<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
-				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span>
+				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span><span class="token punctuation">,</span>
+				<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span> <span class="token comment">// describes the purpose of the requested signature</span>
 			<span class="token punctuation">}</span>
 		<span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -865,7 +864,7 @@ verification relationships such as <code>authentication</code> or <code>assertio
 <h3 id="signing-request-set"><a class="toc-anchor" href="#signing-request-set" >§</a> Signing Request Set</h3>
 <p>This data structure is used as follows:</p>
 <ul>
-<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#didstatestate" ><code>didState.state</code> output field</a>,
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>signingRequest</code> field inside the <a href="#didstatestate" ><code>didState.state</code> output field</a>,
 when the DID Registrar responds to a client request with a <a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code> output field</a>.</li>
 </ul>
 <p>A <strong>Signing Request Set</strong> structure is a JSON object. Each property name in that JSON object is called a <em>signing request ID</em>, and
@@ -880,26 +879,27 @@ the corresponding property value MUST be a JSON object which is called the <stro
 </ul>
 <p>Example <strong>Signing Request Set</strong> containing two <strong>Signing Requests</strong> with IDs <code>signingRequest1</code> and <code>signingRequest2</code>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"payload"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			...
+	<span class="token property">"signingRequest"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"payload"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+				...
+			<span class="token punctuation">}</span><span class="token punctuation">,</span>
+			<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
+			<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
+			<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span>
 		<span class="token punctuation">}</span><span class="token punctuation">,</span>
-		<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-		<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
-		<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span><span class="token punctuation">,</span>
-		<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">".."</span> <span class="token comment">// describes the purpose of the requested signature</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-		<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
-		<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span>
+		<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
+			<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span><span class="token punctuation">,</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span> <span class="token comment">// describes the purpose of the requested signature</span>
+		<span class="token punctuation">}</span>
 	<span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="signing-response-set"><a class="toc-anchor" href="#signing-response-set" >§</a> Signing Response Set</h3>
 <p>This data structure is used as follows:</p>
 <ul>
-<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#secret" ><code>secret</code> input field</a>,
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>signingResponse</code> field inside the <a href="#secret" ><code>secret</code> input field</a>,
 when the client invokes the DID Registrar again after it received a <a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code> output field</a>.</li>
 </ul>
 <p>A <strong>Signing Response Set</strong> structure is a JSON object. Each property name MUST match a <em>signing request ID</em> which was previously received by the
@@ -911,12 +911,14 @@ which is called the <strong>Signing Response</strong>.</p>
 </ul>
 <p>Example <strong>Signing Response Set</strong> containing two <strong>Signing Responses</strong>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span>
-	<span class="token punctuation">}</span>
+	<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span>
+		<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span>
+		<span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="decryption-request-set"><a class="toc-anchor" href="#decryption-request-set" >§</a> Decryption Request Set</h3>

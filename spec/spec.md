@@ -170,7 +170,7 @@ Example:
 {
 	"did": null,
 	"options": {
-        "clientSecretMode": true,
+		"clientSecretMode": true,
 		"network": "mainnet"
 	},
 	"secret": { ... },
@@ -786,13 +786,12 @@ Example:
 				},
 				"serializedPayload": "<-base64->",
 				"kid": "did:example:123#key-0",
-				"alg": "EdDSA",
-				"purpose": ".." // describes the purpose of the requested signature
+				"alg": "EdDSA"
 			},
 			"signingRequest2": {
 				"serializedPayload": "<-base64->",
-				"kid": null,
-				"alg": "ES256K"
+				"alg": "ES256K",
+				"purpose": "authentication" // describes the purpose of the requested signature
 			}
 		}
 	},
@@ -1007,7 +1006,7 @@ Example **Verification Method Template** containing properties `purpose` and `ty
 
 This data structure is used as follows:
 
-- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.state` output field](#didstatestate),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `signingRequest` field inside the [`didState.state` output field](#didstatestate),
   when the DID Registrar responds to a client request with a [`didState.action="signPayload"` output field](#didstateactionsignpayload).
 
 A **Signing Request Set** structure is a JSON object. Each property name in that JSON object is called a _signing request ID_, and
@@ -1025,19 +1024,20 @@ Example **Signing Request Set** containing two **Signing Requests** with IDs `si
 
 ```json
 {
-	"signingRequest1": {
-		"payload": {
-			...
+	"signingRequest": {
+		"signingRequest1": {
+			"payload": {
+				...
+			},
+			"serializedPayload": "<-base64->",
+			"kid": "did:example:123#key-0",
+			"alg": "EdDSA"
 		},
-		"serializedPayload": "<-base64->",
-		"kid": "did:example:123#key-0",
-		"alg": "EdDSA",
-		"purpose": ".." // describes the purpose of the requested signature
-	},
-	"signingRequest2": {
-		"serializedPayload": "<-base64->",
-		"kid": null,
-		"alg": "ES256K"
+		"signingRequest2": {
+			"serializedPayload": "<-base64->",
+			"alg": "ES256K",
+			"purpose": "authentication" // describes the purpose of the requested signature
+		}
 	}
 }
 ```
@@ -1046,7 +1046,7 @@ Example **Signing Request Set** containing two **Signing Requests** with IDs `si
 
 This data structure is used as follows:
 
-- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`secret` input field](#secret),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `signingResponse` field inside the [`secret` input field](#secret),
   when the client invokes the DID Registrar again after it received a [`didState.action="signPayload"` output field](#didstateactionsignpayload).
 
 A **Signing Response Set** structure is a JSON object. Each property name MUST match a _signing request ID_ which was previously received by the
@@ -1061,12 +1061,14 @@ Example **Signing Response Set** containing two **Signing Responses**:
 
 ```json
 {
-	"signingRequest1": {
-		"signature": "<-base64->"
-	},
-	"signingRequest2": {
-		"signature": "<-base64->"
-	}
+	"signingResponse": {
+		"signingRequest1": {
+			"signature": "<-base64->"
+		},
+		"signingRequest2": {
+			"signature": "<-base64->"
+		}
+    }
 }
 ```
 
