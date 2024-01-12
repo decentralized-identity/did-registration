@@ -292,7 +292,9 @@ Example:
 	"secret": {
 		"signingResponse": {
 			"signingRequest1": {
-				"signature": "<-- base64 encoded -->"
+				"signature": "<-- base64 encoded -->",
+				"kid": "did:example:123#key-0",
+				"alg": "EdDSA"
 			}
 		}
 	},
@@ -1056,6 +1058,9 @@ which is called the **Signing Response**.
 A **Signing Response** contains the following properties:
 
 * `signature`: The Base64-encoded byte array that represents the signature of a payload. This property is REQUIRED.
+* `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that was used for signing. Example value: `did:example:123#key-0`. This property is OPTIONAL, but SHOULD be included if an identifier for the key is known.
+* `alg`: This property is interpreted as in [[spec:RFC7515]] to indicate the cryptographic algorithm that was used to sign the payload. Example values: `EdDSA`, `ES256K`, `PS256`. This property SHOULD be included.
+* `purpose`: This property indicates the specific intent of the signing process. Example value: `authentication`. This property is OPTIONAL.
 
 Example **Signing Response Set** containing two **Signing Responses**:
 
@@ -1063,12 +1068,16 @@ Example **Signing Response Set** containing two **Signing Responses**:
 {
 	"signingResponse": {
 		"signingRequest1": {
-			"signature": "<-base64->"
+			"signature": "<-base64->",
+			"kid": "did:example:123#key-0",
+			"alg": "EdDSA"
 		},
 		"signingRequest2": {
-			"signature": "<-base64->"
+			"signature": "<-base64->",
+			"alg": "ES256K",
+			"purpose": "authentication" // describes the purpose of the requested signature
 		}
-    }
+	}
 }
 ```
 

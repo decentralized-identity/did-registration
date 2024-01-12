@@ -295,7 +295,9 @@ with option <code>storeSecrets=true</code> can be simulated by building a “wra
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 			<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-				<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-- base64 encoded -->"</span>
+				<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-- base64 encoded -->"</span><span class="token punctuation">,</span>
+				<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
+				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span>
 			<span class="token punctuation">}</span>
 		<span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -908,17 +910,24 @@ which is called the <strong>Signing Response</strong>.</p>
 <p>A <strong>Signing Response</strong> contains the following properties:</p>
 <ul>
 <li><code>signature</code>: The Base64-encoded byte array that represents the signature of a payload. This property is REQUIRED.</li>
+<li><code>kid</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>] to indicate a specific key that was used for signing. Example value: <code>did:example:123#key-0</code>. This property is OPTIONAL, but SHOULD be included if an identifier for the key is known.</li>
+<li><code>alg</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7515">RFC7515</a>] to indicate the cryptographic algorithm that was used to sign the payload. Example values: <code>EdDSA</code>, <code>ES256K</code>, <code>PS256</code>. This property SHOULD be included.</li>
+<li><code>purpose</code>: This property indicates the specific intent of the signing process. Example value: <code>authentication</code>. This property is OPTIONAL.</li>
 </ul>
 <p>Example <strong>Signing Response Set</strong> containing two <strong>Signing Responses</strong>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span>
+			<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
+			<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
+			<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span>
 		<span class="token punctuation">}</span><span class="token punctuation">,</span>
 		<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span>
+			<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
+			<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span><span class="token punctuation">,</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span> <span class="token comment">// describes the purpose of the requested signature</span>
 		<span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="decryption-request-set"><a class="toc-anchor" href="#decryption-request-set" >§</a> Decryption Request Set</h3>
