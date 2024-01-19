@@ -1,7 +1,7 @@
 DID Registration
 ================
 
-**Specification Status:** Pre-Draft
+**Specification Status:** [Draft](https://github.com/decentralized-identity/org/blob/master/work-item-lifecycle.md)
 
 **Latest Draft:**
   [identity.foundation/did-registration](https://identity.foundation/did-registration)
