@@ -161,8 +161,8 @@ This input field contains an object with various options for the DID operation, 
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
 applicable across all DID methods.
 
-This specification defines four DID method-independent properties for this field: `storeSecrets`, `returnSecrets`,
-`clientSecretMode`, `requestVerificationMethod`.
+This specification defines four DID method-independent properties for this field: `clientSecretMode`, `storeSecrets`,
+`returnSecrets`, `requestVerificationMethod`.
 
 Example:
 
@@ -178,6 +178,24 @@ Example:
 }
 ```
 
+#### `clientSecretMode`
+
+In [Client-managed Secret Mode](#client-managed-secret-mode), if the `clientSecretMode` option is set to `true`, then the DID Registrar will
+enable client-managed secret mode and let the client perform cryptographic operations such as generating signatures.
+
+Example:
+
+```json
+{
+	"did": null,
+	"options": {
+		"clientSecretMode": true
+	},
+	"secret": { ... },
+	"didDocument": { ... }
+}
+```
+
 #### `storeSecrets`
 
 In [Internal Secret Mode](#internal-secret-mode), if the `storeSecrets` option is set to `true`, then the DID Registrar maintains an internal wallet where DIDs
@@ -187,15 +205,36 @@ be able to use existing DID controller keys stored in the DID Registrar.
 
 TODO: Mention potential import/export of keys, and how this could relate to other specs such as [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/) or [WebKMS](https://w3c-ccg.github.io/webkms/) or the [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface).
 
+Example:
+
+```json
+{
+	"did": null,
+	"options": {
+		"storeSecrets": true
+	},
+	"secret": { ... },
+	"didDocument": { ... }
+}
+```
+
 #### `returnSecrets`
 
 In [Internal Secret Mode](#internal-secret-mode), if the `returnSecrets` option is set to `true`, then the DID Registrar will return generated DID controller keys
 to the client.
 
-#### `clientSecretMode`
+Example:
 
-In [Client-managed Secret Mode](#client-managed-secret-mode), if the `clientSecretMode` option is set to `true`, then the DID Registrar will
-enable client-managed secret mode and let the client perform cryptographic operations such as generating signatures.
+```json
+{
+	"did": null,
+	"options": {
+		"returnSecrets": true
+	},
+	"secret": { ... },
+	"didDocument": { ... }
+}
+```
 
 #### `requestVerificationMethod`
 
@@ -206,6 +245,21 @@ these keys may or may not appear in the DID document.
 Irrespective of DID method-specific differences with regard to keys, it may sometimes be useful to add additional keys
 to a DID document. This can be done by adding a `requestVerificationMethod` option. This option MUST contain a JSON array
 containing one or more [Verification Method Template](#verification-method-template) data structures.
+
+```json
+{
+	"did": null,
+	"options": {
+      "requestVerificationMethod": [{
+        "id": "#signingKey",
+        "type": "Ed25519VerificationKey2018",
+        "purpose": ["authentication", "assertionMethod"]
+      }]
+    },
+	"secret": { ... },
+	"didDocument": { ... }
+}
+```
 
 #### Considerations
 

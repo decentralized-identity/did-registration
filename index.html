@@ -48,7 +48,7 @@ customElements.define("slide-panels",class extends HTMLElement{static get observ
       
                     <article id="content">
                       <h1 id="did-registration"><a class="toc-anchor" href="#did-registration" >§</a> DID Registration</h1>
-<p><strong>Specification Status:</strong> Pre-Draft</p>
+<p><strong>Specification Status:</strong> <a path-0="github.com"path-1="decentralized-identity"path-2="org"path-3="blob"path-4="master"path-5="work-item-lifecycle.md"href="https://github.com/decentralized-identity/org/blob/master/work-item-lifecycle.md" >Draft</a></p>
 <p><strong>Latest Draft:</strong>
 <a path-0="identity.foundation"path-1="did-registration"href="https://identity.foundation/did-registration" >identity.foundation/did-registration</a></p>
 <dl>
@@ -192,8 +192,8 @@ restrict how this input field is used.</p>
 <p>This input field contains an object with various options for the DID operation, such as the network where the DID
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
 applicable across all DID methods.</p>
-<p>This specification defines four DID method-independent properties for this field: <code>storeSecrets</code>, <code>returnSecrets</code>,
-<code>clientSecretMode</code>, <code>requestVerificationMethod</code>.</p>
+<p>This specification defines four DID method-independent properties for this field: <code>clientSecretMode</code>, <code>storeSecrets</code>,
+<code>returnSecrets</code>, <code>requestVerificationMethod</code>.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
@@ -205,18 +205,48 @@ applicable across all DID methods.</p>
 	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
+<h4 id="clientsecretmode"><a class="toc-anchor" href="#clientsecretmode" >§</a> <code>clientSecretMode</code></h4>
+<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, if the <code>clientSecretMode</code> option is set to <code>true</code>, then the DID Registrar will
+enable client-managed secret mode and let the client perform cryptographic operations such as generating signatures.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"clientSecretMode"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="storesecrets"><a class="toc-anchor" href="#storesecrets" >§</a> <code>storeSecrets</code></h4>
 <p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <code>storeSecrets</code> option is set to <code>true</code>, then the DID Registrar maintains an internal wallet where DIDs
 and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
 example, if a <code>create()</code> operation is executed, then a subsequent <code>update()</code> or <code>deactivate()</code> operation will
 be able to use existing DID controller keys stored in the DID Registrar.</p>
 <p>TODO: Mention potential import/export of keys, and how this could relate to other specs such as <a path-0="w3c-ccg.github.io"path-1="universal-wallet-interop-spec"path-2=""href="https://w3c-ccg.github.io/universal-wallet-interop-spec/" >Universal Wallet</a> or <a path-0="w3c-ccg.github.io"path-1="webkms"path-2=""href="https://w3c-ccg.github.io/webkms/" >WebKMS</a> or the <a path-0="w3c.github.io"path-1="webcrypto"path-2="#subtlecrypto-interface"href="https://w3c.github.io/webcrypto/#subtlecrypto-interface" >WebCrypto API</a>.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"storeSecrets"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="returnsecrets"><a class="toc-anchor" href="#returnsecrets" >§</a> <code>returnSecrets</code></h4>
 <p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <code>returnSecrets</code> option is set to <code>true</code>, then the DID Registrar will return generated DID controller keys
 to the client.</p>
-<h4 id="clientsecretmode"><a class="toc-anchor" href="#clientsecretmode" >§</a> <code>clientSecretMode</code></h4>
-<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, if the <code>clientSecretMode</code> option is set to <code>true</code>, then the DID Registrar will
-enable client-managed secret mode and let the client perform cryptographic operations such as generating signatures.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"returnSecrets"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="requestverificationmethod"><a class="toc-anchor" href="#requestverificationmethod" >§</a> <code>requestVerificationMethod</code></h4>
 <p>Normally, when creating or updating a DID, only cryptographic keys that are required by the applicable DID method itself
 are generated, in other words, keys that are needed for DID operations themselves. Depending on the DID method,
@@ -224,6 +254,19 @@ these keys may or may not appear in the DID document.</p>
 <p>Irrespective of DID method-specific differences with regard to keys, it may sometimes be useful to add additional keys
 to a DID document. This can be done by adding a <code>requestVerificationMethod</code> option. This option MUST contain a JSON array
 containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"requestVerificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+        <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#signingKey"</span><span class="token punctuation">,</span>
+        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span><span class="token punctuation">,</span>
+        <span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h4 id="considerations"><a class="toc-anchor" href="#considerations" >§</a> Considerations</h4>
 <p>The <code>storeSecrets</code> and <code>returnSecrets</code> options can be enabled or disabled independently. A DID Registrar
 may define default values for these options, and/or it may allow a client to set them via
@@ -1121,9 +1164,9 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#did" ><code>did</code></a></li>
 <li><a href="#options" ><code>options</code></a>
 <ul>
+<li><a href="#clientsecretmode" ><code>clientSecretMode</code></a></li>
 <li><a href="#storesecrets" ><code>storeSecrets</code></a></li>
 <li><a href="#returnsecrets" ><code>returnSecrets</code></a></li>
-<li><a href="#clientsecretmode" ><code>clientSecretMode</code></a></li>
 <li><a href="#requestverificationmethod" ><code>requestVerificationMethod</code></a></li>
 <li><a href="#considerations" >Considerations</a></li>
 </ul>
