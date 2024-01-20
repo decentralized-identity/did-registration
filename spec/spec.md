@@ -82,7 +82,17 @@ This mode has two options that control how DID controller keys are handled:
 In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it has a way
 of accessing an external wallet in order to perform cryptographic operations such as generating signatures.
 
-TODO: Mention how this could relate to other specs such as [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/) or [WebKMS](https://w3c-ccg.github.io/webkms/) or the [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface).
+The interface between the DID Registrar and an external wallet is out of scope for this specification, but could
+potentially use wallet or key management interfaces defined by other specifications, e.g.:
+
+- [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/)
+- [WebKMS](https://w3c-ccg.github.io/webkms/)
+- [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface)
+- others...
+
+If additional information (such as a URL, or tenant ID, or secret key, etc.) is required in order for the DID Registrar
+to be able to access the external wallet, then such information could be preconfigured in the DID Registrar, or
+alternatively supplied by a client in the [`options`](#options) and/or [`secret`](#secret) input fields.
 
 <img alt="Diagram showing External Secret Mode" src="images/diagram-mode-external-secret.png">
 
@@ -202,8 +212,6 @@ In [Internal Secret Mode](#internal-secret-mode), if the `storeSecrets` option i
 and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
 example, if a `create()` operation is executed, then a subsequent `update()` or `deactivate()` operation will
 be able to use existing DID controller keys stored in the DID Registrar.
-
-TODO: Mention potential import/export of keys, and how this could relate to other specs such as [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/) or [WebKMS](https://w3c-ccg.github.io/webkms/) or the [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface).
 
 Example:
 
@@ -825,8 +833,6 @@ The [`didState` output field](#didstate) MUST contain a property `signingRequest
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
 
-TODO: Mention how this could relate to other specs such as [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/) or [WebKMS](https://w3c-ccg.github.io/webkms/) or the [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface).
-
 Example:
 
 ```json
@@ -866,8 +872,6 @@ This action is used in [Client Managed Secret Mode](#client-managed-secret-mode)
 The [`didState` output field](#didstate) MUST contain a property `decryptionRequest` with a [Decryption Request Set](#decryption-request-set) data structure.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
-
-TODO: Mention how this could relate to other specs such as [Universal Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/) or [WebKMS](https://w3c-ccg.github.io/webkms/) or the [WebCrypto API](https://w3c.github.io/webcrypto/#subtlecrypto-interface).
 
 Example:
 
