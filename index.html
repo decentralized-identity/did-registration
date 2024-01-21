@@ -126,7 +126,7 @@ work is being done.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="architecture-modes"><a class="toc-anchor" href="#architecture-modes" >§</a> Architecture Modes</h2>
+<h2 id="key-management"><a class="toc-anchor" href="#key-management" >§</a> Key Management</h2>
 <p>The DID create/update/deactivate functions raise architectural questions around key management,
 since they typically involve the generation and use of private keys and other secrets.</p>
 <p>With regard to key management, a DID Registrar can operate in the following modes:</p>
@@ -202,8 +202,7 @@ restrict how this input field is used.</p>
 <p>This input field contains an object with various options for the DID operation, such as the network where the DID
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
 applicable across all DID methods.</p>
-<p>This specification defines four DID method-independent properties for this field: <code>clientSecretMode</code>, <code>storeSecrets</code>,
-<code>returnSecrets</code>, <code>requestVerificationMethod</code>.</p>
+<p>This specification defines several DID method-independent properties for this field that are relevant to <a href="#key-management" >Key Management</a>.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
@@ -1151,7 +1150,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#abstract" >Abstract</a></li>
 <li><a href="#status-of-this-document" >Status of This Document</a></li>
 <li><a href="#terminology" >Terminology</a></li>
-<li><a href="#architecture-modes" >Architecture Modes</a>
+<li><a href="#key-management" >Key Management</a>
 <ul>
 <li><a href="#internal-secret-mode" >Internal Secret Mode</a></li>
 <li><a href="#external-secret-mode" >External Secret Mode</a></li>

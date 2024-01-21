@@ -58,7 +58,7 @@ DID Registrar | A software and/or hardware component that implements the DID cre
 DID Resolver | A software and/or hardware component that implements the DID resolution function.
 Wallet | A software and/or hardware component that can securely store DIDs and associated private keys and other sensitive cryptographic key material. Wallets implement various interfaces for cryptographic key generation, signing, verification, and other operations.
 
-## Architecture Modes
+## Key Management
 
 The DID create/update/deactivate functions raise architectural questions around key management,
 since they typically involve the generation and use of private keys and other secrets.
@@ -171,8 +171,7 @@ This input field contains an object with various options for the DID operation, 
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
 applicable across all DID methods.
 
-This specification defines four DID method-independent properties for this field: `clientSecretMode`, `storeSecrets`,
-`returnSecrets`, `requestVerificationMethod`.
+This specification defines several DID method-independent properties for this field that are relevant to [Key Management](#key-management).
 
 Example:
 
