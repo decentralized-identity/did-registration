@@ -1205,7 +1205,7 @@ Example **Decryption Response Set** containing two **Decryption Responses**:
 
 In order to implement a library or tool that supports the above interfaces for
 creating, updating, and deactivating DIDs in a method-agnostic way, we can imagine
-a similar architecture as is common for a DID resolver, i.e. using a set of drivers
+a similar architecture as is common for a DID Resolver, i.e. using a set of drivers
 that perform method-specific operations.
 
 Some architectural questions that apply to a DID Resolver also apply to a DID Registrar, e.g.:
