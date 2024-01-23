@@ -649,11 +649,6 @@ Possible uses of the `didDocumentMetadata` output field:
 * Hash values, smart contract addresses, blockchain heights, transaction numbers, etc.
 * Proofs added by a DID controller (e.g. to establish control authority).
 
-## Options
-
-The following sections explain well-defined options, which can be included in the
-[`options` input field](#options).
-
 ## States
 
 The following sections explain the possible states of a DID registration process, which are returned as values of the
