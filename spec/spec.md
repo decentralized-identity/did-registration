@@ -1201,7 +1201,7 @@ Example **Decryption Response Set** containing two **Decryption Responses**:
 }
 ```
 
-## Implementation Considerations
+## Architecture Considerations
 
 In order to implement a library or tool that supports the above interfaces for
 creating, updating, and deactivating DIDs in a method-agnostic way, we can imagine
