@@ -265,12 +265,12 @@ containing one or more <a href="#verification-method-template" >Verification Met
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"requestVerificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-        <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#signingKey"</span><span class="token punctuation">,</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span><span class="token punctuation">,</span>
-        <span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">]</span>
-      <span class="token punctuation">}</span><span class="token punctuation">]</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token property">"requestVerificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#signingKey"</span><span class="token punctuation">,</span>
+			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span><span class="token punctuation">,</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">]</span>
+		<span class="token punctuation">}</span><span class="token punctuation">]</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -388,9 +388,9 @@ ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"network"</span><span class="token operator">:</span> <span class="token string">"mainnet"</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"setDidDocument"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 		<span class="token property">"@context"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
@@ -413,10 +413,10 @@ ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 </code></pre>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"network"</span><span class="token operator">:</span> <span class="token string">"mainnet"</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"addToDidDocument"</span><span class="token punctuation">,</span> <span class="token string">"removeFromDidDocument"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"removeFromDidDocument"</span><span class="token punctuation">,</span> <span class="token string">"addToDidDocument"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 			<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 				<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-1"</span>

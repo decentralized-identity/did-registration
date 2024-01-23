@@ -257,12 +257,12 @@ containing one or more [Verification Method Template](#verification-method-templ
 {
 	"did": null,
 	"options": {
-      "requestVerificationMethod": [{
-        "id": "#signingKey",
-        "type": "Ed25519VerificationKey2018",
-        "purpose": ["authentication", "assertionMethod"]
-      }]
-    },
+		"requestVerificationMethod": [{
+			"id": "#signingKey",
+			"type": "Ed25519VerificationKey2018",
+			"purpose": ["authentication", "assertionMethod"]
+		}]
+	},
 	"secret": { ... },
 	"didDocument": { ... }
 }
@@ -407,9 +407,9 @@ Example:
 
 ```json
 {
-	"options": {
-		"network": "mainnet"
-	},
+	"did": "did:example:123",
+	"options": { ... },
+	"secret": { ... },
 	"didDocumentOperation": ["setDidDocument"],
 	"didDocument": [{
 		"@context": [
@@ -435,10 +435,10 @@ Example:
 
 ```json
 {
-	"options": {
-		"network": "mainnet"
-	},
-	"didDocumentOperation": ["addToDidDocument", "removeFromDidDocument"],
+	"did": "did:example:123",
+	"options": { ... },
+	"secret": { ... },
+	"didDocumentOperation": ["removeFromDidDocument", "addToDidDocument"],
 	"didDocument": [{
 			"verificationMethod": [{
 				"id": "did:example:123#key-1"
