@@ -1238,6 +1238,81 @@ Example:
 In the above example, a client instructs a DID Registrar to first remove a verification method from a DID document,
 and then deactivate the DID.
 
+### `didDocumentOperation="rotateDidFrom"`
+
+DID Rotation is the process of changing a DID from an original DID to a new DID. To complete a DID Rotation process,
+both the original DID and the DID have to be updated, as documented in [[DID-ROTATION]](#ref:DID-ROTATION).
+
+This section defines the value `rotateDidFrom` for the [`didDocumentOperation` input field](#diddocumentoperation).
+This instructs the DID Registrar to update the original DID of a DID Rotation process. This operation also requires
+the presence of a `newDid` option in the [`options` input field](#options) to indicate the new DID.
+
+Example:
+
+```json
+{
+	"did": "did:example:123",
+	"options": {
+		"newDid": "did:example:789"
+	},
+	"secret": { ... },
+	"didDocumentOperation": ["rotateDidFrom"],
+	"didDocument": [ null ]
+}
+```
+
+The above example is functionally equivalent to the following operation:
+
+```json
+{
+	"did": "did:example:123",
+	"options": { },
+	"secret": { ... },
+	"didDocumentOperation": ["addToDidDocument", "deactivate"],
+	"didDocument": [{
+		"alsoKnownAs": [ "did:example:789" ]
+	},
+	null]
+}
+```
+
+### `didDocumentOperation="rotateDidTo"`
+
+DID Rotation is the process of changing a DID from an original DID to a new DID. To complete a DID Rotation process,
+both the original DID and the new DID have to be updated, as documented in [[DID-ROTATION]](#ref:DID-ROTATION).
+
+This section defines the value `rotateDidTo` for the [`didDocumentOperation` input field](#diddocumentoperation).
+This instructs the DID Registrar to update the new DID of a DID Rotation process. This operation also requires
+the presence of an `originalDid` option in the [`options` input field](#options) to indicate the original DID.
+
+Example:
+
+```json
+{
+	"did": "did:example:789",
+	"options": {
+		"originalDid": "did:example:123"
+	},
+	"secret": { ... },
+	"didDocumentOperation": ["rotateDidTo"],
+	"didDocument": [ null ]
+}
+```
+
+The above example is functionally equivalent to the following operation:
+
+```json
+{
+	"did": "did:example:789",
+	"options": { },
+	"secret": { ... },
+	"didDocumentOperation": ["addToDidDocument"],
+	"didDocument": [{
+		"alsoKnownAs": [ "did:example:789" ]
+	}]
+}
+```
+
 ## Architecture Considerations
 
 In order to implement a library or tool that supports the above interfaces for
@@ -1295,9 +1370,21 @@ The following HTTP status codes are used for the [`deactivate()` function](#deac
 
 See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">here</a> for an OpenAPI definition.
 
-## Normative References
+## References
+
+### Normative References
 
 [[spec]]
+
+### Informative References
+
+<dl>
+  <dt id="ref:DID-ROTATION">DID-ROTATION</dt>
+  <dd>
+    <cite><a href="https://www.ownyourdata.eu/en/did-rotation/">DID Rotation</a></cite>.
+        OwnYourData. <span class="reference-status">Status: Blog post.</span>
+  </dd>
+</dl>
 
 ## Acknowledgements
 
