@@ -255,26 +255,6 @@ to the client.</p>
 	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h4 id="requestverificationmethod"><a class="toc-anchor" href="#requestverificationmethod" >§</a> <code>requestVerificationMethod</code></h4>
-<p>Normally, when creating or updating a DID, only cryptographic keys that are required by the applicable DID method itself
-are generated, in other words, keys that are needed for DID operations themselves. Depending on the DID method,
-these keys may or may not appear in the DID document.</p>
-<p>Irrespective of DID method-specific differences with regard to keys, it may sometimes be useful to add additional keys
-to a DID document. This can be done by adding a <code>requestVerificationMethod</code> option. This option MUST contain a JSON array
-containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
-	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"requestVerificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
-			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#signingKey"</span><span class="token punctuation">,</span>
-			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span><span class="token punctuation">,</span>
-			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">]</span>
-		<span class="token punctuation">}</span><span class="token punctuation">]</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
 <h4 id="considerations"><a class="toc-anchor" href="#considerations" >§</a> Considerations</h4>
 <p>The <code>storeSecrets</code> and <code>returnSecrets</code> options can be enabled or disabled independently. A DID Registrar
 may define default values for these options, and/or it may allow a client to set them via
@@ -1029,6 +1009,57 @@ which is called the <strong>Decryption Response</strong>.</p>
 	<span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
+<h2 id="extensions"><a class="toc-anchor" href="#extensions" >§</a> Extensions</h2>
+<p>This section documents various optional extension features that can complement the main functionality of a DID Registrar
+to accommodate advanced use cases.</p>
+<h3 id="optionsrequestverificationmethod"><a class="toc-anchor" href="#optionsrequestverificationmethod" >§</a> <code>options.requestVerificationMethod</code></h3>
+<p>Normally, when creating or updating a DID, only cryptographic keys that are required by the applicable DID method itself
+are generated, in other words, keys that are needed for DID operations themselves. Depending on the DID method,
+these keys may or may not appear in the DID document.</p>
+<p>Irrespective of DID method-specific differences with regard to keys, it may sometimes be useful to add additional keys
+to a DID document. This can be done by adding a <code>requestVerificationMethod</code> option. If present, this option MUST contain
+a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"requestVerificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"#signingKey"</span><span class="token punctuation">,</span>
+			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span><span class="token punctuation">,</span>
+			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"assertionMethod"</span><span class="token punctuation">]</span>
+		<span class="token punctuation">}</span><span class="token punctuation">]</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>In the above example, a client instructs a DID Registrar to add a verification method with <code>&quot;id&quot;: &quot;#signingKey&quot;</code> and
+<code>&quot;type&quot;: &quot;Ed25519VerificationKey2018&quot;</code>, even if this verification method is not required for the DID operation itself.</p>
+<h3 id="diddocumentoperationdeactivate"><a class="toc-anchor" href="#diddocumentoperationdeactivate" >§</a> <code>didDocumentOperation=&quot;deactivate&quot;</code></h3>
+<p>The <a href="#update" ><code>update() function</code></a> uses the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a> to determine
+what type of update operation should be applied to a DID’s associated DID document. Deactivating a DID is normally
+done by using the separate <a href="#deactivate" ><code>deactivate() function</code></a>.</p>
+<p>However, it is also possible to model deactivation as a special type of update operation. For this purpose, this
+section defines the value <code>deactivate</code> for the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>. This can
+be especially useful if atomic combinations of update and deactivate functions are required, since a single execution
+of the <a href="#update" ><code>update() function</code></a> can include multiple entries in the
+<a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"removeFromDidDocument"</span><span class="token punctuation">,</span> <span class="token string">"deactivate"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+			<span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-1"</span>
+		<span class="token punctuation">}</span><span class="token punctuation">]</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token null keyword">null</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>In the above example, a client instructs a DID Registrar to first remove a verification method from a DID document,
+and then deactivate the DID.</p>
 <h2 id="architecture-considerations"><a class="toc-anchor" href="#architecture-considerations" >§</a> Architecture Considerations</h2>
 <p>In order to implement a library or tool that supports the above interfaces for
 creating, updating, and deactivating DIDs in a method-agnostic way, we can imagine
@@ -1170,7 +1201,6 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#clientsecretmode" ><code>clientSecretMode</code></a></li>
 <li><a href="#storesecrets" ><code>storeSecrets</code></a></li>
 <li><a href="#returnsecrets" ><code>returnSecrets</code></a></li>
-<li><a href="#requestverificationmethod" ><code>requestVerificationMethod</code></a></li>
 <li><a href="#considerations" >Considerations</a></li>
 </ul>
 </li>
@@ -1218,6 +1248,12 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#signing-response-set" >Signing Response Set</a></li>
 <li><a href="#decryption-request-set" >Decryption Request Set</a></li>
 <li><a href="#decryption-response-set" >Decryption Response Set</a></li>
+</ul>
+</li>
+<li><a href="#extensions" >Extensions</a>
+<ul>
+<li><a href="#optionsrequestverificationmethod" ><code>options.requestVerificationMethod</code></a></li>
+<li><a href="#diddocumentoperationdeactivate" ><code>didDocumentOperation=&quot;deactivate&quot;</code></a></li>
 </ul>
 </li>
 <li><a href="#architecture-considerations" >Architecture Considerations</a></li>
