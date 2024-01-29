@@ -1308,7 +1308,7 @@ The above example is functionally equivalent to the following operation:
 	"secret": { ... },
 	"didDocumentOperation": ["addToDidDocument"],
 	"didDocument": [{
-		"alsoKnownAs": [ "did:example:789" ]
+		"alsoKnownAs": [ "did:example:123" ]
 	}]
 }
 ```
