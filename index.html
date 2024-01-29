@@ -1060,6 +1060,63 @@ of the <a href="#update" ><code>update() function</code></a> can include multipl
 </code></pre>
 <p>In the above example, a client instructs a DID Registrar to first remove a verification method from a DID document,
 and then deactivate the DID.</p>
+<h3 id="diddocumentoperationrotatedidfrom"><a class="toc-anchor" href="#diddocumentoperationrotatedidfrom" >§</a> <code>didDocumentOperation=&quot;rotateDidFrom&quot;</code></h3>
+<p>DID Rotation is the process of changing a DID from an original DID to a new DID. To complete a DID Rotation process,
+both the original DID and the DID have to be updated, as documented in <a href="#ref:DID-ROTATION" >[DID-ROTATION]</a>.</p>
+<p>This section defines the value <code>rotateDidFrom</code> for the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>.
+This instructs the DID Registrar to update the original DID of a DID Rotation process. This operation also requires
+the presence of a <code>newDid</code> option in the <a href="#options" ><code>options</code> input field</a> to indicate the new DID.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"newDid"</span><span class="token operator">:</span> <span class="token string">"did:example:789"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"rotateDidFrom"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token null keyword">null</span> <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>The above example is functionally equivalent to the following operation:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"addToDidDocument"</span><span class="token punctuation">,</span> <span class="token string">"deactivate"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"alsoKnownAs"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"did:example:789"</span> <span class="token punctuation">]</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token null keyword">null</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="diddocumentoperationrotatedidto"><a class="toc-anchor" href="#diddocumentoperationrotatedidto" >§</a> <code>didDocumentOperation=&quot;rotateDidTo&quot;</code></h3>
+<p>DID Rotation is the process of changing a DID from an original DID to a new DID. To complete a DID Rotation process,
+both the original DID and the new DID have to be updated, as documented in <a href="#ref:DID-ROTATION" >[DID-ROTATION]</a>.</p>
+<p>This section defines the value <code>rotateDidTo</code> for the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>.
+This instructs the DID Registrar to update the new DID of a DID Rotation process. This operation also requires
+the presence of an <code>originalDid</code> option in the <a href="#options" ><code>options</code> input field</a> to indicate the original DID.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:789"</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"originalDid"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"rotateDidTo"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token null keyword">null</span> <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>The above example is functionally equivalent to the following operation:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:789"</span><span class="token punctuation">,</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentOperation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"addToDidDocument"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"alsoKnownAs"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">"did:example:123"</span> <span class="token punctuation">]</span>
+	<span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="architecture-considerations"><a class="toc-anchor" href="#architecture-considerations" >§</a> Architecture Considerations</h2>
 <p>In order to implement a library or tool that supports the above interfaces for
 creating, updating, and deactivating DIDs in a method-agnostic way, we can imagine
@@ -1108,7 +1165,8 @@ https://uniregistrar.io/1.0/deactivate
 <li><strong>500</strong>, if an internal error has occurred.</li>
 </ul>
 <p>See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">here</a> for an OpenAPI definition.</p>
-<h2 id="normative-references"><a class="toc-anchor" href="#normative-references" >§</a> Normative References</h2>
+<h2 id="references"><a class="toc-anchor" href="#references" >§</a> References</h2>
+<h3 id="normative-references"><a class="toc-anchor" href="#normative-references" >§</a> Normative References</h3>
 <p>
 <dl class="reference-list">
         <dt id="ref:DID-CORE">DID-CORE</dt>
@@ -1137,6 +1195,14 @@ https://uniregistrar.io/1.0/deactivate
       
 </dl>
 </p>
+<h3 id="informative-references"><a class="toc-anchor" href="#informative-references" >§</a> Informative References</h3>
+<dl>
+  <dt id="ref:DID-ROTATION">DID-ROTATION</dt>
+  <dd>
+    <cite><a href="https://www.ownyourdata.eu/en/did-rotation/">DID Rotation</a></cite>.
+        OwnYourData. <span class="reference-status">Status: Blog post.</span>
+  </dd>
+</dl>
 <h2 id="acknowledgements"><a class="toc-anchor" href="#acknowledgements" >§</a> Acknowledgements</h2>
 <img align="left" src="images/logo-ngitrustchain.png" width="115">
 <p>Supported by <a path-0="trustchain.ngi.eu"path-1=""href="https://trustchain.ngi.eu/" >NGI TRUSTCHAIN</a>, which is made possible with financial support from the European Commission’s <a path-0="ngi.eu"path-1=""href="https://ngi.eu/" >Next Generation Internet</a> programme.</p>
@@ -1254,11 +1320,18 @@ https://uniregistrar.io/1.0/deactivate
 <ul>
 <li><a href="#optionsrequestverificationmethod" ><code>options.requestVerificationMethod</code></a></li>
 <li><a href="#diddocumentoperationdeactivate" ><code>didDocumentOperation=&quot;deactivate&quot;</code></a></li>
+<li><a href="#diddocumentoperationrotatedidfrom" ><code>didDocumentOperation=&quot;rotateDidFrom&quot;</code></a></li>
+<li><a href="#diddocumentoperationrotatedidto" ><code>didDocumentOperation=&quot;rotateDidTo&quot;</code></a></li>
 </ul>
 </li>
 <li><a href="#architecture-considerations" >Architecture Considerations</a></li>
 <li><a href="#https-binding" >HTTPS Binding</a></li>
+<li><a href="#references" >References</a>
+<ul>
 <li><a href="#normative-references" >Normative References</a></li>
+<li><a href="#informative-references" >Informative References</a></li>
+</ul>
+</li>
 <li><a href="#acknowledgements" >Acknowledgements</a></li>
 <li><a href="#appendix" >Appendix</a>
 <ul>
