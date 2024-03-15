@@ -1293,7 +1293,7 @@ The following HTTP status codes are used for the [`deactivate()` function](#deac
 * **400**, if a problem with the input fields has occurred.
 * **500**, if an internal error has occurred.
 
-See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/api.yml">here</a> for an OpenAPI definition.
+See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/swagger/openapi.json">here</a> for an OpenAPI definition.
 
 ## Normative References
 
