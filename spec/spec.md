@@ -1121,8 +1121,8 @@ the corresponding property value MUST be a JSON object which is called the **Dec
 A **Decryption Request** contains the following properties:
 
 * `payload`: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.
-* `encryptedPayload`: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This property is REQUIRED.
-* `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that should be used for decryption. Example value: `did:example:123#key-0`. This property is OPTIONAL.
+* `encryptedPayload`: The Base64-encodedkey- byte array that represents the encrypted payload to be decrypted. This 0property is REQUIRED.
+* `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that should be used for decryption. Example value: `did:example:123#key-1`. This property is OPTIONAL.
 * `enc`: This property is interpreted as in [[spec:RFC7516]] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: `A128GCM`, `A256GCM`. This property is REQUIRED.
 * `purpose`: This property indicates the specific intent of the decryption process. Example value: `parsing`. This property is OPTIONAL.
 
@@ -1157,16 +1157,23 @@ which is called the **Decryption Response**.
 A **Decryption Response** contains the following properties:
 
 * `decryptedPayload`: The Base64-encoded byte array that represents the decrypted payload. This property is REQUIRED.
+* `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that was used for decrypting. Example value: `did:example:123#key-1`. This property is OPTIONAL, but SHOULD be included if an identifier for the key is known.
+* `enc`: This property is interpreted as in [[spec:RFC7515]] to indicate the cryptographic algorithm that was used to decrypt the payload. Example values: `A128GCM`, `A256GCM`. This property SHOULD be included.
+* `purpose`: This property indicates the specific intent of the decryption process. Example value: `parsing`. This property is OPTIONAL.
 
 Example **Decryption Response Set** containing two **Decryption Responses**:
 
 ```json
 {
 	"decryptionRequest1": {
-		"decryptedPayload": "<-base64->"
+		"decryptedPayload": "<-base64->",
+		"key": "did:example:123#key-1",
+		"enc": "A128GCM"
 	},
 	"decryptionRequest2": {
-		"decryptedPayload": "<-base64->"
+		"decryptedPayload": "<-base64->",
+		"key": "did:example:123#key-2",
+		"enc": "A256GCM"
 	}
 }
 ```
