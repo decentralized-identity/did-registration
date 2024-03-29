@@ -450,6 +450,19 @@ is either <code>finished</code> or <code>failed</code>, and MUST NOT have a null
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="didstate"><a class="toc-anchor" href="#didstate" >§</a> <code>didState</code></h3>
+<p>This output field contains an object with the following fields:</p>
+<ul>
+<li><a href="#didstatestate" ><code>didState.state</code></a>: The current state of DID operations.</li>
+<li><a href="#didstatedid" ><code>didState.did</code></a>: The DID at the end of the DID operation.</li>
+<li><a href="#didstatesecret" ><code>didState.secret</code></a>: An object with DID controller keys and other secrets.</li>
+<li><a href="#didstatediddocument" ><code>didState.didDocument</code></a>: The DID document after the DID operation has been successfully executed.</li>
+</ul>
+<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, this output field MAY contain one or more of the following:</p>
+<ul>
+<li>A <code>verificationMethodTemplate</code> property with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> objects.</li>
+<li>A <code>signingRequest</code> property with a <a href="#signing-request-set" >Signing Request Set</a>.</li>
+<li>A <code>decryptionRequest</code> property with a <a href="#decryption-request-set" >Decryption Request Set</a>.</li>
+</ul>
 <h4 id="didstatestate"><a class="toc-anchor" href="#didstatestate" >§</a> <code>didState.state</code></h4>
 <p>This output field contains the current state of the DID operations. It is used to indicate if a DID operation
 is finished, failed, or if a longer-running “job” has been created that requires additional steps.</p>
@@ -773,11 +786,11 @@ properties, to explain the reason for the failure.</p>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
 <h3 id="verification-method-public-data"><a class="toc-anchor" href="#verification-method-public-data" >§</a> Verification Method Public Data</h3>
-<p>This data structure is used when public data about a verification method is exchanged between the client and the DID Registrar, as follows:</p>
+<p>This data structure is used as follows, when public data about a verification method is exchanged between the client and the DID Registrar:</p>
 <ul>
-<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#secret" ><code>secret</code> input field</a>,
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>verificationMethod</code> field inside the <a href="#secret" ><code>secret</code> input field</a>,
 when the client invokes the DID Registrar again after it received a <a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code> output field</a>.</li>
-<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#didstatesecret" ><code>didState.secret</code> output field</a>,
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>verificationMethod</code> field inside the <a href="#didstatesecret" ><code>didState.secret</code> output field</a>,
 when the DID Registrar responds to a client request.</li>
 </ul>
 <p>A <strong>Verification Method Public Data</strong> structure is a JSON object based on the verification method
@@ -817,11 +830,11 @@ verification relationships such as <code>authentication</code> or <code>assertio
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="verification-method-private-data"><a class="toc-anchor" href="#verification-method-private-data" >§</a> Verification Method Private Data</h3>
-<p>This data structure is used when private data about a verification method is exchanged between the client and the DID Registrar, as follows:</p>
+<p>This data structure is used as follows, when private data about a verification method is exchanged between the client and the DID Registrar:</p>
 <ul>
-<li>In <a href="#internal-secret-mode" >Internal Secret Mode</a> inside the <a href="#secret" ><code>secret</code> input field</a>,
+<li>In <a href="#internal-secret-mode" >Internal Secret Mode</a> as a <code>verificationMethod</code> field inside the <a href="#secret" ><code>secret</code> input field</a>,
 when the client invokes the DID Registrar again after it received a <a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code> output field</a>.</li>
-<li>In <a href="#internal-secret-mode" >Internal Secret Mode</a> inside the <a href="#didstatesecret" ><code>didState.secret</code> output field</a>,
+<li>In <a href="#internal-secret-mode" >Internal Secret Mode</a> as a <code>verificationMethod</code> field inside the <a href="#didstatesecret" ><code>didState.secret</code> output field</a>,
 when the DID Registrar responds to a client request.</li>
 </ul>
 <p>A <strong>Verification Method Private Data</strong> structure is a JSON object based on the <a href="#verification-method-public-data" >Verification Method Public Data</a>
@@ -857,7 +870,7 @@ the verification method contains corresponding private key material, using prope
 <h3 id="verification-method-template"><a class="toc-anchor" href="#verification-method-template" >§</a> Verification Method Template</h3>
 <p>This data structure is used as follows:</p>
 <ul>
-<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#didstatestate" ><code>didState.state</code> output field</a>,
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as <code>verificationMethodTemplate</code> field inside the <a href="#didstate" ><code>didState</code> output field</a>,
 when the DID Registrar responds to a client request with a <a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code> output field</a>.</li>
 </ul>
 <p>A <strong>Verification Method Template</strong> structure is a JSON object based on the verification method
@@ -892,7 +905,7 @@ verification relationships such as <code>authentication</code> or <code>assertio
 <h3 id="signing-request-set"><a class="toc-anchor" href="#signing-request-set" >§</a> Signing Request Set</h3>
 <p>This data structure is used as follows:</p>
 <ul>
-<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>signingRequest</code> field inside the <a href="#didstatestate" ><code>didState.state</code> output field</a>,
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>signingRequest</code> field inside the <a href="#didstate" ><code>didState</code> output field</a>,
 when the DID Registrar responds to a client request with a <a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code> output field</a>.</li>
 </ul>
 <p>A <strong>Signing Request Set</strong> structure is a JSON object. Each property name in that JSON object is called a <em>signing request ID</em>, and
@@ -959,7 +972,7 @@ which is called the <strong>Signing Response</strong>.</p>
 <h3 id="decryption-request-set"><a class="toc-anchor" href="#decryption-request-set" >§</a> Decryption Request Set</h3>
 <p>This data structure is used as follows:</p>
 <ul>
-<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#didstatestate" ><code>didState.state</code> output field</a>,
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>decryptionRequest</code> field inside the <a href="#didstate" ><code>didState</code> output field</a>,
 when the DID Registrar responds to a client request with a <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code> output field</a>.</li>
 </ul>
 <p>A <strong>Decryption Request Set</strong> structure is a JSON object. Each property name in that JSON object is called a <em>decryption request ID</em>, and
@@ -989,7 +1002,7 @@ the corresponding property value MUST be a JSON object which is called the <stro
 <h3 id="decryption-response-set"><a class="toc-anchor" href="#decryption-response-set" >§</a> Decryption Response Set</h3>
 <p>This data structure is used as follows:</p>
 <ul>
-<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> inside the <a href="#secret" ><code>secret</code> input field</a>,
+<li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>decryptionResponse</code> field inside the <a href="#secret" ><code>secret</code> input field</a>,
 when the client invokes the DID Registrar again after it received a <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code> output field</a>.</li>
 </ul>
 <p>A <strong>Decryption Response Set</strong> structure is a JSON object. Each property name MUST match a <em>decryption request ID</em> which was previously received by the

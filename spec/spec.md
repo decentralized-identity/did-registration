@@ -482,6 +482,19 @@ Example:
 
 ### `didState`
 
+This output field contains an object with the following fields:
+
+* [`didState.state`](#didstatestate): The current state of DID operations.
+* [`didState.did`](#didstatedid): The DID at the end of the DID operation.
+* [`didState.secret`](#didstatesecret): An object with DID controller keys and other secrets.
+* [`didState.didDocument`](#didstatediddocument): The DID document after the DID operation has been successfully executed.
+
+In [Client-managed Secret Mode](#client-managed-secret-mode), this output field MAY contain one or more of the following:
+
+* A `verificationMethodTemplate` property with a JSON array containing one or more [Verification Method Template](#verification-method-template) objects.
+* A `signingRequest` property with a [Signing Request Set](#signing-request-set).
+* A `decryptionRequest` property with a [Decryption Request Set](#decryption-request-set).
+
 #### `didState.state`
 
 This output field contains the current state of the DID operations. It is used to indicate if a DID operation
@@ -901,11 +914,11 @@ This specification defines a number of data structures that appear in the [input
 
 ### Verification Method Public Data
 
-This data structure is used when public data about a verification method is exchanged between the client and the DID Registrar, as follows:
+This data structure is used as follows, when public data about a verification method is exchanged between the client and the DID Registrar:
 
-- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`secret` input field](#secret),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),
   when the client invokes the DID Registrar again after it received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
-- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.secret` output field](#didstatesecret),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
   when the DID Registrar responds to a client request.
 
 A **Verification Method Public Data** structure is a JSON object based on the verification method
@@ -949,11 +962,11 @@ Example:
 
 ### Verification Method Private Data
 
-This data structure is used when private data about a verification method is exchanged between the client and the DID Registrar, as follows:
+This data structure is used as follows, when private data about a verification method is exchanged between the client and the DID Registrar:
 
-- In [Internal Secret Mode](#internal-secret-mode) inside the [`secret` input field](#secret),
+- In [Internal Secret Mode](#internal-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),
   when the client invokes the DID Registrar again after it received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
-- In [Internal Secret Mode](#internal-secret-mode) inside the [`didState.secret` output field](#didstatesecret),
+- In [Internal Secret Mode](#internal-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
   when the DID Registrar responds to a client request.
 
 A **Verification Method Private Data** structure is a JSON object based on the [Verification Method Public Data](#verification-method-public-data)
@@ -996,7 +1009,7 @@ Example:
 
 This data structure is used as follows:
 
-- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.state` output field](#didstatestate),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as `verificationMethodTemplate` field inside the [`didState` output field](#didstate),
   when the DID Registrar responds to a client request with a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
 
 A **Verification Method Template** structure is a JSON object based on the verification method
@@ -1035,7 +1048,7 @@ Example **Verification Method Template** containing properties `purpose` and `ty
 
 This data structure is used as follows:
 
-- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `signingRequest` field inside the [`didState.state` output field](#didstatestate),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `signingRequest` field inside the [`didState` output field](#didstate),
   when the DID Registrar responds to a client request with a [`didState.action="signPayload"` output field](#didstateactionsignpayload).
 
 A **Signing Request Set** structure is a JSON object. Each property name in that JSON object is called a _signing request ID_, and
@@ -1112,7 +1125,7 @@ Example **Signing Response Set** containing two **Signing Responses**:
 
 This data structure is used as follows:
 
-- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`didState.state` output field](#didstatestate),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `decryptionRequest` field inside the [`didState` output field](#didstate),
   when the DID Registrar responds to a client request with a [`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
 
 A **Decryption Request Set** structure is a JSON object. Each property name in that JSON object is called a _decryption request ID_, and
@@ -1147,7 +1160,7 @@ Example **Decryption Request Set** containing two **Decryption Requests** with I
 
 This data structure is used as follows:
 
-- In [Client-managed Secret Mode](#client-managed-secret-mode) inside the [`secret` input field](#secret), 
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `decryptionResponse` field inside the [`secret` input field](#secret), 
   when the client invokes the DID Registrar again after it received a [`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
 
 A **Decryption Response Set** structure is a JSON object. Each property name MUST match a _decryption request ID_ which was previously received by the
