@@ -9,7 +9,7 @@
     "url": "git://github.com/decentralized-identity/did-registration"
   },
   "dependencies": {
-    "spec-up": "^0.10.6"
+    "spec-up": "^0.10.7"
   },
   "scripts": {
     "edit": "node -e \"require('spec-up')()\""
