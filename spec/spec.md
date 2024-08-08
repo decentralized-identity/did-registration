@@ -75,6 +75,18 @@ etc. MUST be used.
 This mode has two options that control how DID controller keys are handled:
 [`storeSecrets`](#storesecrets) and [`returnSecrets`](#returnsecrets).
 
+The `storeSecrets` and `returnSecrets` options can be enabled or disabled independently. A DID Registrar
+may define default values for these options, and/or it may allow a client to set them via
+the [`options` input field](#options).
+
+Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
+operating in [Internal Secret Mode](#internal-secret-mode) will generate DID controller keys internally, but it will
+neither store them nor return them to a client.
+
+If a DID Registrar is configured with options `storeSecrets=false` and `returnSecrets=true`, then a DID Registrar
+with option `storeSecrets=true` can be simulated by building a "wrapping DID Registrar" around an
+"inner DID Registrar".
+
 <img alt="Diagram showing Internal Secret Mode" src="images/diagram-mode-internal-secret.png">
 
 ### External Secret Mode
@@ -244,20 +256,6 @@ Example:
 	"didDocument": { ... }
 }
 ```
-
-#### Considerations
-
-The `storeSecrets` and `returnSecrets` options can be enabled or disabled independently. A DID Registrar
-may define default values for these options, and/or it may allow a client to set them via
-the [`options` input field](#options).
-
-Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
-operating in [Internal Secret Mode](#internal-secret-mode) will generate DID controller keys internally, but it will
-neither store them nor return them to a client.
-
-If a DID Registrar is configured with options `storeSecrets=false` and `returnSecrets=true`, then a DID Registrar
-with option `storeSecrets=true` can be simulated by building a "wrapping DID Registrar" around an
-"inner DID Registrar".
 
 ### `secret`
 

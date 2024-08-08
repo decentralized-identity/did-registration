@@ -137,6 +137,15 @@ DID controller. If it is operated as a remotely hosted service, secure connectio
 etc. MUST be used.</p>
 <p>This mode has two options that control how DID controller keys are handled:
 <a href="#storesecrets" ><code>storeSecrets</code></a> and <a href="#returnsecrets" ><code>returnSecrets</code></a>.</p>
+<p>The <code>storeSecrets</code> and <code>returnSecrets</code> options can be enabled or disabled independently. A DID Registrar
+may define default values for these options, and/or it may allow a client to set them via
+the <a href="#options" ><code>options</code> input field</a>.</p>
+<p>Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
+operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> will generate DID controller keys internally, but it will
+neither store them nor return them to a client.</p>
+<p>If a DID Registrar is configured with options <code>storeSecrets=false</code> and <code>returnSecrets=true</code>, then a DID Registrar
+with option <code>storeSecrets=true</code> can be simulated by building a “wrapping DID Registrar” around an
+“inner DID Registrar”.</p>
 <img alt="Diagram showing Internal Secret Mode" src="images/diagram-mode-internal-secret.png">
 <h3 id="external-secret-mode"><a class="toc-anchor" href="#external-secret-mode" >§</a> External Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it has a way
@@ -256,16 +265,6 @@ to the client.</p>
 	<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h4 id="considerations"><a class="toc-anchor" href="#considerations" >§</a> Considerations</h4>
-<p>The <code>storeSecrets</code> and <code>returnSecrets</code> options can be enabled or disabled independently. A DID Registrar
-may define default values for these options, and/or it may allow a client to set them via
-the <a href="#options" ><code>options</code> input field</a>.</p>
-<p>Note that if neither option is enabled, then control over a DID may get permanently lost, since the DID Registrar
-operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> will generate DID controller keys internally, but it will
-neither store them nor return them to a client.</p>
-<p>If a DID Registrar is configured with options <code>storeSecrets=false</code> and <code>returnSecrets=true</code>, then a DID Registrar
-with option <code>storeSecrets=true</code> can be simulated by building a “wrapping DID Registrar” around an
-“inner DID Registrar”.</p>
 <h3 id="secret"><a class="toc-anchor" href="#secret" >§</a> <code>secret</code></h3>
 <p>This input field contains an object with DID controller keys and other secrets.</p>
 <p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this input field MAY contain one or more of the following:</p>
@@ -1233,7 +1232,6 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#clientsecretmode" ><code>clientSecretMode</code></a></li>
 <li><a href="#storesecrets" ><code>storeSecrets</code></a></li>
 <li><a href="#returnsecrets" ><code>returnSecrets</code></a></li>
-<li><a href="#considerations" >Considerations</a></li>
 </ul>
 </li>
 <li><a href="#secret" ><code>secret</code></a></li>
