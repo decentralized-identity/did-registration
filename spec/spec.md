@@ -564,7 +564,6 @@ In [Client-managed Secret Mode](#client-managed-secret-mode), this output field 
 Example:
 
 ```json
-
 {
 	"jobId": null,
 	"didState": {
@@ -602,17 +601,27 @@ Example:
 
 ```json
 {
-	"@context": [
-		"https://www.w3.org/ns/did/v1"
-	],
-	"id": "did:example:123",
-	"verificationMethod": [{
-		"type": "Ed25519VerificationKey2018",
-		"id": "did:example:123#key-1",
-		"publicKeyBase58": "EqRvGzVX3aoLYwZSdKhNd2q5Ez7EVbdPA4DVZW3ngn1U"
-	}],
-	"authentication": ["did:example:123#key-1"],
-	"assertionMethod": ["did:example:123#key-1"]
+	"jobId": null,
+	"didState": {
+		"state": "finished",
+		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"secret": { ... },
+		"didDocument": {
+			"@context": [
+				"https://www.w3.org/ns/did/v1"
+			],
+			"id": "did:example:123",
+			"verificationMethod": [{
+				"type": "Ed25519VerificationKey2018",
+				"id": "did:example:123#key-1",
+				"publicKeyBase58": "EqRvGzVX3aoLYwZSdKhNd2q5Ez7EVbdPA4DVZW3ngn1U"
+			}],
+			"authentication": ["did:example:123#key-1"],
+			"assertionMethod": ["did:example:123#key-1"]
+		}
+	},
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
 }
 ```
 
