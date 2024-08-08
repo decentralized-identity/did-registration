@@ -140,7 +140,8 @@ update(did, options, secret, didDocumentOperation, didDocument) -> jobId, didSta
 ```
 ____
 This function updates the DID document associated with the DID, either by completely replacing it, or
-by performing an incremental update (see the [`didDocumentOperation` input field](#diddocumentoperation)).
+by performing an incremental update, or in another way. The specific update operation to be executed is specified in the
+[`didDocumentOperation` input field](#diddocumentoperation).
 
 ### `deactivate()`
 
@@ -149,6 +150,22 @@ deactivate(did, options, secret) -> jobId, didState, didRegistrationMetadata, di
 ```
 ___
 This function deactivates the DID.
+
+### `execute()`
+
+```
+execute(did, options, secret, operation, operationData) -> jobId, didState, operationResult, didRegistrationMetadata, didDocumentMetadata
+```
+____
+This function executes an operation that uses the DID but is not related to the standard
+create/update/deactivate operations. This is essentially an extensibility feature that makes
+it possible to perform operations that do not affect the DID or DID document itself, but use
+them for any kind of additional functionality which uses the DID. The specific operation
+to be executed is specified in the [`operation` input field](#operation).
+
+::: note
+This operation is currently an experimental feature.
+:::
 
 ## Input Fields
 
@@ -358,7 +375,7 @@ Example:
 
 ### `didDocumentOperation`
 
-This input field indicates which update operation should be applied to a DID's associated DID document.
+This input field indicates which update operation(s) should be applied to a DID's associated DID document.
 
 For the [`create()` function](#create), this input field MUST be absent, and is implied to have a single value of `setDidDocument`.
 
@@ -457,6 +474,47 @@ For the [`create()` function](#create), this input field MUST contain a single J
 For the [`update()` function](#update), this input field is OPTIONAL. If present, it MUST contain a JSON array of JSON object values.
 
 For the [`deactivate()` function](#deactivate), this input field MUST be absent.
+
+For the [`execute()` function](#execute), this input field MUST be absent.
+
+### `operation`
+
+This input field indicates which operation(s) should be executed when the [`execute()` function](#execute) function is used to
+execute an operation that does not affect the DID or DID document itself.
+
+For the [`create()` function](#create), [`update()` function](#update), and [`deactivate()` function](#deactivate) this
+input field MUST be absent.
+
+For the [`execute()` function](#execute), this input field is REQUIRED and MUST contain a JSON array of string
+values to indicate one or more operations that should be executed.
+
+This specification does not define any concrete operation. It is expected that such operations will
+often be DID method-specific, although it is also possible that method-independent operations could be defined
+in the future by other specifications.
+
+Example:
+
+```json
+{
+	"options": {
+		"network": "mainnet"
+	},
+	"operation": ["addToTrustRegistry"],
+	"operationData": [{
+		"trustRegistryUrl": "https://example.com/registry"
+    }]
+}
+```
+
+### `operationData`
+
+This input field contains additional data when the [`execute()` function](#execute) function is used to
+execute an operation that does not affect the DID or DID document itself.
+
+For the [`create()` function](#create), [`update()` function](#update), and [`deactivate()` function](#deactivate) this
+input field MUST be absent.
+
+For the [`execute()` function](#execute), this input field is REQUIRED and MUST contain a JSON array of JSON object values.
 
 ## Output Fields
 
@@ -645,6 +703,30 @@ Possible uses of the `didDocumentMetadata` output field:
 
 * Hash values, smart contract addresses, blockchain heights, transaction numbers, etc.
 * Proofs added by a DID controller (e.g. to establish control authority).
+
+### `operationResult`
+
+This input field contains the result when the [`execute()` function](#execute) function is used to
+execute an operation that does not affect the DID or DID document itself.
+
+For the [`create()` function](#create), [`update()` function](#update), and [`deactivate()` function](#deactivate) this
+output field MUST be absent.
+
+For the [`execute()` function](#execute), this input field is REQUIRED and MUST contain a JSON array of JSON object values.
+
+Example:
+
+```json
+{
+	"jobId": null,
+	"didState": { ... },
+	"operationResult": [{
+		"myResult": "myResultValue"
+	}],
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
 
 ## States
 

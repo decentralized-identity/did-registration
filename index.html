@@ -182,12 +182,24 @@ various options and optionally an initial DID document.</p>
 </code></pre>
 <hr>
 <p>This function updates the DID document associated with the DID, either by completely replacing it, or
-by performing an incremental update (see the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>).</p>
+by performing an incremental update, or in another way. The specific update operation to be executed is specified in the
+<a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>.</p>
 <h3 id="deactivate"><a class="toc-anchor" href="#deactivate" >§</a> <code>deactivate()</code></h3>
 <pre><code>deactivate(did, options, secret) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function deactivates the DID.</p>
+<h3 id="execute"><a class="toc-anchor" href="#execute" >§</a> <code>execute()</code></h3>
+<pre><code>execute(did, options, secret, operation, operationData) -&gt; jobId, didState, operationResult, didRegistrationMetadata, didDocumentMetadata
+</code></pre>
+<hr>
+<p>This function executes an operation that uses the DID but is not related to the standard
+create/update/deactivate operations. This is essentially an extensibility feature that makes
+it possible to perform operations that do not affect the DID or DID document itself, but use
+them for any kind of additional functionality which uses the DID. The specific operation
+to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
+<div id="note-1" class="notice note"><a class="notice-link" href="#note-1">NOTE</a><p>This operation is currently an experimental feature.</p>
+</div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
 <p>This input field indicates the DID method that should be used for the DID operation.</p>
@@ -351,7 +363,7 @@ to the client.</p>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="diddocumentoperation"><a class="toc-anchor" href="#diddocumentoperation" >§</a> <code>didDocumentOperation</code></h3>
-<p>This input field indicates which update operation should be applied to a DID’s associated DID document.</p>
+<p>This input field indicates which update operation(s) should be applied to a DID’s associated DID document.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be absent, and is implied to have a single value of <code>setDidDocument</code>.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL. If present, it MUST contain a JSON array of string
 values to indicate one or more DID document operations that should be performed.
@@ -434,6 +446,34 @@ depending on the value of the <a href="#diddocumentoperation" ><code>didDocument
 <p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST contain a single JSON object value.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL. If present, it MUST contain a JSON array of JSON object values.</p>
 <p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
+<p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field MUST be absent.</p>
+<h3 id="operation"><a class="toc-anchor" href="#operation" >§</a> <code>operation</code></h3>
+<p>This input field indicates which operation(s) should be executed when the <a href="#execute" ><code>execute()</code> function</a> function is used to
+execute an operation that does not affect the DID or DID document itself.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, <a href="#update" ><code>update()</code> function</a>, and <a href="#deactivate" ><code>deactivate()</code> function</a> this
+input field MUST be absent.</p>
+<p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field is REQUIRED and MUST contain a JSON array of string
+values to indicate one or more operations that should be executed.</p>
+<p>This specification does not define any concrete operation. It is expected that such operations will
+often be DID method-specific, although it is also possible that method-independent operations could be defined
+in the future by other specifications.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"network"</span><span class="token operator">:</span> <span class="token string">"mainnet"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operation"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"addToTrustRegistry"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"operationData"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"trustRegistryUrl"</span><span class="token operator">:</span> <span class="token string">"https://example.com/registry"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="operationdata"><a class="toc-anchor" href="#operationdata" >§</a> <code>operationData</code></h3>
+<p>This input field contains additional data when the <a href="#execute" ><code>execute()</code> function</a> function is used to
+execute an operation that does not affect the DID or DID document itself.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, <a href="#update" ><code>update()</code> function</a>, and <a href="#deactivate" ><code>deactivate()</code> function</a> this
+input field MUST be absent.</p>
+<p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field is REQUIRED and MUST contain a JSON array of JSON object values.</p>
 <h2 id="output-fields"><a class="toc-anchor" href="#output-fields" >§</a> Output Fields</h2>
 <h3 id="jobid"><a class="toc-anchor" href="#jobid" >§</a> <code>jobId</code></h3>
 <p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
@@ -585,6 +625,23 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <li>Hash values, smart contract addresses, blockchain heights, transaction numbers, etc.</li>
 <li>Proofs added by a DID controller (e.g. to establish control authority).</li>
 </ul>
+<h3 id="operationresult"><a class="toc-anchor" href="#operationresult" >§</a> <code>operationResult</code></h3>
+<p>This input field contains the result when the <a href="#execute" ><code>execute()</code> function</a> function is used to
+execute an operation that does not affect the DID or DID document itself.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, <a href="#update" ><code>update()</code> function</a>, and <a href="#deactivate" ><code>deactivate()</code> function</a> this
+output field MUST be absent.</p>
+<p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field is REQUIRED and MUST contain a JSON array of JSON object values.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationResult"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+		<span class="token property">"myResult"</span><span class="token operator">:</span> <span class="token string">"myResultValue"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <h2 id="states"><a class="toc-anchor" href="#states" >§</a> States</h2>
 <p>The following sections explain the possible states of a DID registration process, which are returned as values of the
 <a href="#didstatestate" ><code>didState.state</code> output field</a>.</p>
@@ -1221,6 +1278,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#create" ><code>create()</code></a></li>
 <li><a href="#update" ><code>update()</code></a></li>
 <li><a href="#deactivate" ><code>deactivate()</code></a></li>
+<li><a href="#execute" ><code>execute()</code></a></li>
 </ul>
 </li>
 <li><a href="#input-fields" >Input Fields</a>
@@ -1237,6 +1295,8 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#secret" ><code>secret</code></a></li>
 <li><a href="#diddocumentoperation" ><code>didDocumentOperation</code></a></li>
 <li><a href="#diddocument" ><code>didDocument</code></a></li>
+<li><a href="#operation" ><code>operation</code></a></li>
+<li><a href="#operationdata" ><code>operationData</code></a></li>
 </ul>
 </li>
 <li><a href="#output-fields" >Output Fields</a>
@@ -1252,6 +1312,7 @@ https://uniregistrar.io/1.0/deactivate
 </li>
 <li><a href="#didregistrationmetadata" ><code>didRegistrationMetadata</code></a></li>
 <li><a href="#diddocumentmetadata" ><code>didDocumentMetadata</code></a></li>
+<li><a href="#operationresult" ><code>operationResult</code></a></li>
 </ul>
 </li>
 <li><a href="#states" >States</a>
