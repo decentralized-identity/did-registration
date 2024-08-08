@@ -156,7 +156,8 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<p>TODO: Discuss how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-1" class="notice todo"><a class="notice-link" href="#todo-1">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+</div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
 <img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
@@ -658,9 +659,10 @@ DID controller takes certain steps, before the DID operation can be continued.</
 <p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>redirectUrl</code> property, which indicates
 the URL of the web page where the client needs to be redirected.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<p>TODO: How does this work exactly if the client is not browser-based?</p>
-<p>TODO: Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs,
-nonces, states, etc.?</p>
+<div id="issue-1" class="notice issue"><a class="notice-link" href="#issue-1">ISSUE</a><p>How does this work exactly if the client is not browser-based?</p>
+</div>
+<div id="issue-2" class="notice issue"><a class="notice-link" href="#issue-2">ISSUE</a><p>Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs, nonces, states, etc.?</p>
+</div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
@@ -679,7 +681,8 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<p>TODO: Generated VM must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-2" class="notice todo"><a class="notice-link" href="#todo-2">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+</div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>

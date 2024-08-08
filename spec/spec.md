@@ -101,7 +101,9 @@ alternatively supplied by a client in the [`options`](#options) and/or [`secret`
 In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.
 
-TODO: Discuss how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.
+::: todo
+Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.
+:::
 
 This mode has one option that controls how DID controller keys are handled:
 [`clientSecretMode`](#clientsecretmode).
@@ -744,10 +746,13 @@ the URL of the web page where the client needs to be redirected.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
 
-TODO: How does this work exactly if the client is not browser-based?
+::: issue
+How does this work exactly if the client is not browser-based?
+:::
 
-TODO: Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs,
-nonces, states, etc.?
+::: issue
+Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs, nonces, states, etc.?
+:::
 
 Example:
 
@@ -775,7 +780,9 @@ The [`didState` output field](#didstate) MUST contain a property `verificationMe
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
 
-TODO: Generated VM must then be included in either "secret" or "didDocument" in next request.
+::: todo
+Explain that the generated verification method must then be included in either "secret" or "didDocument" in next request.
+:::
 
 Example:
 
