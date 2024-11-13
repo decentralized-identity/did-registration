@@ -125,6 +125,8 @@ This mode has one option that controls how DID controller keys are handled:
 
 ## Operations
 
+This section defines interfaces for the standard DID operations `create()`, `update()`, and `deactivate()`.
+
 ### `create()`
 
 ```
@@ -150,7 +152,7 @@ by performing an incremental update, or in another way. The specific update oper
 deactivate(did, options, secret) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
 ```
 ___
-This function deactivates the DID.
+This function deactivates the DID and associated DID document.
 
 ### `execute()`
 
