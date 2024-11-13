@@ -171,6 +171,7 @@ the client to perform cryptographic operations such as generating signatures.</p
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
 <img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
 <h2 id="operations"><a class="toc-anchor" href="#operations" >§</a> Operations</h2>
+<p>This section defines interfaces for the standard DID operations <code>create()</code>, <code>update()</code>, and <code>deactivate()</code>.</p>
 <h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
 <pre><code>create(method, options, secret, didDocument) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
@@ -188,7 +189,7 @@ by performing an incremental update, or in another way. The specific update oper
 <pre><code>deactivate(did, options, secret) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
-<p>This function deactivates the DID.</p>
+<p>This function deactivates the DID and associated DID document.</p>
 <h3 id="execute"><a class="toc-anchor" href="#execute" >§</a> <code>execute()</code></h3>
 <pre><code>execute(did, options, secret, operation, operationData) -&gt; jobId, didState, operationResult, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
@@ -851,6 +852,27 @@ properties, to explain the reason for the failure.</p>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
+<h2 id="did-url-operations"><a class="toc-anchor" href="#did-url-operations" >§</a> DID URL Operations</h2>
+<p>In addition to the <a href="#operations" >DID Operations</a> defined in previous sections, this specification
+also defines operations on resources identified by DID URLs.</p>
+<h3 id="createresource"><a class="toc-anchor" href="#createresource" >§</a> <code>createResource()</code></h3>
+<pre><code>createResource(did, relativeDidUrl, options, secret, data) -&gt; jobId, didState, didRegistrationMetadata, resourceMetadata
+</code></pre>
+<hr>
+<p>This function creates a new DID URL and associated resource, according to a known DID method, using
+various options and optionally the initial resource data.</p>
+<h3 id="updateresource"><a class="toc-anchor" href="#updateresource" >§</a> <code>updateResource()</code></h3>
+<pre><code>update(did, relativeDidUrl, options, secret, resourceOperation, data) -&gt; jobId, didState, didRegistrationMetadata, resourceMetadata
+</code></pre>
+<hr>
+<p>This function updates the resource associated with the DID URL, either by completely replacing it, or
+by performing an incremental update, or in another way. The specific update operation to be executed is specified in the
+<a href="#resourceoperation" ><code>resourceOperation</code> input field</a>.</p>
+<h3 id="deactivateresource"><a class="toc-anchor" href="#deactivateresource" >§</a> <code>deactivateResource()</code></h3>
+<pre><code>deactivateResource(did, relativeDidUrl, options, secret) -&gt; jobId, didState, didRegistrationMetadata, resourceMetadata
+</code></pre>
+<hr>
+<p>This function deactivates the DID URL and associated resource.</p>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
 <h3 id="verification-method-public-data"><a class="toc-anchor" href="#verification-method-public-data" >§</a> Verification Method Public Data</h3>
@@ -1328,6 +1350,13 @@ https://uniregistrar.io/1.0/deactivate
 </ul>
 </li>
 <li><a href="#didstatestatewait" ><code>didState.state=&quot;wait&quot;</code></a></li>
+</ul>
+</li>
+<li><a href="#did-url-operations" >DID URL Operations</a>
+<ul>
+<li><a href="#createresource" ><code>createResource()</code></a></li>
+<li><a href="#updateresource" ><code>updateResource()</code></a></li>
+<li><a href="#deactivateresource" ><code>deactivateResource()</code></a></li>
 </ul>
 </li>
 <li><a href="#data-structures" >Data Structures</a>
