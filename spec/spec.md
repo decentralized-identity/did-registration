@@ -1265,7 +1265,7 @@ the corresponding property value MUST be a JSON object which is called the **Dec
 A **Decryption Request** contains the following properties:
 
 * `payload`: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.
-* `encryptedPayload`: The Base64-encodedkey- byte array that represents the encrypted payload to be decrypted. This 0property is REQUIRED.
+* `encryptedPayload`: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This 0property is REQUIRED.
 * `kid`: This property is interpreted as in [[spec:RFC7517]] to indicate a specific key that should be used for decryption. Example value: `did:example:123#key-1`. This property is OPTIONAL.
 * `enc`: This property is interpreted as in [[spec:RFC7516]] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: `A128GCM`, `A256GCM`. This property is REQUIRED.
 * `purpose`: This property indicates the specific intent of the decryption process. Example value: `parsing`. This property is OPTIONAL.

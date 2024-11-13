@@ -1070,7 +1070,7 @@ the corresponding property value MUST be a JSON object which is called the <stro
 <p>A <strong>Decryption Request</strong> contains the following properties:</p>
 <ul>
 <li><code>payload</code>: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.</li>
-<li><code>encryptedPayload</code>: The Base64-encodedkey- byte array that represents the encrypted payload to be decrypted. This 0property is REQUIRED.</li>
+<li><code>encryptedPayload</code>: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This 0property is REQUIRED.</li>
 <li><code>kid</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>] to indicate a specific key that should be used for decryption. Example value: <code>did:example:123#key-1</code>. This property is OPTIONAL.</li>
 <li><code>enc</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7516">RFC7516</a>] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: <code>A128GCM</code>, <code>A256GCM</code>. This property is REQUIRED.</li>
 <li><code>purpose</code>: This property indicates the specific intent of the decryption process. Example value: <code>parsing</code>. This property is OPTIONAL.</li>
