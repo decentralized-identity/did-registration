@@ -1024,7 +1024,7 @@ various options and optionally the initial resource data.
 ### `updateResource()`
 
 ```
-update(did, relativeDidUrl, options, secret, resourceOperation, data) -> jobId, didState, didRegistrationMetadata, resourceMetadata
+updateResource(did, relativeDidUrl, options, secret, resourceOperation, data) -> jobId, didState, didRegistrationMetadata, resourceMetadata
 ```
 ____
 This function updates the resource associated with the DID URL, either by completely replacing it, or
