@@ -1015,7 +1015,7 @@ also defines operations on resources identified by DID URLs.
 ### `createResource()`
 
 ```
-createResource(did, relativeDidUrl, options, secret, data) -> jobId, didState, didRegistrationMetadata, resourceMetadata
+createResource(did, relativeDidUrl, options, secret, content) -> jobId, didState, didRegistrationMetadata, contentMetadata
 ```
 ___
 This function creates a new DID URL and associated resource, according to a known DID method, using
@@ -1024,7 +1024,7 @@ various options and optionally the initial resource data.
 ### `updateResource()`
 
 ```
-updateResource(did, relativeDidUrl, options, secret, resourceOperation, data) -> jobId, didState, didRegistrationMetadata, resourceMetadata
+updateResource(did, relativeDidUrl, options, secret, resourceOperation, content) -> jobId, didState, didRegistrationMetadata, contentMetadata
 ```
 ____
 This function updates the resource associated with the DID URL, either by completely replacing it, or
@@ -1034,7 +1034,7 @@ by performing an incremental update, or in another way. The specific update oper
 ### `deactivateResource()`
 
 ```
-deactivateResource(did, relativeDidUrl, options, secret) -> jobId, didState, didRegistrationMetadata, resourceMetadata
+deactivateResource(did, relativeDidUrl, options, secret) -> jobId, didState, didRegistrationMetadata, contentMetadata
 ```
 ___
 This function deactivates the DID URL and associated resource.
