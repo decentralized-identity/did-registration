@@ -1024,12 +1024,12 @@ various options and optionally the initial resource data.
 ### `updateResource()`
 
 ```
-updateResource(did, relativeDidUrl, options, secret, resourceOperation, content) -> jobId, didUrlState, didRegistrationMetadata, contentMetadata
+updateResource(did, relativeDidUrl, options, secret, contentOperation, content) -> jobId, didUrlState, didRegistrationMetadata, contentMetadata
 ```
 ____
-This function updates the resource associated with the DID URL, either by completely replacing it, or
-by performing an incremental update, or in another way. The specific update operation to be executed is specified in the
-[`resourceOperation` input field](#resourceoperation).
+This function updates the content of the resource associated with the DID URL, either by completely replacing it, or
+by performing an incremental update, or in another way. The specific update resource operation to be executed is specified in the
+[`contentOperation` input field](#contentoperation).
 
 ### `deactivateResource()`
 

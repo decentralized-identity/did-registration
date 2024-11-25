@@ -863,12 +863,12 @@ also defines operations on resources identified by DID URLs.</p>
 <p>This function creates a new DID URL and associated resource, according to a known DID method, using
 various options and optionally the initial resource data.</p>
 <h3 id="updateresource"><a class="toc-anchor" href="#updateresource" >§</a> <code>updateResource()</code></h3>
-<pre><code>updateResource(did, relativeDidUrl, options, secret, resourceOperation, content) -&gt; jobId, didUrlState, didRegistrationMetadata, contentMetadata
+<pre><code>updateResource(did, relativeDidUrl, options, secret, contentOperation, content) -&gt; jobId, didUrlState, didRegistrationMetadata, contentMetadata
 </code></pre>
 <hr>
-<p>This function updates the resource associated with the DID URL, either by completely replacing it, or
-by performing an incremental update, or in another way. The specific update operation to be executed is specified in the
-<a href="#resourceoperation" ><code>resourceOperation</code> input field</a>.</p>
+<p>This function updates the content of the resource associated with the DID URL, either by completely replacing it, or
+by performing an incremental update, or in another way. The specific update resource operation to be executed is specified in the
+<a href="#contentoperation" ><code>contentOperation</code> input field</a>.</p>
 <h3 id="deactivateresource"><a class="toc-anchor" href="#deactivateresource" >§</a> <code>deactivateResource()</code></h3>
 <pre><code>deactivateResource(did, relativeDidUrl, options, secret) -&gt; jobId, didUrlState, didRegistrationMetadata, contentMetadata
 </code></pre>
