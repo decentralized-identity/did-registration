@@ -29,7 +29,7 @@ Each DID method specifies how to create/resolve/update/deactivate DIDs within a 
 registry. How exactly this works can be very different depending on the DID method and may involve
 various steps, architectural components, and network communication. The process of resolving a DID
 to a DID document by executing the read() operation is well-understood and specified in the
-[DID Resolution](https://w3c-ccg.github.io/did-resolution/) specification. This document complements
+[DID Resolution](https://www.w3.org/TR/did-resolution/) specification. This document complements
 the concept of a "DID Resolver" by also defining a "DID Registrar" component that can execute the three remaining
 create/update/deactivate operations via a common interface.
 
