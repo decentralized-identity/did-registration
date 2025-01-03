@@ -628,11 +628,11 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <li>Proofs added by a DID controller (e.g. to establish control authority).</li>
 </ul>
 <h3 id="operationresult"><a class="toc-anchor" href="#operationresult" >§</a> <code>operationResult</code></h3>
-<p>This input field contains the result when the <a href="#execute" ><code>execute()</code> function</a> function is used to
+<p>This output field contains the result when the <a href="#execute" ><code>execute()</code> function</a> function is used to
 execute an operation that does not affect the DID or DID document itself.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, <a href="#update" ><code>update()</code> function</a>, and <a href="#deactivate" ><code>deactivate()</code> function</a> this
 output field MUST be absent.</p>
-<p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field is REQUIRED and MUST contain a JSON array of JSON object values.</p>
+<p>For the <a href="#execute" ><code>execute()</code> function</a>, this output field is REQUIRED and MUST contain a JSON array of JSON object values.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>

@@ -188,13 +188,13 @@ Possible uses of the `didDocumentMetadata` output field:
 
 ### `operationResult`
 
-This input field contains the result when the [`execute()` function](#execute) function is used to
+This output field contains the result when the [`execute()` function](#execute) function is used to
 execute an operation that does not affect the DID or DID document itself.
 
 For the [`create()` function](#create), [`update()` function](#update), and [`deactivate()` function](#deactivate) this
 output field MUST be absent.
 
-For the [`execute()` function](#execute), this input field is REQUIRED and MUST contain a JSON array of JSON object values.
+For the [`execute()` function](#execute), this output field is REQUIRED and MUST contain a JSON array of JSON object values.
 
 Example:
 
