@@ -10,7 +10,26 @@
         "host": "github",
         "account": "decentralized-identity",
         "repo": "did-registration"
-      }
+      },
+      "markdown_paths": [
+        "00_title.md",
+        "01_abstract.md",
+        "02_status.md",
+        "03_terminology.md",
+        "04_key_management.md",
+        "05_operations.md",
+        "06_input_fields.md",
+        "07_output_fields.md",
+        "08_states.md",
+        "09_did_url_operations.md",
+        "10_data_structures.md",
+        "11_extensions.md",
+        "12_architecture_considerations.md",
+        "13_https_binding.md",
+        "14_normative_references.md",
+        "15_acknowledgements.md",
+        "16_appendix.md"
+      ]
     }
   ]
 }
