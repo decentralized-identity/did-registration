@@ -9,6 +9,8 @@ have to be called multiple times, and the `operationState` is used to keep track
 This output field MUST be absent or have a `null` value if the value of the [`didState.state` output field](#didstatestate)
 is either `finished` or `failed`, and MUST NOT have a `null` value otherwise.
 
+If present, this output field MUST contain either a string or an object.
+
 Example:
 
 ```json
