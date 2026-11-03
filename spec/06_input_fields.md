@@ -170,7 +170,7 @@ Example:
 
 ```json
 {
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"did": null,
 	"options": { ... },
 	"secret": {
@@ -190,7 +190,7 @@ Example:
 
 ```json
 {
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"did": null,
 	"options": { ... },
 	"secret": {

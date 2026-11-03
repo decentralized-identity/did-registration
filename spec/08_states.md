@@ -11,7 +11,7 @@ Example:
 
 ```json
 {
-	"jobId": null,
+	"operationState": null,
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
@@ -36,7 +36,7 @@ Example:
 
 ```json
 {
-	"jobId": null,
+	"operationState": null,
 	"didState": {
 		"state": "failed",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
@@ -75,7 +75,7 @@ Example:
 
 ```json
 {
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
 		"state": "action",
 		"action": "fundingRequired",
@@ -108,7 +108,7 @@ Example:
 
 ```json
 {
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
 		"state": "action",
 		"action": "redirect",
@@ -138,7 +138,7 @@ Example:
 
 ```json
 {
-	"jobId": null,
+	"operationState": null,
 	"didState": {
 		"state": "action",
 		"action": "getVerificationMethod",
@@ -156,7 +156,7 @@ Example:
 
 ```json
 {
-	"jobId": null,
+	"operationState": null,
 	"didState": {
 		"state": "action",
 		"action": "getVerificationMethod",
@@ -185,7 +185,7 @@ Example:
 
 ```json
 {
-	"jobId": "1234",
+	"operationState": "1234",
 	"didState": {
 		"state": "action",
 		"action": "signPayload",
@@ -225,7 +225,7 @@ Example:
 
 ```json
 {
-	"jobId": "1234",
+	"operationState": "1234",
 	"didState": {
 		"state": "action",
 		"action": "decryptPayload",
@@ -263,7 +263,7 @@ Example:
 
 ```json
 {
-	"jobId": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
 		"state": "wait",
 		"wait": "Please wait until the transaction is complete.",

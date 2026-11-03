@@ -1,10 +1,10 @@
 ## Output Fields
 
-### `jobId`
+### `operationState`
 
 When executing DID operations, an operation can turn into a longer-running "job", during which the operation's
 state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
-have to be called multiple times, and the `jobId` is used to keep track of the ongoing process.
+have to be called multiple times, and the `operationState` is used to keep track of the ongoing process.
 
 This output field MUST be absent or have a null value if the value of the [`didState.state` output field](#didstatestate)
 is either `finished` or `failed`, and MUST NOT have a null value otherwise.
@@ -13,7 +13,7 @@ Example:
 
 ```json
 {
-	"jobId": "2a4b5d3f-7af9-44c8-a5c8-39f893fa0f78",
+	"operationState": "2a4b5d3f-7af9-44c8-a5c8-39f893fa0f78",
 	"didState": { ... },
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
@@ -43,7 +43,7 @@ is finished, failed, or if a longer-running "job" has been created that requires
 This specification defines four well-known values for this property: `finished`, `failed`, `action`, `wait`. These
 values are further explained in [States](#states).
 
-The following diagram illustrates the use of the [`didState.state` output field](#didstatestate) and [`jobId` output field](#jobid) output fields.
+The following diagram illustrates the use of the [`didState.state` output field](#didstatestate) and [`operationState` output field](#operationstate) output fields.
 
 ![Diagram showing the flow and states of DID operations](images/diagram-flow.png)
 
@@ -72,7 +72,7 @@ Example:
 
 ```json
 {
-	"jobId": null,
+	"operationState": null,
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
@@ -105,7 +105,7 @@ Example:
 
 ```json
 {
-	"jobId": null,
+	"operationState": null,
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
@@ -141,7 +141,7 @@ Example:
 
 ```json
 {
-	"jobId": null,
+	"operationState": null,
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
@@ -200,7 +200,7 @@ Example:
 
 ```json
 {
-	"jobId": null,
+	"operationState": null,
 	"didState": { ... },
 	"operationResult": [{
 		"myResult": "myResultValue"
