@@ -6,8 +6,8 @@ When executing DID operations, an operation can turn into a longer-running "job"
 state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
 have to be called multiple times, and the `operationState` is used to keep track of the ongoing process.
 
-This output field MUST be absent or have a null value if the value of the [`didState.state` output field](#didstatestate)
-is either `finished` or `failed`, and MUST NOT have a null value otherwise.
+This output field MUST be absent or have a `null` value if the value of the [`didState.state` output field](#didstatestate)
+is either `finished` or `failed`, and MUST NOT have a `null` value otherwise.
 
 Example:
 

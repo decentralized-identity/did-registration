@@ -481,8 +481,8 @@ input field MUST be absent.</p>
 <p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
 state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
 have to be called multiple times, and the <code>operationState</code> is used to keep track of the ongoing process.</p>
-<p>This output field MUST be absent or have a null value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a>
-is either <code>finished</code> or <code>failed</code>, and MUST NOT have a null value otherwise.</p>
+<p>This output field MUST be absent or have a <code>null</code> value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a>
+is either <code>finished</code> or <code>failed</code>, and MUST NOT have a <code>null</code> value otherwise.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"2a4b5d3f-7af9-44c8-a5c8-39f893fa0f78"</span><span class="token punctuation">,</span>
