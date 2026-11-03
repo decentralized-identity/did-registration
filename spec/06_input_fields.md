@@ -27,6 +27,15 @@ restrict how this input field is used.
 
 For the [`update()` function](#update) and [`deactivate()` function](#deactivate), this input field MUST NOT be null.
 
+### `operationState`
+
+When executing DID operations, an operation can turn into a longer-running "job", during which the operation's
+state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
+have to be called multiple times, and the `operationState` is used to keep track of the ongoing process.
+
+The value of this input field MUST be copied from the [`operationState` output field](##operationstate-2)
+of a previous resposne from the DID Registrar, if present. Otherwise, it MUST be null.
+
 ### `options`
  
 This input field contains an object with various options for the DID operation, such as the network where the DID

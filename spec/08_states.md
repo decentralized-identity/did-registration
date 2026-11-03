@@ -11,13 +11,13 @@ Example:
 
 ```json
 {
-	"operationState": null,
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
 		"secret": { ... },
 		"didDocument": { ... }
 	},
+	"operationState": null,
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
 }
@@ -36,12 +36,12 @@ Example:
 
 ```json
 {
-	"operationState": null,
 	"didState": {
 		"state": "failed",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
 		"reason": "networkUnavailable"
 	},
+	"operationState": null,
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
 }
@@ -75,12 +75,12 @@ Example:
 
 ```json
 {
-	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
 		"state": "action",
 		"action": "fundingRequired",
 		"description": "Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."
 	},
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
 }
@@ -108,12 +108,12 @@ Example:
 
 ```json
 {
-	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
 		"state": "action",
 		"action": "redirect",
 		"redirectUrl" : "https://..."
 	},
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
 }
@@ -138,7 +138,6 @@ Example:
 
 ```json
 {
-	"operationState": null,
 	"didState": {
 		"state": "action",
 		"action": "getVerificationMethod",
@@ -147,6 +146,7 @@ Example:
 			"type": "Ed25519VerificationKey2018"
 		}]
 	},
+	"operationState": null,
 	"didRegistrationMetadata": {},
 	"didDocumentMetadata": {}
 }
@@ -156,7 +156,6 @@ Example:
 
 ```json
 {
-	"operationState": null,
 	"didState": {
 		"state": "action",
 		"action": "getVerificationMethod",
@@ -165,6 +164,7 @@ Example:
 			"type": "EcdsaSecp256k1VerificationKey2019"
 		}]
 	},
+	"operationState": null,
 	"didRegistrationMetadata": {},
 	"didDocumentMetadata": {}
 }
@@ -185,7 +185,6 @@ Example:
 
 ```json
 {
-	"operationState": "1234",
 	"didState": {
 		"state": "action",
 		"action": "signPayload",
@@ -205,6 +204,7 @@ Example:
 			}
 		}
 	},
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didRegistrationMetadata": {},
 	"didDocumentMetadata": {}
 }
@@ -225,7 +225,6 @@ Example:
 
 ```json
 {
-	"operationState": "1234",
 	"didState": {
 		"state": "action",
 		"action": "decryptPayload",
@@ -242,6 +241,7 @@ Example:
 			}
 		}
 	},
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didRegistrationMetadata": {},
 	"didDocumentMetadata": {}
 }
@@ -263,12 +263,12 @@ Example:
 
 ```json
 {
-	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didState": {
 		"state": "wait",
 		"wait": "Please wait until the transaction is complete.",
 		"waitTime": 3600000
 	},
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
 }
