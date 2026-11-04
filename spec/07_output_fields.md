@@ -178,7 +178,7 @@ Example:
 	"didState": { ... },
 	"operationState": {
 		"currentStep": 3,
-		""
+		"someData": { ... }
     },
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
