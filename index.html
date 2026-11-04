@@ -166,7 +166,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-27" class="notice todo"><a class="notice-link" href="#todo-27">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-9" class="notice todo"><a class="notice-link" href="#todo-9">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -200,7 +200,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-14" class="notice note"><a class="notice-link" href="#note-14">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-5" class="notice note"><a class="notice-link" href="#note-5">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -229,7 +229,7 @@ have to be called multiple times, and the <code>operationState</code> is used to
 <p>The value of this input field MUST be copied from the <a href="##operationstate-2" ><code>operationState</code> output field</a>
 of a previous response from the DID Registrar, if present. Otherwise, it MUST be null.</p>
 <h3 id="options"><a class="toc-anchor" href="#options" >§</a> <code>options</code></h3>
-<p>This input field contains an object with various options for the DID operation, such as the network where the DID
+<p>This input field contains a JSON object with various options for the DID operation, such as the network where the DID
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
 applicable across all DID methods.</p>
 <p>This specification defines several DID method-independent properties for this field that are relevant to <a href="#key-management" >Key Management</a>.</p>
@@ -285,7 +285,7 @@ to the client.</p>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="secret"><a class="toc-anchor" href="#secret" >§</a> <code>secret</code></h3>
-<p>This input field contains an object with DID controller keys and other secrets.</p>
+<p>This input field contains a JSON object with DID controller keys and other secrets.</p>
 <p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this input field MAY contain one or more of the following:</p>
 <ul>
 <li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-private-data" >Verification Method Private Data</a> objects.</li>
@@ -374,15 +374,16 @@ to the client.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST be absent, and is implied to have a single value of <code>setDidDocument</code>.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL. If present, it MUST contain a JSON array of string
 values to indicate one or more DID document operations that should be performed.
+Each entry in this JSON array corresponds to a matching entry at the same index in the <a href="#diddocument" ><code>didDocument</code> input field</a>.
 If it is absent, it is implied to have a single value of <code>&quot;setDidDocument&quot;</code>.</p>
 <p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
 <p>This specification defines several standard values for this operation. Individual DID methods MAY specify other
 ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 <p>Possible values:</p>
 <ul>
-<li><code>&quot;setDidDocument&quot;</code>: The <a href="#didDocument" ><code>didDocument</code> input field</a> contains the new DID document of the DID after the DID operation is executed.</li>
-<li><code>&quot;addToDidDocument&quot;</code>: The <a href="#didDocument" ><code>didDocument</code> input field</a> contains properties to be added to the current DID document of the DID after the DID operation is executed.</li>
-<li><code>&quot;removeFromDidDocument&quot;</code>: The <a href="#didDocument" ><code>didDocument</code> input field</a> contains properties to be removed from the current DID document of the DID after the DID operation is executed.</li>
+<li><code>&quot;setDidDocument&quot;</code>: The corresponding entry in the <a href="#diddocument" ><code>didDocument</code> input field</a> contains the new DID document of the DID after the DID operation is executed.</li>
+<li><code>&quot;addToDidDocument&quot;</code>: The corresponding entry in the <a href="#diddocument" ><code>didDocument</code> input field</a> contains properties to be added to the current DID document of the DID after the DID operation is executed.</li>
+<li><code>&quot;removeFromDidDocument&quot;</code>: The corresponding entry in the <a href="#diddocument" ><code>didDocument</code> input field</a> contains properties to be removed from the current DID document of the DID after the DID operation is executed.</li>
 <li>… other DID method-specific DID document operations …</li>
 </ul>
 <p>Example:</p>
@@ -440,18 +441,19 @@ ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 <ul>
 <li>If the update operation is <code>&quot;setDidDocument&quot;</code>, then it may be transformed into a combination of <code>&quot;addToDidDocument&quot;</code>
 and <code>&quot;removeFromDidDocument&quot;</code>, by first resolving the current DID document, and then calculating incremental
-changes (diffs) between the resolved DID document and the value of the <a href="#didDocument" ><code>didDocument</code> input field</a>.</li>
+changes (diffs) between the resolved DID document and the value of the <a href="#didcocument" ><code>didDocument</code> input field</a>.</li>
 <li>If the update operation is either <code>&quot;addToDidDocument&quot;</code> or <code>&quot;removeFromDidDocument&quot;</code>, then it may be transformed
 into <code>&quot;setDidDocument&quot;</code>, by first resolving the current DID document, and then calculating the updated complete
-DID document after applying the incremental changes (diffs) in the <a href="#didDocument" ><code>didDocument</code> input field</a>.</li>
+DID document after applying the incremental changes (diffs) in the <a href="#didcocument" ><code>didDocument</code> input field</a>.</li>
 </ul>
 <p>A DID Registrar may or may not support certain update operations, and it may or may not support internal
 transformation between them.</p>
 <h3 id="diddocument"><a class="toc-anchor" href="#diddocument" >§</a> <code>didDocument</code></h3>
 <p>This input field contains either a complete DID document, or incremental changes in a DID document,
 depending on the value of the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>.</p>
-<p>For the <a href="#create" ><code>create()</code> function</a>, this input field MUST contain a single JSON object value.</p>
-<p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL. If present, it MUST contain a JSON array of JSON object values.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>, this input field is OPTIONAL. If present, it MUST contain a single JSON object value.</p>
+<p>For the <a href="#update" ><code>update()</code> function</a>, this input field is OPTIONAL. If present, it MUST contain a JSON array of JSON object values.
+Each entry in this JSON array corresponds to a matching entry at the same index in the <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>.</p>
 <p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
 <p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field MUST be absent.</p>
 <h3 id="operation"><a class="toc-anchor" href="#operation" >§</a> <code>operation</code></h3>
@@ -483,7 +485,7 @@ input field MUST be absent.</p>
 <p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field is REQUIRED and MUST contain a JSON array of JSON object values.</p>
 <h2 id="output-fields"><a class="toc-anchor" href="#output-fields" >§</a> Output Fields</h2>
 <h3 id="didstate"><a class="toc-anchor" href="#didstate" >§</a> <code>didState</code></h3>
-<p>This output field contains an object with the following fields:</p>
+<p>This output field contains a JSON object with the following fields:</p>
 <ul>
 <li><a href="#didstatestate" ><code>didState.state</code></a>: The current state of DID operations.</li>
 <li><a href="#didstatedid" ><code>didState.did</code></a>: The DID at the end of the DID operation.</li>
@@ -510,7 +512,7 @@ then the value of this output field MUST NOT be null.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this output field MUST NOT
 be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when executing the function.</p>
 <h4 id="didstatesecret"><a class="toc-anchor" href="#didstatesecret" >§</a> <code>didState.secret</code></h4>
-<p>This output field contains an object with DID controller keys and other secrets.</p>
+<p>This output field contains a JSON object with DID controller keys and other secrets.</p>
 <p>It MUST be present if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> and the
 <a href="#returnsecrets-option" ><code>returnSecrets</code> option</a> is set to <code>true</code>, and MUST NOT be present otherwise.</p>
 <p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this output field MAY contain one or more of the following:</p>
@@ -607,7 +609,7 @@ state might change. In order for a DID operation to complete, the DID create/upd
 have to be called multiple times, and the <code>operationState</code> is used to keep track of the ongoing process.</p>
 <p>This output field MUST be absent or have a <code>null</code> value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a>
 is either <code>finished</code> or <code>failed</code>, and MUST NOT have a <code>null</code> value otherwise.</p>
-<p>If present, this output field MUST contain either a string or an object. The type and meaning of the value is
+<p>If present, this output field MUST contain either a string or a JSON object. The type and meaning of the value is
 method-specific and not further specified here.</p>
 <p>If present, the value of this output field MUST be copied to the <a href="##operationstate" ><code>operationState</code> input field</a>
 of a next request to the DID Registrar.</p>
@@ -736,7 +738,7 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="todo-28" class="notice todo"><a class="notice-link" href="#todo-28">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-10" class="notice todo"><a class="notice-link" href="#todo-10">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -1120,7 +1122,8 @@ which is called the <strong>Decryption Response</strong>.</p>
 <h2 id="algorithm"><a class="toc-anchor" href="#algorithm" >§</a> Algorithm</h2>
 <p>This section defines an algorithm that clients can use to execute the <a href="#operations" >operations</a> with
 <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
-<h3 id="step-1"><a class="toc-anchor" href="#step-1" >§</a> Step 1</h3>
+<h3 id="initial-request"><a class="toc-anchor" href="#initial-request" >§</a> Initial Request</h3>
+<h3 id="handling"><a class="toc-anchor" href="#handling" >§</a> Handling</h3>
 <h3 id="step-2"><a class="toc-anchor" href="#step-2" >§</a> Step 2</h3>
 <h3 id="step-3"><a class="toc-anchor" href="#step-3" >§</a> Step 3</h3>
 <h2 id="extensions"><a class="toc-anchor" href="#extensions" >§</a> Extensions</h2>
@@ -1376,7 +1379,8 @@ https://uniregistrar.io/1.0/deactivate
 </li>
 <li><a href="#algorithm" >Algorithm</a>
 <ul>
-<li><a href="#step-1" >Step 1</a></li>
+<li><a href="#initial-request" >Initial Request</a></li>
+<li><a href="#handling" >Handling</a></li>
 <li><a href="#step-2" >Step 2</a></li>
 <li><a href="#step-3" >Step 3</a></li>
 </ul>

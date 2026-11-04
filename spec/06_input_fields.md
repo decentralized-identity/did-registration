@@ -38,7 +38,7 @@ of a previous response from the DID Registrar, if present. Otherwise, it MUST be
 
 ### `options`
  
-This input field contains an object with various options for the DID operation, such as the network where the DID
+This input field contains a JSON object with various options for the DID operation, such as the network where the DID
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
 applicable across all DID methods.
 
@@ -114,7 +114,7 @@ Example:
 
 ### `secret`
 
-This input field contains an object with DID controller keys and other secrets.
+This input field contains a JSON object with DID controller keys and other secrets.
 
 In [Internal Secret Mode](#internal-secret-mode), this input field MAY contain one or more of the following:
 
@@ -219,6 +219,7 @@ For the [`create()` function](#create), this input field MUST be absent, and is 
 
 For the [`update()` function](#update), this input field is OPTIONAL. If present, it MUST contain a JSON array of string
 values to indicate one or more DID document operations that should be performed.
+Each entry in this JSON array corresponds to a matching entry at the same index in the [`didDocument` input field](#diddocument).
 If it is absent, it is implied to have a single value of `"setDidDocument"`.
 
 For the [`deactivate()` function](#deactivate), this input field MUST be absent.
@@ -228,9 +229,9 @@ ways of executing an [`update()` function](#update).
 
 Possible values:
 
-- `"setDidDocument"`: The [`didDocument` input field](#didDocument) contains the new DID document of the DID after the DID operation is executed.
-- `"addToDidDocument"`: The [`didDocument` input field](#didDocument) contains properties to be added to the current DID document of the DID after the DID operation is executed.
-- `"removeFromDidDocument"`: The [`didDocument` input field](#didDocument) contains properties to be removed from the current DID document of the DID after the DID operation is executed.
+- `"setDidDocument"`: The corresponding entry in the [`didDocument` input field](#diddocument) contains the new DID document of the DID after the DID operation is executed.
+- `"addToDidDocument"`: The corresponding entry in the [`didDocument` input field](#diddocument) contains properties to be added to the current DID document of the DID after the DID operation is executed.
+- `"removeFromDidDocument"`: The corresponding entry in the [`didDocument` input field](#diddocument) contains properties to be removed from the current DID document of the DID after the DID operation is executed.
 - ... other DID method-specific DID document operations ...
 
 Example:
@@ -294,10 +295,10 @@ Note that some of the above update operations can be internally transformed into
 
 - If the update operation is `"setDidDocument"`, then it may be transformed into a combination of `"addToDidDocument"`
   and `"removeFromDidDocument"`, by first resolving the current DID document, and then calculating incremental
-  changes (diffs) between the resolved DID document and the value of the [`didDocument` input field](#didDocument).
+  changes (diffs) between the resolved DID document and the value of the [`didDocument` input field](#didcocument).
 - If the update operation is either `"addToDidDocument"` or `"removeFromDidDocument"`, then it may be transformed
   into `"setDidDocument"`, by first resolving the current DID document, and then calculating the updated complete
-  DID document after applying the incremental changes (diffs) in the [`didDocument` input field](#didDocument).
+  DID document after applying the incremental changes (diffs) in the [`didDocument` input field](#didcocument).
 
 A DID Registrar may or may not support certain update operations, and it may or may not support internal
 transformation between them.
@@ -307,9 +308,10 @@ transformation between them.
 This input field contains either a complete DID document, or incremental changes in a DID document,
 depending on the value of the [`didDocumentOperation` input field](#diddocumentoperation).
 
-For the [`create()` function](#create), this input field MUST contain a single JSON object value.
+For the [`create()` function](#create), this input field is OPTIONAL. If present, it MUST contain a single JSON object value.
 
 For the [`update()` function](#update), this input field is OPTIONAL. If present, it MUST contain a JSON array of JSON object values.
+Each entry in this JSON array corresponds to a matching entry at the same index in the [`didDocumentOperation` input field](#diddocumentoperation).
 
 For the [`deactivate()` function](#deactivate), this input field MUST be absent.
 

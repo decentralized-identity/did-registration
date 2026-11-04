@@ -2,7 +2,7 @@
 
 ### `didState`
 
-This output field contains an object with the following fields:
+This output field contains a JSON object with the following fields:
 
 * [`didState.state`](#didstatestate): The current state of DID operations.
 * [`didState.did`](#didstatedid): The DID at the end of the DID operation.
@@ -39,7 +39,7 @@ be null, and its value MUST match the [`did` input field](#did) that was used wh
 
 #### `didState.secret`
 
-This output field contains an object with DID controller keys and other secrets.
+This output field contains a JSON object with DID controller keys and other secrets.
 
 It MUST be present if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode) and the
 [`returnSecrets` option](#returnsecrets-option) is set to `true`, and MUST NOT be present otherwise.
@@ -154,7 +154,7 @@ have to be called multiple times, and the `operationState` is used to keep track
 This output field MUST be absent or have a `null` value if the value of the [`didState.state` output field](#didstatestate)
 is either `finished` or `failed`, and MUST NOT have a `null` value otherwise.
 
-If present, this output field MUST contain either a string or an object. The type and meaning of the value is
+If present, this output field MUST contain either a string or a JSON object. The type and meaning of the value is
 method-specific and not further specified here.
 
 If present, the value of this output field MUST be copied to the [`operationState` input field](##operationstate)
