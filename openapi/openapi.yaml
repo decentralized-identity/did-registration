@@ -1,0 +1,1035 @@
+openapi: 3.1.0
+servers:
+  - url: "/1.0/"
+info:
+  title: DID Registration
+  description: DID Registration
+  version: 1.0.1
+  contact:
+    name: Decentralized Identity Foundation
+    email: markus@danubetech.com
+paths:
+  "/create":
+    post:
+      summary: Create a DID
+      description: <p>This endpoint creates a DID. As input it takes the DID, a DID
+        document, plus optional DID registration <a href="https://identity.foundation/did-registration/#options">options</a>
+        and <a href="https://identity.foundation/did-registration/#secret">secrets</a>
+        needed to create a DID. The output is a state object that represents the current
+        state of the DID creation process.</p> <p>See the <a href="https://identity.foundation/did-registration/#create">DID
+        Registration</a> specification for additional details.</p>
+      operationId: create
+      tags:
+        - Universal Registrar
+      parameters:
+        - in: query
+          required: true
+          name: method
+          schema:
+            type: string
+          description: The requested DID method for the operation.
+          example: key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRequest"
+      responses:
+        "200":
+          description: The request was successful, but the DID may not be fully created
+            yet, as indicated by the "didState.state" and "operationState" output fields. Additional
+            state information plus metadata are available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateState"
+        "201":
+          description: The DID has been successfully created, as indicated by the
+            "didState.state" output field. Additional state information (including
+            the created DID) plus metadata are available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateState"
+        "400":
+          description: A problem with the input fields has occurred. Additional state
+            information plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateState"
+        "500":
+          description: An internal error has occurred. Additional state information
+            plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateState"
+  "/update":
+    post:
+      summary: Update a DID
+      description: <p>This endpoint updates a DID. As input it takes the existing
+        DID, a DID document, plus optional DID registration <a href="https://identity.foundation/did-registration/#options">options</a>
+        and <a href="https://identity.foundation/did-registration/#secret">secrets</a>
+        needed to update a DID. The output is a state object that represents the current
+        state of the DID update process.</p> <p>See the <a href="https://identity.foundation/did-registration/#update">DID
+        Registration</a> specification for additional details.</p>
+      operationId: update
+      tags:
+        - Universal Registrar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRequest"
+      responses:
+        "200":
+          description: The request was successful, and the DID may or may not be fully
+            updated yet, as indicated by the "didState.state" and "operationState" output fields.
+            Additional state information plus metadata are available in the response
+            body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateState"
+        "400":
+          description: A problem with the input fields has occurred. Additional state
+            information plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateState"
+        "500":
+          description: An internal error has occurred. Additional state information
+            plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateState"
+  "/deactivate":
+    post:
+      summary: Deactivate a DID
+      description: <p>This endpoint deactivates a DID. As input it takes the existing
+        DID, plus optional DID registration <a href="https://identity.foundation/did-registration/#options">options</a>
+        and <a href="https://identity.foundation/did-registration/#secret">secrets</a>
+        needed to deactivate a DID. The output is a state object that represents the
+        current state of the DID deactivation process.</p> <p>See the <a href="https://identity.foundation/did-registration/#deactivate">DID
+        Registration</a> specification for additional details.</p>
+      operationId: deactivate
+      tags:
+        - Universal Registrar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeactivateRequest"
+      responses:
+        "200":
+          description: The request was successful, and the DID may or may not be fully
+            deactivated yet, as indicated by the "didState.state" and "operationState" output
+            fields. Additional state information plus metadata are available in the
+            response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeactivateState"
+        "400":
+          description: A problem with the input fields has occurred. Additional state
+            information plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeactivateState"
+        "500":
+          description: An internal error has occurred. Additional state information
+            plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeactivateState"
+  "/execute":
+    post:
+      summary: Execute a DID operation
+      description: <p>This endpoint executes an operation that uses the DID but is not related to the standard create/update/deactivate operations. As input it takes the existing
+        DID, an operation, operation data, plus optional DID registration <a href="https://identity.foundation/did-registration/#options">options</a>
+        and <a href="https://identity.foundation/did-registration/#secret">secrets</a>
+        needed to execute the operation. The output is a state object that represents the current
+        state of the execution process, and an operation result.</p> <p>See the <a href="https://identity.foundation/did-registration/#execute">DID
+        Registration</a> specification for additional details.</p>
+      operationId: execute
+      tags:
+        - Universal Registrar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExecuteRequest"
+      responses:
+        "200":
+          description: The request was successful, and the operation may or may not be fully
+            executed yet, as indicated by the "didState.state" and "operationState" output fields.
+            Additional state information plus metadata are available in the response
+            body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExecuteState"
+        "400":
+          description: A problem with the input fields has occurred. Additional state
+            information plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExecuteState"
+        "500":
+          description: An internal error has occurred. Additional state information
+            plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExecuteState"
+  "/createResource":
+    post:
+      summary: Create a DID URL and associated resource
+      description: <p>This endpoint creates a DID URL and associated resource. As input it takes an existing DID,
+        a relative DID URL, a resource, plus optional DID registration <a href="https://identity.foundation/did-registration/#options">options</a>
+        and <a href="https://identity.foundation/did-registration/#secret">secrets</a>
+        needed to create the DID URL. The output is a state object that represents the current
+        state of the DID URL creation process.</p> <p>See the <a href="https://identity.foundation/did-registration/#createResource">DID
+        Registration</a> specification for additional details.</p>
+      operationId: createResource
+      tags:
+        - Universal Registrar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateResourceRequest"
+      responses:
+        "200":
+          description: The request was successful, but the DID URL may not be fully created
+            yet, as indicated by the "didState.state" and "operationState" output fields. Additional
+            state information plus metadata are available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateResourceState"
+        "201":
+          description: The DID URL has been successfully created, as indicated by the
+            "didState.state" output field. Additional state information (including
+            the created DID URL) plus metadata are available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateResourceState"
+        "400":
+          description: A problem with the input fields has occurred. Additional state
+            information plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateResourceState"
+        "500":
+          description: An internal error has occurred. Additional state information
+            plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateResourceState"
+  "/updateResource":
+    post:
+      summary: Update a DID URL and associated resource
+      description: <p>This endpoint updates a DID URL and associated resource. As input it takes an existing DID,
+        a relative DID URL, a resource, plus optional DID registration <a href="https://identity.foundation/did-registration/#options">options</a>
+        and <a href="https://identity.foundation/did-registration/#secret">secrets</a>
+        needed to update the DID URL. The output is a state object that represents the current
+        state of the DID URL update process.</p> <p>See the <a href="https://identity.foundation/did-registration/#updateResource">DID
+        Registration</a> specification for additional details.</p>
+      operationId: updateResource
+      tags:
+        - Universal Registrar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateResourceRequest"
+      responses:
+        "200":
+          description: The request was successful, and the DID URL may or may not be fully
+            updated yet, as indicated by the "didState.state" and "operationState" output fields.
+            Additional state information plus metadata are available in the response
+            body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateResourceState"
+        "400":
+          description: A problem with the input fields has occurred. Additional state
+            information plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateResourceState"
+        "500":
+          description: An internal error has occurred. Additional state information
+            plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateResourceState"
+  "/deactivateResource":
+    post:
+      summary: Deactivate a DID URL and associated resource
+      description: <p>This endpoint deactivates a DID URL and associated resource. As input it takes an existing DID,
+        a relative DID URL, a resource, plus optional DID registration <a href="https://identity.foundation/did-registration/#options">options</a>
+        and <a href="https://identity.foundation/did-registration/#secret">secrets</a>
+        needed to deactivate the DID URL. The output is a state object that represents the current
+        state of the DID URL deactivation process.</p> <p>See the <a href="https://identity.foundation/did-registration/#deactivateResource">DID
+        Registration</a> specification for additional details.</p>
+      operationId: deactivateResource
+      tags:
+        - Universal Registrar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeactivateResourceRequest"
+      responses:
+        "200":
+          description: The request was successful, and the DID URL may or may not be fully
+            deactivated yet, as indicated by the "didState.state" and "operationState" output
+            fields. Additional state information plus metadata are available in the
+            response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeactivateResourceState"
+        "400":
+          description: A problem with the input fields has occurred. Additional state
+            information plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeactivateResourceState"
+        "500":
+          description: An internal error has occurred. Additional state information
+            plus metadata may be available in the response body.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeactivateResourceState"
+  "/properties":
+    get:
+      summary: Return a map of configuration properties
+      description: <p>This endpoint returns a map of the configuration properties
+        of the DID Registrar, including of its drivers.</p>
+      operationId: universalRegistrarGetProperties
+      tags:
+        - Universal Registrar
+      responses:
+        "200":
+          description: Success.
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: A map of properties.
+                example:
+                  indy:
+                    libIndyPath: "/lib"
+                    poolConfigs: "..."
+  "/methods":
+    get:
+      summary: Return a list of supported DID methods
+      description: <p>This endpoint returns a list of DID methods supported by the
+        DID Registrar.</p>
+      operationId: universalRegistrarGetMethods
+      tags:
+        - Universal Registrar
+      responses:
+        "200":
+          description: Success.
+          content:
+            application/did+json:
+              schema:
+                type: array
+                items:
+                  type: string
+                description: The list of supported DID methods.
+                example:
+                  - indy
+                  - ebsi
+                  - ion
+                  - cheqd
+                  - key
+  "/traits":
+    get:
+      summary: Return a map of DID traits
+      description: <p>This endpoint returns a map of the DID traits of
+        the DID methods supported by the DID Registrar.</p>
+      operationId: universalRegistrarGetTraits
+      tags:
+        - Universal Registrar
+      responses:
+        "200":
+          description: Success.
+          content:
+            application/did+json:
+              schema:
+                type: object
+                description: A map of DID traits.
+                example:
+                  indy:
+                    updatable: true
+                    deactivatable: true
+                    enumerable: true
+                    historyAvailable: true
+                    humanReadable: false
+components:
+  schemas:
+    RegistrarRequest:
+      description: Input fields for a DID operation.
+      type: object
+      x-parent: true
+      properties:
+        operationState:
+          description: This input field is used to keep track of an ongoing DID operation
+            process. See <a href="https://identity.foundation/did-registration/#operationState">https://identity.foundation/did-registration/#operationstate</a>.
+          oneOf:
+            - type: null
+            - type: string
+            - type: object
+          example: 6d85bcd0-2ea3-4288-ab00-15afadd8a156
+        options:
+          $ref: "#/components/schemas/RequestOptions"
+        secret:
+          $ref: "#/components/schemas/RequestSecret"
+    RequestOptions:
+      description: This input field contains an object with various options for
+        the DID operation, such as the network where the DID operation should be executed.
+        See <a href="https://identity.foundation/did-registration/#options">https://identity.foundation/did-registration/#options</a>.
+      type: object
+      properties:
+        clientSecretMode:
+          $ref: "#/components/schemas/Boolean"
+        storeSecrets:
+          $ref: "#/components/schemas/Boolean"
+        returnSecrets:
+          $ref: "#/components/schemas/Boolean"
+        requestVerificationMethod:
+          $ref: "#/components/schemas/RequestOptionsRequestVerificationMethod"
+      additionalProperties: { }
+      example:
+        clientSecretMode: true
+        network: testnet
+    RequestOptionsRequestVerificationMethod:
+      type: array
+      items:
+        $ref: "#/components/schemas/VerificationMethodTemplate"
+    RequestSecret:
+      description: This input field contains an object with DID controller keys
+        and other secrets needed for performing the DID operation. See
+        https://identity.foundation/did-registration/#secret.
+      type: object
+      properties:
+        verificationMethod:
+          $ref: "#/components/schemas/RequestSecretVerificationMethod"
+        signingResponse:
+          type: [object, null]
+          additionalProperties:
+            $ref: "#/components/schemas/SigningResponse"
+        decryptionResponse:
+          type: [object, null]
+          additionalProperties:
+            $ref: "#/components/schemas/DecryptionResponse"
+      additionalProperties: { }
+      example:
+        seed: 72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ
+        verificationMethod:
+            - id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1
+              type: JsonWebKey2020
+              privateKeyJwk:
+                kty: OKP
+                crv: Ed25519
+                d: NzJXR3A3TmdGUjFPcWRpOHpsdDdqUVE0MzRYUjBjTlE
+                x: jpIKKU2b77lNXKTNW2NGvw1GUMjU6v_l_tLJAH5uYz0
+    RequestSecretVerificationMethod:
+      type: array
+      items:
+        oneOf:
+          - $ref: "#/components/schemas/VerificationMethodPublicData"
+          - $ref: "#/components/schemas/VerificationMethodPrivateData"
+    CreateRequest:
+      description: Input fields for a DID create operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarRequest"
+        - type: object
+          properties:
+            didDocument:
+              description: This input field contains the DID document to be used for the DID create operation. See
+                <a href="https://identity.foundation/did-registration/#diddocument">https://identity.foundation/did-registration/#diddocument</a>.
+              $ref: "#/components/schemas/DidDocument"
+    UpdateRequest:
+      description: Input fields for a DID update operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarRequest"
+        - type: object
+          required:
+            - did
+          properties:
+            did:
+              description: This input field indicates the DID that is the target of the
+                DID update operation.
+              type: string
+              example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+            didDocumentOperation:
+              description: This input field indicates which update operation(s) should be
+                applied to a DID’s associated DID document. See <a href="https://identity.foundation/did-registration/#diddocumentoperation">https://identity.foundation/did-registration/#diddocumentoperation</a>.
+              type: array
+              items:
+                type: string
+              example:
+                - setDidDocument
+            didDocument:
+              description: This input field contains either a complete DID document, or
+                an incremental change (diff) to a DID document. See <a href="https://identity.foundation/did-registration/#diddocument">https://identity.foundation/did-registration/#diddocument</a>.
+              type: array
+              items:
+                $ref: "#/components/schemas/DidDocument"
+    DeactivateRequest:
+      description: Input fields for a DID deactivate operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarRequest"
+        - type: object
+          required:
+            - did
+          properties:
+            did:
+              description: This input field indicates the DID that is the target of the
+                DID deactivation operation.
+              type: string
+              example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+    ExecuteRequest:
+      description: Input fields for a DID execute operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarRequest"
+        - type: object
+          required:
+            - did
+          properties:
+            did:
+              description: This input field indicates the DID that is the target of the
+                DID execute operation.
+              type: string
+              example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+            operation:
+              description: This input field indicates which operation should be
+                executed. See <a href="https://identity.foundation/did-registration/#operation">https://identity.foundation/did-registration/#operation</a>.
+              type: array
+              items:
+                type: string
+              example:
+                - executeMyOperation
+            operationData:
+              description: This input field contains additional data. See <a href="https://identity.foundation/did-registration/#operationdata">https://identity.foundation/did-registration/#operationdata</a>.
+              type: array
+              items:
+                type: object
+              example:
+                - myOperationData: myOperationValue
+    CreateResourceRequest:
+      description: Input fields for a DID URL create operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarRequest"
+        - type: object
+          required:
+            - did
+            - relativeDidUrl
+          properties:
+            did:
+              description: This input field indicates the DID that is the target of the
+                DID URL create operation.
+              type: string
+              example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+            relativeDidUrl:
+              description: This input field indicates a relative DID URL that is the target of the
+                DID URL create operation.
+              type: string
+              example: /resources/123
+            content:
+              description: This input field contains Base64-encoded data that is the content of the
+                resource associated with the DID URL.
+              type: string
+              example: SGVsbG8gV29ybGQ=
+    UpdateResourceRequest:
+      description: Input fields for a DID URL update operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarRequest"
+        - type: object
+          required:
+            - did
+            - relativeDidUrl
+          properties:
+            did:
+              description: This input field indicates the DID that is the target of the
+                DID URL update operation.
+              type: string
+              example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+            relativeDidUrl:
+              description: This input field indicates a relative DID URL that is the target of the
+                DID URL update operation.
+              type: string
+              example: /resources/123
+            contentOperation:
+              description: This input field indicates which update operation(s) should be
+                applied to the content of a DID URL’s associated resource. See <a href="https://identity.foundation/did-registration/#diddocumentoperation">https://identity.foundation/did-registration/#resourceoperation</a>.
+              type: array
+              items:
+                type: string
+              example:
+                - setContent
+            content:
+              description: This input field contains Base64-encoded data that is the content of the
+                resource associated with the DID URL.
+              type: array
+              items:
+                type: string
+              example:
+                - SGVsbG8gV29ybGQ=
+    DeactivateResourceRequest:
+      description: Input fields for a DID URL deactivate operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarRequest"
+        - type: object
+          required:
+            - did
+            - relativeDidUrl
+          properties:
+            did:
+              description: This input field indicates the DID that is the target of the
+                DID URL deactivate operation.
+              type: string
+              example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+            relativeDidUrl:
+              description: This input field indicates a relative DID URL that is the target of the
+                DID URL deactivate operation.
+              type: string
+              example: /resources/123
+    DidDocument:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/String"
+          example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+        controller:
+          $ref: "#/components/schemas/DidDocumentController"
+          example: ['did:indy:sovrin:WRfXPg8dantKVubE3HX8pw']
+        verificationMethod:
+          $ref: "#/components/schemas/DidDocumentVerificationMethod"
+        service:
+          $ref: "#/components/schemas/DidDocumentService"
+      additionalProperties: { }
+    DidDocumentController:
+      oneOf:
+        - type: null
+        - type: string
+        - type: array
+          items:
+            type: string
+    DidDocumentVerificationMethod:
+      type: array
+      items:
+        type: object
+        additionalProperties: { }
+    DidDocumentService:
+      type: array
+      items:
+        type: object
+        additionalProperties: { }
+    RegistrarState:
+      description: The state after a DID operation.
+      type: object
+      x-parent: true
+      required:
+        - didState
+      properties:
+        didState:
+          $ref: "#/components/schemas/DidState"
+        operationState:
+          oneOf:
+            - type: null
+            - type: string
+            - type: object
+          example: 6d85bcd0-2ea3-4288-ab00-15afadd8a156
+        didRegistrationMetadata:
+          type: object
+          additionalProperties: { }
+        didDocumentMetadata:
+          type: object
+          additionalProperties: { }
+    RegistrarResourceState:
+      description: The state after a DID URL operation.
+      type: object
+      x-parent: true
+      required:
+        - didUrlState
+      properties:
+        didUrlState:
+          $ref: "#/components/schemas/DidUrlState"
+        operationState:
+          oneOf:
+            - type: null
+            - type: string
+            - type: object
+          example: 6d85bcd0-2ea3-4288-ab00-15afadd8a156
+        didRegistrationMetadata:
+          type: object
+          additionalProperties: { }
+        contentMetadata:
+          type: object
+          additionalProperties: { }
+    CreateState:
+      description: The state after a DID create operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarState"
+        - type: object
+    UpdateState:
+      description: The state after a DID update operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarState"
+        - type: object
+    DeactivateState:
+      description: The state after a DID deactivate operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarState"
+        - type: object
+    ExecuteState:
+      description: The state after a DID execute operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarState"
+        - type: object
+          properties:
+            operationResult:
+              description: This output field contains the result of the operation. See <a href="https://identity.foundation/did-registration/#operationdata">https://identity.foundation/did-registration/#operationdata</a>.
+              type: array
+              items:
+                type: object
+                example:
+                  myOperationData: myOperationValue
+    CreateResourceState:
+      description: The state after a DID URL create operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarResourceState"
+        - type: object
+    UpdateResourceState:
+      description: The state after a DID URL update operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarResourceState"
+        - type: object
+    DeactivateResourceState:
+      description: The state after a DID URL deactivate operation.
+      allOf:
+        - $ref: "#/components/schemas/RegistrarResourceState"
+        - type: object
+    DidState:
+      description: The current state of a DID.
+      type: object
+      x-parent: true
+      required:
+        - state
+      discriminator:
+        propertyName: state
+        mapping:
+          finished: "#/components/schemas/DidStateFinished"
+          failed: "#/components/schemas/DidStateFailed"
+          action: "#/components/schemas/DidStateAction"
+          wait: "#/components/schemas/DidStateWait"
+      properties:
+        state:
+          $ref: "#/components/schemas/String"
+          example: finished
+        did:
+          $ref: "#/components/schemas/String"
+          example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+        secret:
+          $ref: "#/components/schemas/DidStateSecret"
+        didDocument:
+          $ref: "#/components/schemas/DidDocument"
+      additionalProperties: { }
+    DidUrlState:
+      description: The current state of a DID URL and associated resource.
+      type: object
+      x-parent: true
+      required:
+        - state
+      discriminator:
+        propertyName: state
+        mapping:
+          finished: "#/components/schemas/DidUrlStateFinished"
+          failed: "#/components/schemas/DidUrlStateFailed"
+          action: "#/components/schemas/DidUrlStateAction"
+          wait: "#/components/schemas/DidUrlStateWait"
+      properties:
+        state:
+          $ref: "#/components/schemas/String"
+          example: finished
+        didUrl:
+          $ref: "#/components/schemas/String"
+          example: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw
+        secret:
+          $ref: "#/components/schemas/DidStateSecret"
+        content:
+          $ref: "#/components/schemas/String"
+      additionalProperties: { }
+    DidStateSecret:
+      description: This output field contains an object with DID controller keys and other secrets. See
+        https://identity.foundation/did-registration/#didstatesecret.
+      type: object
+      properties:
+        verificationMethod:
+          $ref: "#/components/schemas/DidStateSecretVerificationMethod"
+      additionalProperties: { }
+      example:
+        verificationMethod:
+          - id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1
+            type: JsonWebKey2020
+            privateKeyJwk:
+              kty: OKP
+              crv: Ed25519
+              d: NzJXR3A3TmdGUjFPcWRpOHpsdDdqUVE0MzRYUjBjTlE
+              x: jpIKKU2b77lNXKTNW2NGvw1GUMjU6v_l_tLJAH5uYz0
+    DidStateSecretVerificationMethod:
+      type: array
+      items:
+        oneOf:
+          - $ref: "#/components/schemas/VerificationMethodPublicData"
+          - $ref: "#/components/schemas/VerificationMethodPrivateData"
+          - $ref: "#/components/schemas/DidStateSecretVerificationMethodVerificationMethodTemplate"
+    DidStateSecretVerificationMethodVerificationMethodTemplate:
+      type: array
+      items:
+        $ref: "#/components/schemas/VerificationMethodTemplate"
+    DidStateFinished:
+      allOf:
+        - $ref: "#/components/schemas/DidState"
+        - $ref: "#/components/schemas/StateFinished"
+    DidStateFailed:
+      allOf:
+        - $ref: "#/components/schemas/DidState"
+        - $ref: "#/components/schemas/StateFailed"
+    DidStateAction:
+      allOf:
+        - $ref: "#/components/schemas/DidState"
+        - $ref: "#/components/schemas/StateAction"
+    DidStateWait:
+      allOf:
+        - $ref: "#/components/schemas/DidState"
+        - $ref: "#/components/schemas/StateWait"
+    DidUrlStateFinished:
+      allOf:
+        - $ref: "#/components/schemas/DidUrlState"
+        - $ref: "#/components/schemas/StateFinished"
+    DidUrlStateFailed:
+      allOf:
+        - $ref: "#/components/schemas/DidUrlState"
+        - $ref: "#/components/schemas/StateFailed"
+    DidUrlStateAction:
+      allOf:
+        - $ref: "#/components/schemas/DidUrlState"
+        - $ref: "#/components/schemas/StateAction"
+    DidUrlStateWait:
+      allOf:
+        - $ref: "#/components/schemas/DidUrlState"
+        - $ref: "#/components/schemas/StateWait"
+    StateFinished:
+      description: This state indicates that the DID operation has been completed. See
+        https://identity.foundation/did-registration/#didstatestatefinished.
+      allOf:
+        - type: object
+    StateFailed:
+      description: This state indicates that the DID operation has failed. See
+        https://identity.foundation/did-registration/#didstatestatefailed.
+      allOf:
+        - type: object
+          properties:
+            error:
+              $ref: "#/components/schemas/String"
+            reason:
+              $ref: "#/components/schemas/String"
+    StateAction:
+      description: This state indicates that the client needs to perform an action, before the DID operation can be continued. See
+        https://identity.foundation/did-registration/#didstatestateaction.
+      allOf:
+        - type: object
+          properties:
+            action:
+              $ref: "#/components/schemas/String"
+            verificationMethodTemplate:
+              $ref: "#/components/schemas/StateActionVerificationMethodTemplate"
+            signingRequest:
+              type: [object, null]
+              additionalProperties:
+                $ref: "#/components/schemas/SigningRequest"
+            decryptionRequest:
+              type: [object, null]
+              additionalProperties:
+                $ref: "#/components/schemas/DecryptionRequest"
+    StateActionVerificationMethodTemplate:
+      type: array
+      items:
+        $ref: "#/components/schemas/VerificationMethodTemplate"
+    StateWait:
+      description: This state indicates that the client needs to wait, before the DID operation can be continued.
+        See https://identity.foundation/did-registration/#didstatestatewait.
+      allOf:
+        - type: object
+          properties:
+            wait:
+              $ref: "#/components/schemas/String"
+            waitTime:
+              $ref: "#/components/schemas/String"
+    SigningRequest:
+      description: A signing request, see https://identity.foundation/did-registration/#signing-request-set.
+      type: object
+      required:
+        - serializedPayload
+        - alg
+      properties:
+        payload:
+          type: object
+        serializedPayload:
+          $ref: "#/components/schemas/String"
+        kid:
+          $ref: "#/components/schemas/String"
+        alg:
+          $ref: "#/components/schemas/String"
+        purpose:
+          $ref: "#/components/schemas/String"
+      additionalProperties: { }
+    SigningRequestSet:
+      description: A signing request set, see https://identity.foundation/did-registration/#signing-request-set.
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/SigningRequest"
+    SigningResponse:
+      description: A signing response, see https://identity.foundation/did-registration/#signing-response-set.
+      type: object
+      required:
+        - signature
+      properties:
+        signature:
+          $ref: "#/components/schemas/String"
+        kid:
+          $ref: "#/components/schemas/String"
+        alg:
+          $ref: "#/components/schemas/String"
+        purpose:
+          $ref: "#/components/schemas/String"
+      additionalProperties: { }
+    SigningResponseSet:
+      description: A signing response set, see https://identity.foundation/did-registration/#signing-response-set.
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/SigningResponse"
+    DecryptionRequest:
+      description: A decryption request, see https://identity.foundation/did-registration/#decryption-request-set.
+      type: object
+      required:
+        - encryptedPayload
+        - enc
+      properties:
+        payload:
+          $ref: "#/components/schemas/String"
+        encryptedPayload:
+          $ref: "#/components/schemas/String"
+        kid:
+          $ref: "#/components/schemas/String"
+        enc:
+          $ref: "#/components/schemas/String"
+        purpose:
+          $ref: "#/components/schemas/String"
+      additionalProperties: { }
+    DecryptionRequestSet:
+      description: A decryption request set, see https://identity.foundation/did-registration/#decryption-request-set.
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/DecryptionRequest"
+    DecryptionResponse:
+      description: A decryption response, see https://identity.foundation/did-registration/#decryption-response-set.
+      type: object
+      required:
+        - decryptedPayload
+      properties:
+        decryptedPayload:
+          $ref: "#/components/schemas/String"
+        kid:
+          $ref: "#/components/schemas/String"
+        enc:
+          $ref: "#/components/schemas/String"
+        purpose:
+          $ref: "#/components/schemas/String"
+      additionalProperties: { }
+    DecryptionResponseSet:
+      description: A decryption response set, see https://identity.foundation/did-registration/#decryption-response-set.
+      type: object
+      additionalProperties:
+        $ref: "#/components/schemas/DecryptionResponse"
+    VerificationMethodData:
+      type: object
+      x-parent: true
+      required:
+        - type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        controller:
+          type: string
+        purpose:
+          type: array
+          items:
+            type: string
+    VerificationMethodPublicData:
+      description: A verification method public data object, see https://identity.foundation/did-registration/#verification-method-public-data
+      allOf:
+        - $ref: "#/components/schemas/VerificationMethodData"
+        - type: object
+          properties:
+            publicKeyJwk:
+              type: object
+              additionalProperties: { }
+            publicKeyMultibase:
+              type: string
+    VerificationMethodPrivateData:
+      description: A verification method private data object, see https://identity.foundation/did-registration/#verification-method-private-data
+      allOf:
+        - $ref: "#/components/schemas/VerificationMethodData"
+        - type: object
+          properties:
+            privateKeyJwk:
+              type: object
+              additionalProperties: { }
+            privateKeyMultibase:
+              type: string
+    VerificationMethodTemplate:
+      description: A verification method template, see https://identity.foundation/did-registration/#verification-method-template
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        controller:
+          type: string
+        purpose:
+          type: array
+          items:
+            type: string
+        publicKeyJwk:
+          type: [object, null]
+          additionalProperties: { }
+    String:
+      type: string
+    Boolean:
+      type: boolean

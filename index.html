@@ -166,7 +166,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-7" class="notice todo"><a class="notice-link" href="#todo-7">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-19" class="notice todo"><a class="notice-link" href="#todo-19">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -200,7 +200,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-4" class="notice note"><a class="notice-link" href="#note-4">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-10" class="notice note"><a class="notice-link" href="#note-10">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -233,7 +233,6 @@ of a previous response from the DID Registrar, if present. Otherwise, it MUST be
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
 applicable across all DID methods.</p>
 <p>This specification defines several DID method-independent properties for this field that are relevant to <a href="#key-management" >Key Management</a>.</p>
-<p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -247,7 +246,7 @@ applicable across all DID methods.</p>
 <h4 id="clientsecretmode"><a class="toc-anchor" href="#clientsecretmode" >§</a> <code>clientSecretMode</code></h4>
 <p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, if the <code>clientSecretMode</code> option is set to <code>true</code>, then the DID Registrar will
 enable client-managed secret mode and let the client perform cryptographic operations such as generating signatures.</p>
-<p>Example:</p>
+<p>Example operation:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -340,8 +339,8 @@ to the client.</p>
 </code></pre>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -357,8 +356,8 @@ to the client.</p>
 </code></pre>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"decryptionResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -738,9 +737,9 @@ DID controller takes certain steps, before the DID operation can be continued.</
 <p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>redirectUrl</code> property, which indicates
 the URL of the web page where the client needs to be redirected.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="issue-7" class="notice issue"><a class="notice-link" href="#issue-7">ISSUE</a><p>How does this work exactly if the client is not browser-based?</p>
+<div id="issue-19" class="notice issue"><a class="notice-link" href="#issue-19">ISSUE</a><p>How does this work exactly if the client is not browser-based?</p>
 </div>
-<div id="issue-8" class="notice issue"><a class="notice-link" href="#issue-8">ISSUE</a><p>Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs, nonces, states, etc.?</p>
+<div id="issue-20" class="notice issue"><a class="notice-link" href="#issue-20">ISSUE</a><p>Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs, nonces, states, etc.?</p>
 </div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -760,7 +759,7 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="todo-8" class="notice todo"><a class="notice-link" href="#todo-8">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-20" class="notice todo"><a class="notice-link" href="#todo-20">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -1245,7 +1244,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><strong>400</strong>, if a problem with the input fields has occurred.</li>
 <li><strong>500</strong>, if an internal error has occurred.</li>
 </ul>
-<p>See <a href="https://github.com/decentralized-identity/universal-registrar/blob/main/openapi/openapi.yaml">here</a> for an OpenAPI definition.</p>
+<p>See <a href="https://github.com/decentralized-identity/did-registration/blob/main/openapi/openapi.yaml">here</a> for an OpenAPI definition.</p>
 <h2 id="normative-references"><a class="toc-anchor" href="#normative-references" >§</a> Normative References</h2>
 <p>
 <dl class="reference-list">

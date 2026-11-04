@@ -44,8 +44,6 @@ applicable across all DID methods.
 
 This specification defines several DID method-independent properties for this field that are relevant to [Key Management](#key-management).
 
-Example:
-
 ```json
 {
 	"did": null,
@@ -63,7 +61,7 @@ Example:
 In [Client-managed Secret Mode](#client-managed-secret-mode), if the `clientSecretMode` option is set to `true`, then the DID Registrar will
 enable client-managed secret mode and let the client perform cryptographic operations such as generating signatures.
 
-Example:
+Example operation:
 
 ```json
 {
@@ -179,8 +177,8 @@ Example:
 
 ```json
 {
-	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"did": null,
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"options": { ... },
 	"secret": {
 		"signingResponse": {
@@ -199,8 +197,8 @@ Example:
 
 ```json
 {
-	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"did": null,
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"options": { ... },
 	"secret": {
 		"decryptionResponse": {
