@@ -34,7 +34,7 @@ state might change. In order for a DID operation to complete, the DID create/upd
 have to be called multiple times, and the `operationState` is used to keep track of the ongoing process.
 
 The value of this input field MUST be copied from the [`operationState` output field](##operationstate-2)
-of a previous resposne from the DID Registrar, if present. Otherwise, it MUST be null.
+of a previous response from the DID Registrar, if present. Otherwise, it MUST be null.
 
 ### `options`
  
