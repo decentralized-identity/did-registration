@@ -1,25 +1,5 @@
 ## Output Fields
 
-### `jobId`
-
-When executing DID operations, an operation can turn into a longer-running "job", during which the operation's
-state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
-have to be called multiple times, and the `jobId` is used to keep track of the ongoing process.
-
-This output field MUST be absent or have a null value if the value of the [`didState.state` output field](#didstatestate)
-is either `finished` or `failed`, and MUST NOT have a null value otherwise.
-
-Example:
-
-```json
-{
-	"jobId": "2a4b5d3f-7af9-44c8-a5c8-39f893fa0f78",
-	"didState": { ... },
-	"didRegistrationMetadata": { ... },
-	"didDocumentMetadata": { ... }
-}
-```
-
 ### `didState`
 
 This output field contains an object with the following fields:
@@ -43,7 +23,7 @@ is finished, failed, or if a longer-running "job" has been created that requires
 This specification defines four well-known values for this property: `finished`, `failed`, `action`, `wait`. These
 values are further explained in [States](#states).
 
-The following diagram illustrates the use of the [`didState.state` output field](#didstatestate) and [`jobId` output field](#jobid) output fields.
+The following diagram illustrates the use of the [`didState.state` output field](#didstatestate) and [`operationState` output field](#operationstate) output fields.
 
 ![Diagram showing the flow and states of DID operations](images/diagram-flow.png)
 
@@ -72,7 +52,6 @@ Example:
 
 ```json
 {
-	"jobId": null,
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
@@ -92,6 +71,7 @@ Example:
 		},
 		"didDocument": { ... }
 	},
+	"operationState": null,
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
 }
@@ -105,7 +85,6 @@ Example:
 
 ```json
 {
-	"jobId": null,
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
@@ -124,6 +103,7 @@ Example:
 		},
 		"didDocument": { ... }
 	},
+	"operationState": null,
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
 }
@@ -141,7 +121,6 @@ Example:
 
 ```json
 {
-	"jobId": null,
 	"didState": {
 		"state": "finished",
 		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
@@ -160,6 +139,47 @@ Example:
 			"assertionMethod": ["did:example:123#key-1"]
 		}
 	},
+	"operationState": null,
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
+
+### `operationState`
+
+When executing DID operations, an operation can turn into a longer-running "job", during which the operation's
+state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
+have to be called multiple times, and the `operationState` is used to keep track of the ongoing process.
+
+This output field MUST be absent or have a `null` value if the value of the [`didState.state` output field](#didstatestate)
+is either `finished` or `failed`, and MUST NOT have a `null` value otherwise.
+
+If present, this output field MUST contain either a string or an object. The type and meaning of the value is
+method-specific and not further specified here.
+
+If present, the value of this output field MUST be copied to the [`operationState` input field](##operationstate)
+of a next request to the DID Registrar. 
+
+Example:
+
+```json
+{
+	"didState": { ... },
+	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
+
+Example:
+
+```json
+{
+	"didState": { ... },
+	"operationState": {
+		"currentStep": 3,
+		""
+    },
 	"didRegistrationMetadata": { ... },
 	"didDocumentMetadata": { ... }
 }
@@ -200,8 +220,8 @@ Example:
 
 ```json
 {
-	"jobId": null,
 	"didState": { ... },
+	"operationState": null,
 	"operationResult": [{
 		"myResult": "myResultValue"
 	}],

@@ -166,7 +166,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-1" class="notice todo"><a class="notice-link" href="#todo-1">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-5" class="notice todo"><a class="notice-link" href="#todo-5">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -174,25 +174,25 @@ the client to perform cryptographic operations such as generating signatures.</p
 <h2 id="operations"><a class="toc-anchor" href="#operations" >§</a> Operations</h2>
 <p>This section defines interfaces for the standard DID operations <code>create()</code>, <code>update()</code>, and <code>deactivate()</code>.</p>
 <h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
-<pre><code>create(method, options, secret, didDocument) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
+<pre><code>create(method, operationState, options, secret, didDocument) -&gt; operationState, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function creates a new DID and associated DID document, according to a known DID method, using
 various options and optionally an initial DID document.</p>
 <h3 id="update"><a class="toc-anchor" href="#update" >§</a> <code>update()</code></h3>
-<pre><code>update(did, options, secret, didDocumentOperation, didDocument) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
+<pre><code>update(did, operationState, options, secret, didDocumentOperation, didDocument) -&gt; operationState, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function updates the DID document associated with the DID, either by completely replacing it, or
 by performing an incremental update, or in another way. The specific update operation to be executed is specified in the
 <a href="#diddocumentoperation" ><code>didDocumentOperation</code> input field</a>.</p>
 <h3 id="deactivate"><a class="toc-anchor" href="#deactivate" >§</a> <code>deactivate()</code></h3>
-<pre><code>deactivate(did, options, secret) -&gt; jobId, didState, didRegistrationMetadata, didDocumentMetadata
+<pre><code>deactivate(did, operationState, options, secret) -&gt; operationState, didState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function deactivates the DID and associated DID document.</p>
 <h3 id="execute"><a class="toc-anchor" href="#execute" >§</a> <code>execute()</code></h3>
-<pre><code>execute(did, options, secret, operation, operationData) -&gt; jobId, didState, operationResult, didRegistrationMetadata, didDocumentMetadata
+<pre><code>execute(did, operationState, options, secret, operation, operationData) -&gt; operationState, didState, operationResult, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
 <hr>
 <p>This function executes an operation that uses the DID but is not related to the standard
@@ -200,7 +200,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-1" class="notice note"><a class="notice-link" href="#note-1">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-3" class="notice note"><a class="notice-link" href="#note-3">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -222,6 +222,12 @@ null, since the DID method is determined by the <a href="#did" ><code>did</code>
 <p>For the <a href="#create" ><code>create()</code> function</a>, this input field is OPTIONAL. Specific DID methods typically
 restrict how this input field is used.</p>
 <p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST NOT be null.</p>
+<h3 id="operationstate"><a class="toc-anchor" href="#operationstate" >§</a> <code>operationState</code></h3>
+<p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
+state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
+have to be called multiple times, and the <code>operationState</code> is used to keep track of the ongoing process.</p>
+<p>The value of this input field MUST be copied from the <a href="##operationstate-2" ><code>operationState</code> output field</a>
+of a previous resposne from the DID Registrar, if present. Otherwise, it MUST be null.</p>
 <h3 id="options"><a class="toc-anchor" href="#options" >§</a> <code>options</code></h3>
 <p>This input field contains an object with various options for the DID operation, such as the network where the DID
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
@@ -334,7 +340,7 @@ to the client.</p>
 </code></pre>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -351,7 +357,7 @@ to the client.</p>
 </code></pre>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -477,20 +483,6 @@ execute an operation that does not affect the DID or DID document itself.</p>
 input field MUST be absent.</p>
 <p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field is REQUIRED and MUST contain a JSON array of JSON object values.</p>
 <h2 id="output-fields"><a class="toc-anchor" href="#output-fields" >§</a> Output Fields</h2>
-<h3 id="jobid"><a class="toc-anchor" href="#jobid" >§</a> <code>jobId</code></h3>
-<p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
-state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
-have to be called multiple times, and the <code>jobId</code> is used to keep track of the ongoing process.</p>
-<p>This output field MUST be absent or have a null value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a>
-is either <code>finished</code> or <code>failed</code>, and MUST NOT have a null value otherwise.</p>
-<p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"2a4b5d3f-7af9-44c8-a5c8-39f893fa0f78"</span><span class="token punctuation">,</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
 <h3 id="didstate"><a class="toc-anchor" href="#didstate" >§</a> <code>didState</code></h3>
 <p>This output field contains an object with the following fields:</p>
 <ul>
@@ -510,7 +502,7 @@ is either <code>finished</code> or <code>failed</code>, and MUST NOT have a null
 is finished, failed, or if a longer-running “job” has been created that requires additional steps.</p>
 <p>This specification defines four well-known values for this property: <code>finished</code>, <code>failed</code>, <code>action</code>, <code>wait</code>. These
 values are further explained in <a href="#states" >States</a>.</p>
-<p>The following diagram illustrates the use of the <a href="#didstatestate" ><code>didState.state</code> output field</a> and <a href="#jobid" ><code>jobId</code> output field</a> output fields.</p>
+<p>The following diagram illustrates the use of the <a href="#didstatestate" ><code>didState.state</code> output field</a> and <a href="#operationstate" ><code>operationState</code> output field</a> output fields.</p>
 <p><img src="images/diagram-flow.png" alt="Diagram showing the flow and states of DID operations"></p>
 <h4 id="didstatedid"><a class="toc-anchor" href="#didstatedid" >§</a> <code>didState.did</code></h4>
 <p>This output field contains the DID at the end of the DID operation.</p>
@@ -528,7 +520,6 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
 		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
@@ -548,6 +539,7 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 		<span class="token punctuation">}</span><span class="token punctuation">,</span>
 		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -558,7 +550,6 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
 		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
@@ -577,6 +568,7 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 		<span class="token punctuation">}</span><span class="token punctuation">,</span>
 		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -587,7 +579,6 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <p>This output field is OPTIONAL.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
 		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
@@ -606,6 +597,36 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 			<span class="token property">"assertionMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"did:example:123#key-1"</span><span class="token punctuation">]</span>
 		<span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="operationstate-2"><a class="toc-anchor" href="#operationstate-2" >§</a> <code>operationState</code></h3>
+<p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
+state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
+have to be called multiple times, and the <code>operationState</code> is used to keep track of the ongoing process.</p>
+<p>This output field MUST be absent or have a <code>null</code> value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a>
+is either <code>finished</code> or <code>failed</code>, and MUST NOT have a <code>null</code> value otherwise.</p>
+<p>If present, this output field MUST contain either a string or an object. The type and meaning of the value is
+method-specific and not further specified here.</p>
+<p>If present, the value of this output field MUST be copied to the <a href="##operationstate" ><code>operationState</code> input field</a>
+of a next request to the DID Registrar.</p>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
+	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Example:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"currentStep"</span><span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+		<span class="token string">""</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -635,8 +656,8 @@ output field MUST be absent.</p>
 <p>For the <a href="#execute" ><code>execute()</code> function</a>, this output field is REQUIRED and MUST contain a JSON array of JSON object values.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"operationResult"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 		<span class="token property">"myResult"</span><span class="token operator">:</span> <span class="token string">"myResultValue"</span>
 	<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
@@ -651,13 +672,13 @@ output field MUST be absent.</p>
 <p>This state indicates that the DID operation has been completed.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
 		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
 		<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -669,12 +690,12 @@ for the failure.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this state.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"failed"</span><span class="token punctuation">,</span>
 		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
 		<span class="token property">"reason"</span><span class="token operator">:</span> <span class="token string">"networkUnavailable"</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -701,12 +722,12 @@ action that needs to be performed.</p>
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"fundingRequired"</span><span class="token punctuation">,</span>
 		<span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -717,18 +738,18 @@ DID controller takes certain steps, before the DID operation can be continued.</
 <p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>redirectUrl</code> property, which indicates
 the URL of the web page where the client needs to be redirected.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="issue-1" class="notice issue"><a class="notice-link" href="#issue-1">ISSUE</a><p>How does this work exactly if the client is not browser-based?</p>
+<div id="issue-5" class="notice issue"><a class="notice-link" href="#issue-5">ISSUE</a><p>How does this work exactly if the client is not browser-based?</p>
 </div>
-<div id="issue-2" class="notice issue"><a class="notice-link" href="#issue-2">ISSUE</a><p>Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs, nonces, states, etc.?</p>
+<div id="issue-6" class="notice issue"><a class="notice-link" href="#issue-6">ISSUE</a><p>Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs, nonces, states, etc.?</p>
 </div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"redirect"</span><span class="token punctuation">,</span>
 		<span class="token property">"redirectUrl"</span> <span class="token operator">:</span> <span class="token string">"https://..."</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -739,11 +760,10 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="todo-2" class="notice todo"><a class="notice-link" href="#todo-2">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-6" class="notice todo"><a class="notice-link" href="#todo-6">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"getVerificationMethod"</span><span class="token punctuation">,</span>
@@ -752,13 +772,13 @@ continued.</p>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"Ed25519VerificationKey2018"</span>
 		<span class="token punctuation">}</span><span class="token punctuation">]</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"getVerificationMethod"</span><span class="token punctuation">,</span>
@@ -767,6 +787,7 @@ continued.</p>
 			<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"EcdsaSecp256k1VerificationKey2019"</span>
 		<span class="token punctuation">}</span><span class="token punctuation">]</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -779,7 +800,6 @@ continued.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"1234"</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"signPayload"</span><span class="token punctuation">,</span>
@@ -799,6 +819,7 @@ continued.</p>
 			<span class="token punctuation">}</span>
 		<span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -811,7 +832,6 @@ continued.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"1234"</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
 		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"decryptPayload"</span><span class="token punctuation">,</span>
@@ -828,6 +848,7 @@ continued.</p>
 			<span class="token punctuation">}</span>
 		<span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -843,12 +864,12 @@ continued.</p>
 properties, to explain the reason for the failure.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"jobId"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"wait"</span><span class="token punctuation">,</span>
 		<span class="token property">"wait"</span><span class="token operator">:</span> <span class="token string">"Please wait until the transaction is complete."</span><span class="token punctuation">,</span>
 		<span class="token property">"waitTime"</span><span class="token operator">:</span> <span class="token number">3600000</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
 	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -857,20 +878,20 @@ properties, to explain the reason for the failure.</p>
 <p>In addition to the <a href="#operations" >DID Operations</a> defined in previous sections, this specification
 also defines operations on resources identified by DID URLs.</p>
 <h3 id="createresource"><a class="toc-anchor" href="#createresource" >§</a> <code>createResource()</code></h3>
-<pre><code>createResource(did, relativeDidUrl, options, secret, content) -&gt; jobId, didUrlState, didRegistrationMetadata, contentMetadata
+<pre><code>createResource(did, relativeDidUrl, options, secret, content) -&gt; operationState, didUrlState, didRegistrationMetadata, contentMetadata
 </code></pre>
 <hr>
 <p>This function creates a new DID URL and associated resource, according to a known DID method, using
 various options and optionally the initial resource data.</p>
 <h3 id="updateresource"><a class="toc-anchor" href="#updateresource" >§</a> <code>updateResource()</code></h3>
-<pre><code>updateResource(did, relativeDidUrl, options, secret, contentOperation, content) -&gt; jobId, didUrlState, didRegistrationMetadata, contentMetadata
+<pre><code>updateResource(did, relativeDidUrl, options, secret, contentOperation, content) -&gt; operationState, didUrlState, didRegistrationMetadata, contentMetadata
 </code></pre>
 <hr>
 <p>This function updates the content of the resource associated with the DID URL, either by completely replacing it, or
 by performing an incremental update, or in another way. The specific update resource operation to be executed is specified in the
 <a href="#contentoperation" ><code>contentOperation</code> input field</a>.</p>
 <h3 id="deactivateresource"><a class="toc-anchor" href="#deactivateresource" >§</a> <code>deactivateResource()</code></h3>
-<pre><code>deactivateResource(did, relativeDidUrl, options, secret) -&gt; jobId, didUrlState, didRegistrationMetadata, contentMetadata
+<pre><code>deactivateResource(did, relativeDidUrl, options, secret) -&gt; operationState, didUrlState, didRegistrationMetadata, contentMetadata
 </code></pre>
 <hr>
 <p>This function deactivates the DID URL and associated resource.</p>
@@ -1308,6 +1329,7 @@ https://uniregistrar.io/1.0/deactivate
 <ul>
 <li><a href="#method" ><code>method</code></a></li>
 <li><a href="#did" ><code>did</code></a></li>
+<li><a href="#operationstate" ><code>operationState</code></a></li>
 <li><a href="#options" ><code>options</code></a>
 <ul>
 <li><a href="#clientsecretmode" ><code>clientSecretMode</code></a></li>
@@ -1324,7 +1346,6 @@ https://uniregistrar.io/1.0/deactivate
 </li>
 <li><a href="#output-fields" >Output Fields</a>
 <ul>
-<li><a href="#jobid" ><code>jobId</code></a></li>
 <li><a href="#didstate" ><code>didState</code></a>
 <ul>
 <li><a href="#didstatestate" ><code>didState.state</code></a></li>
@@ -1333,6 +1354,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#didstatediddocument" ><code>didState.didDocument</code></a></li>
 </ul>
 </li>
+<li><a href="#operationstate-2" ><code>operationState</code></a></li>
 <li><a href="#didregistrationmetadata" ><code>didRegistrationMetadata</code></a></li>
 <li><a href="#diddocumentmetadata" ><code>didDocumentMetadata</code></a></li>
 <li><a href="#operationresult" ><code>operationResult</code></a></li>

@@ -5,7 +5,7 @@ This section defines interfaces for the standard DID operations `create()`, `upd
 ### `create()`
 
 ```
-create(method, options, secret, didDocument) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
+create(method, operationState, options, secret, didDocument) -> operationState, didState, didRegistrationMetadata, didDocumentMetadata
 ```
 ___
 This function creates a new DID and associated DID document, according to a known DID method, using
@@ -14,7 +14,7 @@ various options and optionally an initial DID document.
 ### `update()`
 
 ```
-update(did, options, secret, didDocumentOperation, didDocument) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
+update(did, operationState, options, secret, didDocumentOperation, didDocument) -> operationState, didState, didRegistrationMetadata, didDocumentMetadata
 ```
 ____
 This function updates the DID document associated with the DID, either by completely replacing it, or
@@ -24,7 +24,7 @@ by performing an incremental update, or in another way. The specific update oper
 ### `deactivate()`
 
 ```
-deactivate(did, options, secret) -> jobId, didState, didRegistrationMetadata, didDocumentMetadata
+deactivate(did, operationState, options, secret) -> operationState, didState, didRegistrationMetadata, didDocumentMetadata
 ```
 ___
 This function deactivates the DID and associated DID document.
@@ -32,7 +32,7 @@ This function deactivates the DID and associated DID document.
 ### `execute()`
 
 ```
-execute(did, options, secret, operation, operationData) -> jobId, didState, operationResult, didRegistrationMetadata, didDocumentMetadata
+execute(did, operationState, options, secret, operation, operationData) -> operationState, didState, operationResult, didRegistrationMetadata, didDocumentMetadata
 ```
 ____
 This function executes an operation that uses the DID but is not related to the standard
