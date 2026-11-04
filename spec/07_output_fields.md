@@ -2,7 +2,8 @@
 
 ### `didState`
 
-This output field contains a JSON object with the following fields:
+This output field contains a JSON object with the following fields, which contain information about the current
+state of the DID:
 
 * [`didState.state`](#didstatestate): The current state of DID operations.
 * [`didState.did`](#didstatedid): The DID at the end of the DID operation.
@@ -17,25 +18,24 @@ In [Client-managed Secret Mode](#client-managed-secret-mode), this output field 
 
 #### `didState.state`
 
-This output field contains the current state of the DID operations. It is used to indicate if a DID operation
+This output field contains the current state of the DID. It is used to indicate if a DID operation
 is finished, failed, or if a longer-running "job" has been created that requires additional steps.
 
 This specification defines four well-known values for this property: `finished`, `failed`, `action`, `wait`. These
 values are further explained in [States](#states).
 
-The following diagram illustrates the use of the [`didState.state` output field](#didstatestate) and [`operationState` output field](#operationstate) output fields.
-
-![Diagram showing the flow and states of DID operations](images/diagram-flow.png)
-
 #### `didState.did`
 
-This output field contains the DID at the end of the DID operation.
+This output field contains the DID that is the target of the operation.
 
-For the [`create()` function](#create), if the value of the [`didState.state` output field](#didstatestate) is `"finished"`,
-then the value of this output field MUST NOT be null.
+For the [`create()` function](#create):
+- If the value of the [`didState.state` output field](#didstatestate) is `"finished"`, then the value of this output field
+  MUST NOT be null and contains the final DID that has been created.
+- Otherwise, the value of this output field may or may not contain the DID, depending on the DID method.
 
-For the [`update()` function](#update) and [`deactivate()` function](#deactivate), this output field MUST NOT
-be null, and its value MUST match the [`did` input field](#did) that was used when executing the function.
+For the [`update()` function](#update) and [`deactivate()` function](#deactivate):
+- This output field MUST NOT be null, and its value MUST match the [`did` input field](#did) that was used when
+  executing the function.
 
 #### `didState.secret`
 
@@ -157,7 +157,7 @@ is either `finished` or `failed`, and MUST NOT have a `null` value otherwise.
 If present, this output field MUST contain either a string or a JSON object. The type and meaning of the value is
 method-specific and not further specified here.
 
-If present, the value of this output field MUST be copied to the [`operationState` input field](##operationstate)
+If present, the value of this output field MUST be copied to the [`operationState` input field](#operationstate)
 of a next request to the DID Registrar. 
 
 Example:

@@ -33,7 +33,7 @@ When executing DID operations, an operation can turn into a longer-running "job"
 state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
 have to be called multiple times, and the `operationState` is used to keep track of the ongoing process.
 
-The value of this input field MUST be copied from the [`operationState` output field](##operationstate-2)
+The value of this input field MUST be copied from the [`operationState` output field](#operationstate-2)
 of a previous response from the DID Registrar, if present. Otherwise, it MUST be null.
 
 ### `options`

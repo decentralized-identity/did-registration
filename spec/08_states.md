@@ -1,5 +1,22 @@
 ## States
 
+When executing DID operations, an operation can turn into a longer-running "job", during which the operation's
+state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
+have to be called multiple times until it is completed.
+
+The [`operationState` input field](#operationstate) and [`operationState` output field](#operationstate-2) are used to keep
+track of the ongoing process. They fulfill a similar function as a cookie in web architecture and allow a
+DID Registrar to correlate multiple client requests and maintain state between them.
+
+The value of this input field MUST be copied from the [`operationState` output field](#operationstate-2)
+of a previous response from the DID Registrar, if present. Otherwise, it MUST be null.
+
+
+
+The following diagram illustrates the states while executing a DID operation.
+
+![Diagram showing the flow and states of DID operations](images/diagram-flow.png)
+
 The following sections explain the possible states of a DID registration process, which are returned as values of the
 [`didState.state` output field](#didstatestate).
 
