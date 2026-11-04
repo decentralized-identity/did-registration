@@ -166,7 +166,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-1" class="notice todo"><a class="notice-link" href="#todo-1">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-27" class="notice todo"><a class="notice-link" href="#todo-27">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -200,7 +200,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-1" class="notice note"><a class="notice-link" href="#note-1">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-14" class="notice note"><a class="notice-link" href="#note-14">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -714,7 +714,6 @@ action that needs to be performed.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this state.</p>
 <p>This specification defines the following well-known values for the <code>action</code> property that may be used in this state:</p>
 <ul>
-<li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a> - Client needs to be redirected to a web page, e.g. an onboarding service.</li>
 <li><a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code></a> - Client needs to provide a newly generated or already existing verification method.</li>
 <li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a> - Client needs to generate a signature on a payload.</li>
 <li><a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code></a> - Client needs to decrypt a payload.</li>
@@ -731,35 +730,13 @@ action that needs to be performed.</p>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h4 id="didstateactionredirect"><a class="toc-anchor" href="#didstateactionredirect" >§</a> <code>didState.action=&quot;redirect&quot;</code></h4>
-<p>This action indicates that the client needs to be redirected to a web page, e.g. an onboarding service where the
-DID controller takes certain steps, before the DID operation can be continued.</p>
-<p>With this action, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>redirectUrl</code> property, which indicates
-the URL of the web page where the client needs to be redirected.</p>
-<p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="issue-1" class="notice issue"><a class="notice-link" href="#issue-1">ISSUE</a><p>How does this work exactly if the client is not browser-based?</p>
-</div>
-<div id="issue-2" class="notice issue"><a class="notice-link" href="#issue-2">ISSUE</a><p>Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs, nonces, states, etc.?</p>
-</div>
-<p>Example:</p>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"action"</span><span class="token punctuation">,</span>
-		<span class="token property">"action"</span><span class="token operator">:</span> <span class="token string">"redirect"</span><span class="token punctuation">,</span>
-		<span class="token property">"redirectUrl"</span> <span class="token operator">:</span> <span class="token string">"https://..."</span>
-	<span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"operationState"</span><span class="token operator">:</span> <span class="token string">"155eae21-45e5-4e71-bb22-fef51cda5bf7"</span><span class="token punctuation">,</span>
-	<span class="token property">"didRegistrationMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
-	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
 <h4 id="didstateactiongetverificationmethod"><a class="toc-anchor" href="#didstateactiongetverificationmethod" >§</a> <code>didState.action=&quot;getVerificationMethod&quot;</code></h4>
 <p>This action indicates that the client needs to provide a newly generated or already existing verification method, before the DID operation can be
 continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="todo-2" class="notice todo"><a class="notice-link" href="#todo-2">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-28" class="notice todo"><a class="notice-link" href="#todo-28">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -1371,7 +1348,6 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#didstatestatefailed" ><code>didState.state=&quot;failed&quot;</code></a></li>
 <li><a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a>
 <ul>
-<li><a href="#didstateactionredirect" ><code>didState.action=&quot;redirect&quot;</code></a></li>
 <li><a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code></a></li>
 <li><a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a></li>
 <li><a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code></a></li>

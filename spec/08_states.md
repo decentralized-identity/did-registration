@@ -66,7 +66,6 @@ The [`didState` output field](#didstate) MAY contain additional properties that 
 
 This specification defines the following well-known values for the `action` property that may be used in this state:
 
-* [`didState.action="redirect"`](#didstateactionredirect) - Client needs to be redirected to a web page, e.g. an onboarding service.
 * [`didState.action="getVerificationMethod"`](#didstateactiongetverificationmethod) - Client needs to provide a newly generated or already existing verification method.
 * [`didState.action="signPayload"`](#didstateactionsignpayload) - Client needs to generate a signature on a payload.
 * [`didState.action="decryptPayload"`](#didstateactiondecryptpayload) - Client needs to decrypt a payload.
@@ -79,39 +78,6 @@ Example:
 		"state": "action",
 		"action": "fundingRequired",
 		"description": "Please fund the address mzUC2F1XgXfTJEYUBZXdG6M8wWWvhgEknG."
-	},
-	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
-	"didRegistrationMetadata": { ... },
-	"didDocumentMetadata": { ... }
-}
-```
-
-#### `didState.action="redirect"`
-
-This action indicates that the client needs to be redirected to a web page, e.g. an onboarding service where the
-DID controller takes certain steps, before the DID operation can be continued.
-
-With this action, the [`didState` output field](#didstate) MUST contain a `redirectUrl` property, which indicates
-the URL of the web page where the client needs to be redirected.
-
-The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
-
-::: issue
-How does this work exactly if the client is not browser-based?
-:::
-
-::: issue
-Does this need features from other well-known redirect-based protocols (e.g. OAuth), such as callback URLs, nonces, states, etc.?
-:::
-
-Example:
-
-```json
-{
-	"didState": {
-		"state": "action",
-		"action": "redirect",
-		"redirectUrl" : "https://..."
 	},
 	"operationState": "155eae21-45e5-4e71-bb22-fef51cda5bf7",
 	"didRegistrationMetadata": { ... },
