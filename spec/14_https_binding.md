@@ -6,12 +6,13 @@ and outputs sent in the HTTP body, encoded as JSON.
 
 In this binding, a secure HTTPS connection with at least TLS 1.2 MUST be used.
 
-Each one of the three [operations](#operations) can be invoked via a separate HTTPS endpoint, for example:
+Each one of the four [operations](#operations) can be invoked via a separate HTTPS endpoint, for example:
 
 ```
 https://uniregistrar.io/1.0/create
 https://uniregistrar.io/1.0/update
 https://uniregistrar.io/1.0/deactivate
+https://uniregistrar.io/1.0/execute
 ```
 
 The following HTTP status codes are used for the [`create()` function](#create):

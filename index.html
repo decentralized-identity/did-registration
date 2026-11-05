@@ -166,7 +166,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-1" class="notice todo"><a class="notice-link" href="#todo-1">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-5" class="notice todo"><a class="notice-link" href="#todo-5">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -201,7 +201,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-1" class="notice note"><a class="notice-link" href="#note-1">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-3" class="notice note"><a class="notice-link" href="#note-3">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -1189,7 +1189,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-2" class="notice todo"><a class="notice-link" href="#todo-2">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-6" class="notice todo"><a class="notice-link" href="#todo-6">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="extensions"><a class="toc-anchor" href="#extensions" >§</a> Extensions</h2>
 <p>This section documents various optional extension features that can complement the main functionality of a DID Registrar
@@ -1261,10 +1261,11 @@ do they have direct access to a blockchain full node?</li>
 different concrete protocols and transports. This section defines a binding based on HTTP POST operations, with inputs
 and outputs sent in the HTTP body, encoded as JSON.</p>
 <p>In this binding, a secure HTTPS connection with at least TLS 1.2 MUST be used.</p>
-<p>Each one of the three <a href="#operations" >operations</a> can be invoked via a separate HTTPS endpoint, for example:</p>
+<p>Each one of the four <a href="#operations" >operations</a> can be invoked via a separate HTTPS endpoint, for example:</p>
 <pre><code>https://uniregistrar.io/1.0/create
 https://uniregistrar.io/1.0/update
 https://uniregistrar.io/1.0/deactivate
+https://uniregistrar.io/1.0/execute
 </code></pre>
 <p>The following HTTP status codes are used for the <a href="#create" ><code>create()</code> function</a>:</p>
 <ul>
