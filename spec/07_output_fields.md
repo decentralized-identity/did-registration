@@ -16,24 +16,27 @@ In [Client-managed Secret Mode](#client-managed-secret-mode), this output field 
 * A `signingRequest` property with a [Signing Request Set](#signing-request-set).
 * A `decryptionRequest` property with a [Decryption Request Set](#decryption-request-set).
 
+See [States](#states) for further details about how this output field is used.
+
 #### `didState.state`
 
 This output field contains the current state of the DID. It is used to indicate if a DID operation
-is finished, failed, or if a longer-running "job" has been created that requires additional steps.
+is finished, failed, or if a longer-running process has been created that requires additional steps.
 
-This specification defines four well-known values for this property: `finished`, `failed`, `action`, `wait`. These
-values are further explained in [States](#states).
+This specification defines four well-known values for this property: `finished`, `failed`, `action`, `wait`.
 
 #### `didState.did`
 
 This output field contains the DID that is the target of the operation.
 
 For the [`create()` function](#create):
-- If the value of the [`didState.state` output field](#didstatestate) is `"finished"`, then the value of this output field
-  MUST NOT be null and contains the final DID that has been created.
+
+- If the value of the [`didState.state` output field](#didstatestate) is `"finished"`, the value of this output field
+  MUST NOT be null and MUST contain the final DID that has been created.
 - Otherwise, the value of this output field may or may not contain the DID, depending on the DID method.
 
 For the [`update()` function](#update) and [`deactivate()` function](#deactivate):
+
 - This output field MUST NOT be null, and its value MUST match the [`did` input field](#did) that was used when
   executing the function.
 
@@ -41,12 +44,9 @@ For the [`update()` function](#update) and [`deactivate()` function](#deactivate
 
 This output field contains a JSON object with DID controller keys and other secrets.
 
-It MUST be present if the DID Registrar is operating in [Internal Secret Mode](#internal-secret-mode) and the
-[`returnSecrets` option](#returnsecrets-option) is set to `true`, and MUST NOT be present otherwise.
+In [Internal Secret Mode](#internal-secret-mode), if the [`returnSecrets` option](#returnsecrets) is set to `true`:
 
-In [Internal Secret Mode](#internal-secret-mode), this output field MAY contain one or more of the following:
-
-* A `verificationMethod` property with a JSON array containing one or more [Verification Method Private Data](#verification-method-private-data) objects.
+- This output field MAY contain a `verificationMethod` property  with a JSON array containing one or more [Verification Method Private Data](#verification-method-private-data) objects.
 
 Example:
 
@@ -77,9 +77,9 @@ Example:
 }
 ```
 
-In [Client-managed Secret Mode](#client-managed-secret-mode), this output field MAY contain one or more of the following:
+In [Client-managed Secret Mode](#client-managed-secret-mode):
 
-* A `verificationMethod` property with a JSON array containing one or more [Verification Method Public Data](#verification-method-public-data) objects.
+- This output field MAY contain a `verificationMethod` property with a JSON array containing one or more [Verification Method Public Data](#verification-method-public-data) objects.
 
 Example:
 
@@ -109,7 +109,7 @@ Example:
 }
 ```
 
-The `didState.secret` output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.
+This output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.
 
 #### `didState.didDocument`
 
@@ -147,18 +147,17 @@ Example:
 
 ### `operationState`
 
-When executing DID operations, an operation can turn into a longer-running "job", during which the operation's
-state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
-have to be called multiple times, and the `operationState` is used to keep track of the ongoing process.
-
-This output field MUST be absent or have a `null` value if the value of the [`didState.state` output field](#didstatestate)
-is either `finished` or `failed`, and MUST NOT have a `null` value otherwise.
+This output field contains data related to the current state of the DID operation. It matches the
+[`operationState` input field](#operationstate).
 
 If present, this output field MUST contain either a string or a JSON object. The type and meaning of the value is
-method-specific and not further specified here.
+DID method-specific and not further specified here.
 
-If present, the value of this output field MUST be copied to the [`operationState` input field](#operationstate)
-of a next request to the DID Registrar. 
+If the value of the [`didState.state` output field](#didstatestate) is either `finished` or `failed`:
+
+- This output field MUST be absent or have a `null` value.
+
+See [States](#states) for further details about how this output field is used.
 
 Example:
 

@@ -22,19 +22,25 @@ Possible values:
 
 This input field indicates the DID that is the target of the DID operation.
 
-For the [`create()` function](#create), this input field is OPTIONAL. Specific DID methods typically
-restrict how this input field is used.
+For the [`create()` function](#create):
 
-For the [`update()` function](#update) and [`deactivate()` function](#deactivate), this input field MUST NOT be null.
+- This input field is OPTIONAL, and its use depends on the DID method. In some DID methods, it might be possible for
+  a client to freely choose a DID they want to create, but for other DID methods, the DID is determined by the
+  DID method itself.
+
+For the [`update()` function](#update) and [`deactivate()` function](#deactivate):
+
+- This input field MUST NOT be null.
 
 ### `operationState`
 
-When executing DID operations, an operation can turn into a longer-running "job", during which the operation's
-state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
-have to be called multiple times, and the `operationState` is used to keep track of the ongoing process.
+This input field contains data related to the current state of the DID operation. It matches the
+[`operationState` output field](#operationstate-2).
 
-The value of this input field MUST be copied from the [`operationState` output field](#operationstate-2)
-of a previous response from the DID Registrar, if present. Otherwise, it MUST be null.
+If present, this input field MUST contain either a string or a JSON object. The type and meaning of the value is
+DID method-specific and not further specified here.
+
+See [States](#states) for further details about how this input field is used.
 
 ### `options`
  
@@ -76,10 +82,12 @@ Example operation:
 
 #### `storeSecrets`
 
-In [Internal Secret Mode](#internal-secret-mode), if the `storeSecrets` option is set to `true`, then the DID Registrar maintains an internal wallet where DIDs
+In [Internal Secret Mode](#internal-secret-mode), if the `storeSecrets` option is set to `true`:
+
+- The DID Registrar maintains an internal wallet where DIDs
 and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
 example, if a `create()` operation is executed, then a subsequent `update()` or `deactivate()` operation will
-be able to use existing DID controller keys stored in the DID Registrar.
+be able to use existing DID controller keys stored in the DID Registrar's internal wallet.
 
 Example:
 
@@ -96,8 +104,11 @@ Example:
 
 #### `returnSecrets`
 
-In [Internal Secret Mode](#internal-secret-mode), if the `returnSecrets` option is set to `true`, then the DID Registrar will return generated DID controller keys
-to the client.
+In [Internal Secret Mode](#internal-secret-mode), if the `returnSecrets` option is set to `true`:
+
+- The DID Registrar will return generated DID controller keys to the client.
+
+See the [`didState.secret` output field](#didstatesecret) for further details.
 
 Example:
 

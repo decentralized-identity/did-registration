@@ -1,28 +1,52 @@
 ## States
 
-When executing DID operations, an operation can turn into a longer-running "job", during which the operation's
-state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
-have to be called multiple times until it is completed.
+When executing the `create()`, `update()`, and `deactivate()` DID operations, an operation can turn into a
+longer-running process potentially consisting of multiple
+steps. The
+[DID Registrar functions](#operations)
+may have to be invoked multiple times until the DID operation is completed. In each step,
+additional information such as public key material or signatures may be required, and the DID operation's state
+might change.
 
-The [`operationState` input field](#operationstate) and [`operationState` output field](#operationstate-2) are used to keep
-track of the ongoing process. They fulfill a similar function as a cookie in web architecture and allow a
-DID Registrar to correlate multiple client requests and maintain state between them.
+The [`didState` output field](#didstate) is used by the DID Registrar to indicate to the client the current state of
+this process, and how to proceed to a next step if needed.
 
-The value of this input field MUST be copied from the [`operationState` output field](#operationstate-2)
-of a previous response from the DID Registrar, if present. Otherwise, it MUST be null.
+The [`operationState` input field](#operationstate) and [`operationState` output field](#operationstate-2) contain
+DID-method specific information that is used internally by the DID Registrar to keep track of the ongoing process. They
+fulfill a similar function as a cookie in web architecture and allow a DID Registrar to correlate multiple invocations
+by the client and maintain state between them.
 
+If the value of the [`didState.state` output field](#didstatestate) is either `finished` or `failed`:
 
+- The DID operation is complete, and no further invocations of the [DID Registrar functions](#operations) are required.
 
-The following diagram illustrates the states while executing a DID operation.
+If the value of the [`didState.state` output field](#didstatestate) is either `action` or `wait`:
+
+- The client needs to perform an external action such as signing a payload, or it needs to wait for a certain period of
+  time or until a certain event occurs.
+- After that, the client prepares new inputs and invokes the [DID Registrar functions](#operations) again.
+
+The following diagram illustrates the states while executing a `create()` DID operation.
 
 ![Diagram showing the flow and states of DID operations](images/diagram-flow.png)
+
+When a client needs to invoke the [DID Registrar functions](#operations) again, the following **State Processing Algorithm**
+is used for processing
+the current state and preparing new inputs. Given _previousInputs_ and _previousOutputs_, the algorithm determines
+the _nextInputs_ for the next invocation of the [DID Registrar functions](#operations).
+
+1. Initialize _nextInputs_ by copying all [input fields](#input-fields) from _previousInputs_.
+2. If present, copy `previousOutputs.`[`didState.did`](#didstatedid) to `nextInputs.`[`did`](#did).
+3. If present, copy `previousOutputs.`[`didState.didDocument`](#didstatediddocument) to `nextInputs.`[`didDocument`](#diddocument).
+4. If present, copy `previousOutputs.`[`operationState`](#operationstate-2) to `nextInputs.`[`operationState`](#operationstate).
 
 The following sections explain the possible states of a DID registration process, which are returned as values of the
 [`didState.state` output field](#didstatestate).
 
 ### `didState.state="finished"`
 
-This state indicates that the DID operation has been completed.
+This state indicates that the DID operation has been completed, and that
+no further invocations of the [DID Registrar functions](#operations) are required.
 
 Example:
 
@@ -42,7 +66,8 @@ Example:
 
 ### `didState.state="failed"`
 
-This state indicates that the DID operation has failed.
+This state indicates that the DID operation has failed, and that
+no further invocations of the [DID Registrar functions](#operations) are required.
 
 In this state, the [`didState` output field](#didstate) MUST contain a `reason` property that indicates the reason
 for the failure.
@@ -70,11 +95,11 @@ This state indicates that the client needs to perform an action, before the DID 
 
 Possible uses for `didState.state="action"`:
 
-* Client needs to perform an action at an external service
-* Client needs to perform a cryptographic operation, e.g. generate a signature
-* Client needs to send coins to fund a wallet
+* Client needs to generate a new cryptographic key pair
+* Client needs to cryptographically sign a payload
+* Client needs to send cryptocurrency to fund a wallet addres
+* Client needs to obtain an OAuth2 access token from an external service
 * Client needs to accept the terms of a legal agreement
-* Client needs to upload a file to a webserver
 
 In this state, the [`didState` output field](#didstate) MUST contain an `action` property that indicates the type of
 action that needs to be performed.

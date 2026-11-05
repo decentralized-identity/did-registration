@@ -166,13 +166,14 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-161" class="notice todo"><a class="notice-link" href="#todo-161">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-163" class="notice todo"><a class="notice-link" href="#todo-163">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
 <img alt="Diagram showing Client-Managed Secret Mode" src="images/diagram-mode-client-managed-secret.png">
 <h2 id="operations"><a class="toc-anchor" href="#operations" >§</a> Operations</h2>
-<p>This section defines interfaces for the standard DID operations <code>create()</code>, <code>update()</code>, and <code>deactivate()</code>.</p>
+<p>This section defines interfaces for the standard DID operations <code>create()</code>, <code>update()</code>, and <code>deactivate()</code>, expressed
+as abstract functions with logical inputs and outputs.</p>
 <h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
 <pre><code>create(method, operationState, options, secret, didDocument) -&gt; didState, operationState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
@@ -200,7 +201,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-81" class="notice note"><a class="notice-link" href="#note-81">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-82" class="notice note"><a class="notice-link" href="#note-82">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -219,15 +220,22 @@ null, since the DID method is determined by the <a href="#did" ><code>did</code>
 </ul>
 <h3 id="did"><a class="toc-anchor" href="#did" >§</a> <code>did</code></h3>
 <p>This input field indicates the DID that is the target of the DID operation.</p>
-<p>For the <a href="#create" ><code>create()</code> function</a>, this input field is OPTIONAL. Specific DID methods typically
-restrict how this input field is used.</p>
-<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST NOT be null.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>:</p>
+<ul>
+<li>This input field is OPTIONAL, and its use depends on the DID method. In some DID methods, it might be possible for
+a client to freely choose a DID they want to create, but for other DID methods, the DID is determined by the
+DID method itself.</li>
+</ul>
+<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>:</p>
+<ul>
+<li>This input field MUST NOT be null.</li>
+</ul>
 <h3 id="operationstate"><a class="toc-anchor" href="#operationstate" >§</a> <code>operationState</code></h3>
-<p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
-state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
-have to be called multiple times, and the <code>operationState</code> is used to keep track of the ongoing process.</p>
-<p>The value of this input field MUST be copied from the <a href="##operationstate-2" ><code>operationState</code> output field</a>
-of a previous response from the DID Registrar, if present. Otherwise, it MUST be null.</p>
+<p>This input field contains data related to the current state of the DID operation. It matches the
+<a href="#operationstate-2" ><code>operationState</code> output field</a>.</p>
+<p>If present, this input field MUST contain either a string or a JSON object. The type and meaning of the value is
+DID method-specific and not further specified here.</p>
+<p>See <a href="#states" >States</a> for further details about how this input field is used.</p>
 <h3 id="options"><a class="toc-anchor" href="#options" >§</a> <code>options</code></h3>
 <p>This input field contains a JSON object with various options for the DID operation, such as the network where the DID
 should be created, or instructions that influence the DID operation. Options may be DID method-specific or may be universally
@@ -257,10 +265,13 @@ enable client-managed secret mode and let the client perform cryptographic opera
 <span class="token punctuation">}</span>
 </code></pre>
 <h4 id="storesecrets"><a class="toc-anchor" href="#storesecrets" >§</a> <code>storeSecrets</code></h4>
-<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <code>storeSecrets</code> option is set to <code>true</code>, then the DID Registrar maintains an internal wallet where DIDs
+<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <code>storeSecrets</code> option is set to <code>true</code>:</p>
+<ul>
+<li>The DID Registrar maintains an internal wallet where DIDs
 and DID controller keys can be stored. The DID controller keys can then be used in future DID operations. For
 example, if a <code>create()</code> operation is executed, then a subsequent <code>update()</code> or <code>deactivate()</code> operation will
-be able to use existing DID controller keys stored in the DID Registrar.</p>
+be able to use existing DID controller keys stored in the DID Registrar’s internal wallet.</li>
+</ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
@@ -272,8 +283,11 @@ be able to use existing DID controller keys stored in the DID Registrar.</p>
 <span class="token punctuation">}</span>
 </code></pre>
 <h4 id="returnsecrets"><a class="toc-anchor" href="#returnsecrets" >§</a> <code>returnSecrets</code></h4>
-<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <code>returnSecrets</code> option is set to <code>true</code>, then the DID Registrar will return generated DID controller keys
-to the client.</p>
+<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <code>returnSecrets</code> option is set to <code>true</code>:</p>
+<ul>
+<li>The DID Registrar will return generated DID controller keys to the client.</li>
+</ul>
+<p>See the <a href="#didstatesecret" ><code>didState.secret</code> output field</a> for further details.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
@@ -485,7 +499,8 @@ input field MUST be absent.</p>
 <p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field is REQUIRED and MUST contain a JSON array of JSON object values.</p>
 <h2 id="output-fields"><a class="toc-anchor" href="#output-fields" >§</a> Output Fields</h2>
 <h3 id="didstate"><a class="toc-anchor" href="#didstate" >§</a> <code>didState</code></h3>
-<p>This output field contains a JSON object with the following fields:</p>
+<p>This output field contains a JSON object with the following fields, which contain information about the current
+state of the DID:</p>
 <ul>
 <li><a href="#didstatestate" ><code>didState.state</code></a>: The current state of DID operations.</li>
 <li><a href="#didstatedid" ><code>didState.did</code></a>: The DID at the end of the DID operation.</li>
@@ -498,26 +513,29 @@ input field MUST be absent.</p>
 <li>A <code>signingRequest</code> property with a <a href="#signing-request-set" >Signing Request Set</a>.</li>
 <li>A <code>decryptionRequest</code> property with a <a href="#decryption-request-set" >Decryption Request Set</a>.</li>
 </ul>
+<p>See <a href="#states" >States</a> for further details about how this output field is used.</p>
 <h4 id="didstatestate"><a class="toc-anchor" href="#didstatestate" >§</a> <code>didState.state</code></h4>
-<p>This output field contains the current state of the DID operations. It is used to indicate if a DID operation
-is finished, failed, or if a longer-running “job” has been created that requires additional steps.</p>
-<p>This specification defines four well-known values for this property: <code>finished</code>, <code>failed</code>, <code>action</code>, <code>wait</code>. These
-values are further explained in <a href="#states" >States</a>.</p>
-<p>The following diagram illustrates the use of the <a href="#didstatestate" ><code>didState.state</code> output field</a> and <a href="#operationstate" ><code>operationState</code> output field</a> output fields.</p>
-<p><img src="images/diagram-flow.png" alt="Diagram showing the flow and states of DID operations"></p>
+<p>This output field contains the current state of the DID. It is used to indicate if a DID operation
+is finished, failed, or if a longer-running process has been created that requires additional steps.</p>
+<p>This specification defines four well-known values for this property: <code>finished</code>, <code>failed</code>, <code>action</code>, <code>wait</code>.</p>
 <h4 id="didstatedid"><a class="toc-anchor" href="#didstatedid" >§</a> <code>didState.did</code></h4>
-<p>This output field contains the DID at the end of the DID operation.</p>
-<p>For the <a href="#create" ><code>create()</code> function</a>, if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is <code>&quot;finished&quot;</code>,
-then the value of this output field MUST NOT be null.</p>
-<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this output field MUST NOT
-be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when executing the function.</p>
+<p>This output field contains the DID that is the target of the operation.</p>
+<p>For the <a href="#create" ><code>create()</code> function</a>:</p>
+<ul>
+<li>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is <code>&quot;finished&quot;</code>, the value of this output field
+MUST NOT be null and MUST contain the final DID that has been created.</li>
+<li>Otherwise, the value of this output field may or may not contain the DID, depending on the DID method.</li>
+</ul>
+<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>:</p>
+<ul>
+<li>This output field MUST NOT be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when
+executing the function.</li>
+</ul>
 <h4 id="didstatesecret"><a class="toc-anchor" href="#didstatesecret" >§</a> <code>didState.secret</code></h4>
 <p>This output field contains a JSON object with DID controller keys and other secrets.</p>
-<p>It MUST be present if the DID Registrar is operating in <a href="#internal-secret-mode" >Internal Secret Mode</a> and the
-<a href="#returnsecrets-option" ><code>returnSecrets</code> option</a> is set to <code>true</code>, and MUST NOT be present otherwise.</p>
-<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, this output field MAY contain one or more of the following:</p>
+<p>In <a href="#internal-secret-mode" >Internal Secret Mode</a>, if the <a href="#returnsecrets" ><code>returnSecrets</code> option</a> is set to <code>true</code>:</p>
 <ul>
-<li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-private-data" >Verification Method Private Data</a> objects.</li>
+<li>This output field MAY contain a <code>verificationMethod</code> property  with a JSON array containing one or more <a href="#verification-method-private-data" >Verification Method Private Data</a> objects.</li>
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -545,9 +563,9 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>, this output field MAY contain one or more of the following:</p>
+<p>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>:</p>
 <ul>
-<li>A <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-public-data" >Verification Method Public Data</a> objects.</li>
+<li>This output field MAY contain a <code>verificationMethod</code> property with a JSON array containing one or more <a href="#verification-method-public-data" >Verification Method Public Data</a> objects.</li>
 </ul>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -574,7 +592,7 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>The <code>didState.secret</code> output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.</p>
+<p>This output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.</p>
 <h4 id="didstatediddocument"><a class="toc-anchor" href="#didstatediddocument" >§</a> <code>didState.didDocument</code></h4>
 <p>This output field contains the DID document after the DID operation has been successfully executed.</p>
 <p>This output field is OPTIONAL.</p>
@@ -604,15 +622,15 @@ be null, and its value MUST match the <a href="#did" ><code>did</code> input fie
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="operationstate-2"><a class="toc-anchor" href="#operationstate-2" >§</a> <code>operationState</code></h3>
-<p>When executing DID operations, an operation can turn into a longer-running “job”, during which the operation’s
-state might change. In order for a DID operation to complete, the DID create/update/deactivate functions may
-have to be called multiple times, and the <code>operationState</code> is used to keep track of the ongoing process.</p>
-<p>This output field MUST be absent or have a <code>null</code> value if the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a>
-is either <code>finished</code> or <code>failed</code>, and MUST NOT have a <code>null</code> value otherwise.</p>
+<p>This output field contains data related to the current state of the DID operation. It matches the
+<a href="#operationstate" ><code>operationState</code> input field</a>.</p>
 <p>If present, this output field MUST contain either a string or a JSON object. The type and meaning of the value is
-method-specific and not further specified here.</p>
-<p>If present, the value of this output field MUST be copied to the <a href="##operationstate" ><code>operationState</code> input field</a>
-of a next request to the DID Registrar.</p>
+DID method-specific and not further specified here.</p>
+<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <code>finished</code> or <code>failed</code>:</p>
+<ul>
+<li>This output field MUST be absent or have a <code>null</code> value.</li>
+</ul>
+<p>See <a href="#states" >States</a> for further details about how this output field is used.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -667,10 +685,46 @@ output field MUST be absent.</p>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="states"><a class="toc-anchor" href="#states" >§</a> States</h2>
+<p>When executing the <code>create()</code>, <code>update()</code>, and <code>deactivate()</code> DID operations, an operation can turn into a
+longer-running process potentially consisting of multiple
+steps. The
+<a href="#operations" >DID Registrar functions</a>
+may have to be invoked multiple times until the DID operation is completed. In each step,
+additional information such as public key material or signatures may be required, and the DID operation’s state
+might change.</p>
+<p>The <a href="#didstate" ><code>didState</code> output field</a> is used by the DID Registrar to indicate to the client the current state of
+this process, and how to proceed to a next step if needed.</p>
+<p>The <a href="#operationstate" ><code>operationState</code> input field</a> and <a href="#operationstate-2" ><code>operationState</code> output field</a> contain
+DID-method specific information that is used internally by the DID Registrar to keep track of the ongoing process. They
+fulfill a similar function as a cookie in web architecture and allow a DID Registrar to correlate multiple invocations
+by the client and maintain state between them.</p>
+<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <code>finished</code> or <code>failed</code>:</p>
+<ul>
+<li>The DID operation is complete, and no further invocations of the <a href="#operations" >DID Registrar functions</a> are required.</li>
+</ul>
+<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <code>action</code> or <code>wait</code>:</p>
+<ul>
+<li>The client needs to perform an external action such as signing a payload, or it needs to wait for a certain period of
+time or until a certain event occurs.</li>
+<li>After that, the client prepares new inputs and invokes the <a href="#operations" >DID Registrar functions</a> again.</li>
+</ul>
+<p>The following diagram illustrates the states while executing a <code>create()</code> DID operation.</p>
+<p><img src="images/diagram-flow.png" alt="Diagram showing the flow and states of DID operations"></p>
+<p>When a client needs to invoke the <a href="#operations" >DID Registrar functions</a> again, the following <strong>State Processing Algorithm</strong>
+is used for processing
+the current state and preparing new inputs. Given <em>previousInputs</em> and <em>previousOutputs</em>, the algorithm determines
+the <em>nextInputs</em> for the next invocation of the <a href="#operations" >DID Registrar functions</a>.</p>
+<ol>
+<li>Initialize <em>nextInputs</em> by copying all <a href="#input-fields" >input fields</a> from <em>previousInputs</em>.</li>
+<li>If present, copy <code>previousOutputs.</code><a href="#didstatedid" ><code>didState.did</code></a> to <code>nextInputs.</code><a href="#did" ><code>did</code></a>.</li>
+<li>If present, copy <code>previousOutputs.</code><a href="#didstatediddocument" ><code>didState.didDocument</code></a> to <code>nextInputs.</code><a href="#diddocument" ><code>didDocument</code></a>.</li>
+<li>If present, copy <code>previousOutputs.</code><a href="#operationstate-2" ><code>operationState</code></a> to <code>nextInputs.</code><a href="#operationstate" ><code>operationState</code></a>.</li>
+</ol>
 <p>The following sections explain the possible states of a DID registration process, which are returned as values of the
 <a href="#didstatestate" ><code>didState.state</code> output field</a>.</p>
 <h3 id="didstatestatefinished"><a class="toc-anchor" href="#didstatestatefinished" >§</a> <code>didState.state=&quot;finished&quot;</code></h3>
-<p>This state indicates that the DID operation has been completed.</p>
+<p>This state indicates that the DID operation has been completed, and that
+no further invocations of the <a href="#operations" >DID Registrar functions</a> are required.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -685,7 +739,8 @@ output field MUST be absent.</p>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="didstatestatefailed"><a class="toc-anchor" href="#didstatestatefailed" >§</a> <code>didState.state=&quot;failed&quot;</code></h3>
-<p>This state indicates that the DID operation has failed.</p>
+<p>This state indicates that the DID operation has failed, and that
+no further invocations of the <a href="#operations" >DID Registrar functions</a> are required.</p>
 <p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>reason</code> property that indicates the reason
 for the failure.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this state.</p>
@@ -705,11 +760,11 @@ for the failure.</p>
 <p>This state indicates that the client needs to perform an action, before the DID operation can be continued.</p>
 <p>Possible uses for <code>didState.state=&quot;action&quot;</code>:</p>
 <ul>
-<li>Client needs to perform an action at an external service</li>
-<li>Client needs to perform a cryptographic operation, e.g. generate a signature</li>
-<li>Client needs to send coins to fund a wallet</li>
+<li>Client needs to generate a new cryptographic key pair</li>
+<li>Client needs to cryptographically sign a payload</li>
+<li>Client needs to send cryptocurrency to fund a wallet addres</li>
+<li>Client needs to obtain an OAuth2 access token from an external service</li>
 <li>Client needs to accept the terms of a legal agreement</li>
-<li>Client needs to upload a file to a webserver</li>
 </ul>
 <p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain an <code>action</code> property that indicates the type of
 action that needs to be performed.</p>
@@ -738,7 +793,7 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="todo-162" class="notice todo"><a class="notice-link" href="#todo-162">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-164" class="notice todo"><a class="notice-link" href="#todo-164">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -890,7 +945,7 @@ data model as defined by [<a class="spec-reference" href="#ref:DID-CORE">DID-COR
 <ul>
 <li>If it is present, its value MUST match the <code>id</code> property of the corresponding verification method in the DID’s
 associated DID document.</li>
-<li>If it is absent, then the verification method does not correspond to any verification method in the DID’s
+<li>If it is absent, the verification method does not correspond to any verification method in the DID’s
 associated DID document.</li>
 </ul>
 </li>

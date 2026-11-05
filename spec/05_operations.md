@@ -1,6 +1,7 @@
 ## Operations
 
-This section defines interfaces for the standard DID operations `create()`, `update()`, and `deactivate()`.
+This section defines interfaces for the standard DID operations `create()`, `update()`, and `deactivate()`, expressed
+as abstract functions with logical inputs and outputs.
 
 ### `create()`
 
