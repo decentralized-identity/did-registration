@@ -1,10 +1,7 @@
 ## States
 
-When executing the `create()`, `update()`, and `deactivate()` DID operations, an operation can turn into a
-longer-running process potentially consisting of multiple
-steps. The
-[DID Registrar functions](#operations)
-may have to be invoked multiple times until the DID operation is completed. In each step,
+When executing the `create()`, `update()`, and `deactivate()` DID operations, an operation can sometimes turn into a
+longer-running process potentially consisting of multiple steps. In each step,
 additional information such as public key material or signatures may be required, and the DID operation's state
 might change.
 
@@ -16,29 +13,9 @@ DID-method specific information that is used internally by the DID Registrar to 
 fulfill a similar function as a cookie in web architecture and allow a DID Registrar to correlate multiple invocations
 by the client and maintain state between them.
 
-If the value of the [`didState.state` output field](#didstatestate) is either `finished` or `failed`:
-
-- The DID operation is complete, and no further invocations of the [DID Registrar functions](#operations) are required.
-
-If the value of the [`didState.state` output field](#didstatestate) is either `action` or `wait`:
-
-- The client needs to perform an external action such as signing a payload, or it needs to wait for a certain period of
-  time or until a certain event occurs.
-- After that, the client prepares new inputs and invokes the [DID Registrar functions](#operations) again.
-
-The following diagram illustrates the states while executing a `create()` DID operation.
+The following diagram illustrates possible states while executing a `create()` DID operation.
 
 ![Diagram showing the flow and states of DID operations](images/diagram-flow.png)
-
-When a client needs to invoke the [DID Registrar functions](#operations) again, the following **State Processing Algorithm**
-is used for processing
-the current state and preparing new inputs. Given _previousInputs_ and _previousOutputs_, the algorithm determines
-the _nextInputs_ for the next invocation of the [DID Registrar functions](#operations).
-
-1. Initialize _nextInputs_ by copying all [input fields](#input-fields) from _previousInputs_.
-2. If present, copy `previousOutputs.`[`didState.did`](#didstatedid) to `nextInputs.`[`did`](#did).
-3. If present, copy `previousOutputs.`[`didState.didDocument`](#didstatediddocument) to `nextInputs.`[`didDocument`](#diddocument).
-4. If present, copy `previousOutputs.`[`operationState`](#operationstate-2) to `nextInputs.`[`operationState`](#operationstate).
 
 The following sections explain the possible states of a DID registration process, which are returned as values of the
 [`didState.state` output field](#didstatestate).
@@ -137,10 +114,6 @@ This action is used in [Client Managed Secret Mode](#client-managed-secret-mode)
 The [`didState` output field](#didstate) MUST contain a property `verificationMethodTemplate` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
 
 The [`didState` output field](#didstate) MAY contain additional properties that are relevant to this action.
-
-::: todo
-Explain that the generated verification method must then be included in either "secret" or "didDocument" in next request.
-:::
 
 Example:
 

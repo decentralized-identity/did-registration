@@ -166,7 +166,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-163" class="notice todo"><a class="notice-link" href="#todo-163">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-1" class="notice todo"><a class="notice-link" href="#todo-1">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -201,7 +201,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-82" class="notice note"><a class="notice-link" href="#note-82">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-1" class="notice note"><a class="notice-link" href="#note-1">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -685,11 +685,8 @@ output field MUST be absent.</p>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="states"><a class="toc-anchor" href="#states" >§</a> States</h2>
-<p>When executing the <code>create()</code>, <code>update()</code>, and <code>deactivate()</code> DID operations, an operation can turn into a
-longer-running process potentially consisting of multiple
-steps. The
-<a href="#operations" >DID Registrar functions</a>
-may have to be invoked multiple times until the DID operation is completed. In each step,
+<p>When executing the <code>create()</code>, <code>update()</code>, and <code>deactivate()</code> DID operations, an operation can sometimes turn into a
+longer-running process potentially consisting of multiple steps. In each step,
 additional information such as public key material or signatures may be required, and the DID operation’s state
 might change.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> is used by the DID Registrar to indicate to the client the current state of
@@ -698,28 +695,8 @@ this process, and how to proceed to a next step if needed.</p>
 DID-method specific information that is used internally by the DID Registrar to keep track of the ongoing process. They
 fulfill a similar function as a cookie in web architecture and allow a DID Registrar to correlate multiple invocations
 by the client and maintain state between them.</p>
-<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <code>finished</code> or <code>failed</code>:</p>
-<ul>
-<li>The DID operation is complete, and no further invocations of the <a href="#operations" >DID Registrar functions</a> are required.</li>
-</ul>
-<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <code>action</code> or <code>wait</code>:</p>
-<ul>
-<li>The client needs to perform an external action such as signing a payload, or it needs to wait for a certain period of
-time or until a certain event occurs.</li>
-<li>After that, the client prepares new inputs and invokes the <a href="#operations" >DID Registrar functions</a> again.</li>
-</ul>
-<p>The following diagram illustrates the states while executing a <code>create()</code> DID operation.</p>
+<p>The following diagram illustrates possible states while executing a <code>create()</code> DID operation.</p>
 <p><img src="images/diagram-flow.png" alt="Diagram showing the flow and states of DID operations"></p>
-<p>When a client needs to invoke the <a href="#operations" >DID Registrar functions</a> again, the following <strong>State Processing Algorithm</strong>
-is used for processing
-the current state and preparing new inputs. Given <em>previousInputs</em> and <em>previousOutputs</em>, the algorithm determines
-the <em>nextInputs</em> for the next invocation of the <a href="#operations" >DID Registrar functions</a>.</p>
-<ol>
-<li>Initialize <em>nextInputs</em> by copying all <a href="#input-fields" >input fields</a> from <em>previousInputs</em>.</li>
-<li>If present, copy <code>previousOutputs.</code><a href="#didstatedid" ><code>didState.did</code></a> to <code>nextInputs.</code><a href="#did" ><code>did</code></a>.</li>
-<li>If present, copy <code>previousOutputs.</code><a href="#didstatediddocument" ><code>didState.didDocument</code></a> to <code>nextInputs.</code><a href="#diddocument" ><code>didDocument</code></a>.</li>
-<li>If present, copy <code>previousOutputs.</code><a href="#operationstate-2" ><code>operationState</code></a> to <code>nextInputs.</code><a href="#operationstate" ><code>operationState</code></a>.</li>
-</ol>
 <p>The following sections explain the possible states of a DID registration process, which are returned as values of the
 <a href="#didstatestate" ><code>didState.state</code> output field</a>.</p>
 <h3 id="didstatestatefinished"><a class="toc-anchor" href="#didstatestatefinished" >§</a> <code>didState.state=&quot;finished&quot;</code></h3>
@@ -793,8 +770,6 @@ continued.</p>
 <p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
-<div id="todo-164" class="notice todo"><a class="notice-link" href="#todo-164">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
-</div>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -1175,12 +1150,47 @@ which is called the <strong>Decryption Response</strong>.</p>
 <span class="token punctuation">}</span>
 </code></pre>
 <h2 id="algorithm"><a class="toc-anchor" href="#algorithm" >§</a> Algorithm</h2>
-<p>This section defines an algorithm that clients can use to execute the <a href="#operations" >operations</a> with
-<a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
-<h3 id="initial-request"><a class="toc-anchor" href="#initial-request" >§</a> Initial Request</h3>
-<h3 id="handling"><a class="toc-anchor" href="#handling" >§</a> Handling</h3>
-<h3 id="step-2"><a class="toc-anchor" href="#step-2" >§</a> Step 2</h3>
-<h3 id="step-3"><a class="toc-anchor" href="#step-3" >§</a> Step 3</h3>
+<p>This section defines a <strong>State Processing Algorithm</strong> that clients can use after invoking the <a href="#operations" >DID Registrar functions</a>,
+in order to process the outputs including current state (see <a href="#states" >States</a>). If the DID operation consists of
+multiple steps, the <a href="#operations" >DID Registrar functions</a> may have to be invoked multiple times until a DID operation is completed.</p>
+<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <a href="#didstatestatefinished" ><code>finished</code></a> or <a href="#didstatestatefailed" ><code>failed</code></a>:</p>
+<ul>
+<li>The DID operation is complete, and no further invocations of the <a href="#operations" >DID Registrar functions</a> are required.</li>
+</ul>
+<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <a href="#didstatestateaction" ><code>action</code></a> or <a href="#didstatestatewait" ><code>wait</code></a>:</p>
+<ul>
+<li>The client needs to perform an action, or it needs to wait for a certain period of
+time or until a certain event occurs.</li>
+<li>After that, the client prepares new inputs and invokes the <a href="#operations" >DID Registrar functions</a> again.</li>
+</ul>
+<p>In the latter case, the current state is processed and new inputs are prepared. Given <em>previousInputs</em> and <em>previousOutputs</em>, the algorithm determines
+<em>nextInputs</em> for the next invocation of the <a href="#operations" >DID Registrar functions</a>.</p>
+<ol>
+<li>Initialize <em>nextInputs</em> by copying all <a href="#input-fields" >input fields</a> from <em>previousInputs</em>.</li>
+<li>If present, copy <code>previousOutputs.</code><a href="#didstatedid" ><code>didState.did</code></a> to <code>nextInputs.</code><a href="#did" ><code>did</code></a>.</li>
+<li>If present, copy <code>previousOutputs.</code><a href="#didstatediddocument" ><code>didState.didDocument</code></a> to <code>nextInputs.</code><a href="#diddocument" ><code>didDocument</code></a>.</li>
+<li>If present, copy <code>previousOutputs.</code><a href="#operationstate-2" ><code>operationState</code></a> to <code>nextInputs.</code><a href="#operationstate" ><code>operationState</code></a>.</li>
+<li>If <a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a> and <a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code></a>
+<ol>
+<li>For each <a href="#verification-method-template" >Verification Method Template</a> in the <a href="#didstate" ><code>didState</code> output field</a>, generate or retrieve a key pair,
+and add a <a href="#verification-method-public-data" >Verification Method Public Data</a> to the <a href="#diddocument" ><code>didDocument</code> input field</a> or <a href="#secret" ><code>secret</code> input field</a>.</li>
+</ol>
+</li>
+<li>If <a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a> and <a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a>
+<ol>
+<li>From the <a href="#signing-request-set" >Signing Request Set</a> in the <a href="#didstate" ><code>didState</code> output field</a>, sign the payload(s),
+and add the <a href="#signing-response-set" >Signing Response Set</a> to the <a href="#secret" ><code>secret</code> input field</a>.</li>
+</ol>
+</li>
+<li>If <a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a> and <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code></a>
+<ol>
+<li>From the <a href="#decryption-request-set" >Decryption Request Set</a> in the <a href="#didstate" ><code>didState</code> output field</a>, decrypt the payload(s),
+and add the <a href="#decryption-response-set" >Decryption Response Set</a> to the <a href="#secret" ><code>secret</code> input field</a>.</li>
+</ol>
+</li>
+</ol>
+<div id="todo-2" class="notice todo"><a class="notice-link" href="#todo-2">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+</div>
 <h2 id="extensions"><a class="toc-anchor" href="#extensions" >§</a> Extensions</h2>
 <p>This section documents various optional extension features that can complement the main functionality of a DID Registrar
 to accommodate advanced use cases.</p>
@@ -1432,14 +1442,7 @@ https://uniregistrar.io/1.0/deactivate
 <li><a href="#decryption-response-set" >Decryption Response Set</a></li>
 </ul>
 </li>
-<li><a href="#algorithm" >Algorithm</a>
-<ul>
-<li><a href="#initial-request" >Initial Request</a></li>
-<li><a href="#handling" >Handling</a></li>
-<li><a href="#step-2" >Step 2</a></li>
-<li><a href="#step-3" >Step 3</a></li>
-</ul>
-</li>
+<li><a href="#algorithm" >Algorithm</a></li>
 <li><a href="#extensions" >Extensions</a>
 <ul>
 <li><a href="#optionsrequestverificationmethod" ><code>options.requestVerificationMethod</code></a></li>
