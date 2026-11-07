@@ -4,13 +4,6 @@ This specification defines a number of data structures that appear in the [input
 
 ### Verification Method Public Data
 
-This data structure is used as follows, when public data about a verification method is exchanged between the client and the DID Registrar:
-
-- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),
-  when the client invokes the DID Registrar again after it received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
-- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
-  when the DID Registrar responds to a client request.
-
 A **Verification Method Public Data** structure is a JSON object based on the verification method
 data model as defined by [[spec:DID-CORE]], with the following differences:
 
@@ -50,14 +43,14 @@ Example:
 }
 ```
 
-### Verification Method Private Data
+The **Verification Method Public Data** structure is used as follows, when public data about a verification method is exchanged between the client and the DID Registrar:
 
-This data structure is used as follows, when private data about a verification method is exchanged between the client and the DID Registrar:
-
-- In [Internal Secret Mode](#internal-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),
   when the client invokes the DID Registrar again after it received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
-- In [Internal Secret Mode](#internal-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
   when the DID Registrar responds to a client request.
+
+### Verification Method Private Data
 
 A **Verification Method Private Data** structure is a JSON object based on the [Verification Method Public Data](#verification-method-public-data)
 structure, with the following difference:
@@ -95,12 +88,14 @@ Example:
 }
 ```
 
+The **Verification Method Private Data** structure is used as follows, when private data about a verification method is exchanged between the client and the DID Registrar:
+
+- In [Internal Secret Mode](#internal-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),
+  when the client invokes the DID Registrar again after it received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
+- In [Internal Secret Mode](#internal-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
+  when the DID Registrar responds to a client request.
+
 ### Verification Method Template
-
-This data structure is used as follows:
-
-- In [Client-managed Secret Mode](#client-managed-secret-mode) as `verificationMethodTemplate` field inside the [`didState` output field](#didstate),
-  when the DID Registrar responds to a client request with a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
 
 A **Verification Method Template** structure is a JSON object based on the verification method
 data model as defined by [[spec:DID-CORE]], with the following differences:
@@ -133,6 +128,11 @@ Example **Verification Method Template** containing properties `purpose` and `ty
 	"type": "EcdsaSecp256k1VerificationKey2019"
 }
 ```
+
+The **Verification Method Template** structure is used as follows:
+
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as `verificationMethodTemplate` field inside the [`didState` output field](#didstate),
+  when the DID Registrar responds to a client request with a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
 
 ### Signing Request Set
 
