@@ -1,7 +1,21 @@
 ## Operations
 
-This section defines interfaces for the standard DID operations `create()`, `update()`, and `deactivate()`, expressed
-as abstract functions with logical inputs and outputs.
+This section defines interfaces for the standard DID operations `create()`, `update()`, and `deactivate()`, 
+as well as a fourth `execute()`.
+
+The signatures of these function are to be understood as abstract interfaces
+for the specified DID operations, with logical named inputs and outputs. Conforming
+<a>DID URL dereferencing</a> implementations are not required to
+implement this function using the same names of the inputs, outputs,
+or of the function itself, nor do they need to implement the algorithm in
+any specific form, such as an explicit function call in a programming language,
+a software library, or a protocol endpoint.
+</p>
+<p>
+<a>Bindings</a> such as the <a href="#bindings-https">HTTP(S) binding</a>
+can be used to define specific ways of implementing and exposing this function.
+
+
 
 ### `create()`
 

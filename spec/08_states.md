@@ -1,6 +1,6 @@
 ## States
 
-When executing the `create()`, `update()`, and `deactivate()` DID operations, an operation can sometimes turn into a
+When executing the `create()`, `update()`, `deactivate()`, and `execute()` DID operations, an operation can sometimes turn into a
 longer-running process potentially consisting of multiple steps. In each step,
 additional information such as public key material or signatures may be required, and the DID operation's state
 might change.
