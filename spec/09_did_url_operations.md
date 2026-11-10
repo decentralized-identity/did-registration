@@ -1,6 +1,6 @@
 ## DID URL Operations
 
-In addition to the [DID Operations](#operations) defined in previous sections, this specification
+In addition to the [DID Registrar functions](#operations) defined in previous sections, this specification
 also defines operations on resources identified by DID URLs.
 
 ### `createResource()`
