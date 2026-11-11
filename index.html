@@ -128,9 +128,22 @@ work is being done.</p>
 </tbody>
 </table>
 <h2 id="key-management"><a class="toc-anchor" href="#key-management" >§</a> Key Management</h2>
-<p>The DID create/update/deactivate functions raise architectural questions around key management,
+<p>The DID create/update/deactivate/execute functions raise architectural questions about key management,
 since they typically involve the generation and use of private keys and other secrets.</p>
-<p>With regard to key management, a DID Registrar can operate in the following modes:</p>
+<p>This specification assumes that a key management system is available that can hold a map whose
+keys are implementation-specific key references, and whose values are private keys that can be logically
+expressed as <a href="#verification-method-private-data" >Verification Method Private Data</a> objects.</p>
+<p>The key management system is assumed to provide the following abstract interface:</p>
+<pre><code>getKeys(controller, url, type, purpose) → « keyReferences »
+getKey(controller, url, type, purpose) → keyReference
+generateKey(controller, url, type, « purpose », verificationMethodType) → keyReference
+importKey(controller, url, type, « purpose », privateKeyJwk, verificationMethodType)
+updateKey(keyReference, controller, url, type, « purposes », jwk, verificationMethodType)
+deleteKey(keyReference)
+signWithKey(keyReference, alg, contentBytes) → signatureBytes
+decryptWithKey(keyReference, alg, contentBytes) → payloadBytes
+</code></pre>
+<p>With regard to key management systems, a DID Registrar can operate in the following modes:</p>
 <h3 id="internal-secret-mode"><a class="toc-anchor" href="#internal-secret-mode" >§</a> Internal Secret Mode</h3>
 <p>In this mode, the DID Registrar is responsible for generating the DID controller keys used by DID operations. This
 means  that the DID Registrar is considered a highly trusted component which should be fully under the control of a
@@ -149,7 +162,7 @@ with option <code>storeSecrets=true</code> can be simulated by building a “wra
 “inner DID Registrar”.</p>
 <img alt="Diagram showing Internal Secret Mode" src="images/diagram-mode-internal-secret.png">
 <h3 id="external-secret-mode"><a class="toc-anchor" href="#external-secret-mode" >§</a> External Secret Mode</h3>
-<p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it has a way
+<p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it has a way
 of accessing an external wallet in order to perform cryptographic operations such as generating signatures.</p>
 <p>The interface between the DID Registrar and an external wallet is out of scope for this specification, but could
 potentially use wallet or key management interfaces defined by other specifications, e.g.:</p>
@@ -164,9 +177,9 @@ to be able to access the external wallet, then such information could be preconf
 alternatively supplied by a client in the <a href="#options" ><code>options</code></a> and/or <a href="#secret" ><code>secret</code></a> input fields.</p>
 <img alt="Diagram showing External Secret Mode" src="images/diagram-mode-external-secret.png">
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
-<p>In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
+<p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-1" class="notice todo"><a class="notice-link" href="#todo-1">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-47" class="notice todo"><a class="notice-link" href="#todo-47">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -212,7 +225,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-1" class="notice note"><a class="notice-link" href="#note-1">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-24" class="notice note"><a class="notice-link" href="#note-24">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -933,7 +946,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-2" class="notice todo"><a class="notice-link" href="#todo-2">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-48" class="notice todo"><a class="notice-link" href="#todo-48">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>

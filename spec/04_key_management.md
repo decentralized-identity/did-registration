@@ -1,9 +1,26 @@
 ## Key Management
 
-The DID create/update/deactivate functions raise architectural questions around key management,
+The DID create/update/deactivate/execute functions raise architectural questions about key management,
 since they typically involve the generation and use of private keys and other secrets.
 
-With regard to key management, a DID Registrar can operate in the following modes:
+This specification assumes that a key management system is available that can hold a map whose
+keys are implementation-specific key references, and whose values are private keys that can be logically
+expressed as [Verification Method Private Data](#verification-method-private-data) objects.
+
+The key management system is assumed to provide the following abstract interface:
+
+```
+getKeys(controller, url, type, purpose) → « keyReferences »
+getKey(controller, url, type, purpose) → keyReference
+generateKey(controller, url, type, « purpose », verificationMethodType) → keyReference
+importKey(controller, url, type, « purpose », privateKeyJwk, verificationMethodType)
+updateKey(keyReference, controller, url, type, « purposes », jwk, verificationMethodType)
+deleteKey(keyReference)
+signWithKey(keyReference, alg, contentBytes) → signatureBytes
+decryptWithKey(keyReference, alg, contentBytes) → payloadBytes
+```
+
+With regard to key management systems, a DID Registrar can operate in the following modes:
 
 ### Internal Secret Mode
 
@@ -31,7 +48,7 @@ with option `storeSecrets=true` can be simulated by building a "wrapping DID Reg
 
 ### External Secret Mode
 
-In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it has a way
+In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it has a way
 of accessing an external wallet in order to perform cryptographic operations such as generating signatures.
 
 The interface between the DID Registrar and an external wallet is out of scope for this specification, but could
@@ -50,7 +67,7 @@ alternatively supplied by a client in the [`options`](#options) and/or [`secret`
 
 ### Client-managed Secret Mode
 
-In this mode, the DID Registrar does not itself have access to the secrets used by DID operations, but it will ask
+In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.
 
 ::: todo
