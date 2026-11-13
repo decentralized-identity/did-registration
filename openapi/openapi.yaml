@@ -653,14 +653,14 @@ components:
       required:
         - didState
       properties:
-        didState:
-          $ref: "#/components/schemas/DidState"
         operationState:
           oneOf:
             - type: null
             - type: string
             - type: object
           example: 6d85bcd0-2ea3-4288-ab00-15afadd8a156
+        didState:
+          $ref: "#/components/schemas/DidState"
         didRegistrationMetadata:
           type: object
           additionalProperties: { }
@@ -674,14 +674,14 @@ components:
       required:
         - didUrlState
       properties:
-        didUrlState:
-          $ref: "#/components/schemas/DidUrlState"
         operationState:
           oneOf:
             - type: null
             - type: string
             - type: object
           example: 6d85bcd0-2ea3-4288-ab00-15afadd8a156
+        didUrlState:
+          $ref: "#/components/schemas/DidUrlState"
         didRegistrationMetadata:
           type: object
           additionalProperties: { }
