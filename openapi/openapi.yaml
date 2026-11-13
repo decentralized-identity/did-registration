@@ -394,7 +394,7 @@ components:
       properties:
         operationState:
           description: This input field is used to keep track of an ongoing DID operation
-            process. See <a href="https://identity.foundation/did-registration/#operationState">https://identity.foundation/did-registration/#operationstate</a>.
+            process. See <a href="https://identity.foundation/did-registration/#operationstate">https://identity.foundation/did-registration/#operationstate</a>.
           oneOf:
             - type: null
             - type: string
