@@ -446,13 +446,13 @@ components:
       example:
         seed: 72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ
         verificationMethod:
-            - id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1
-              type: JsonWebKey2020
-              privateKeyJwk:
-                kty: OKP
-                crv: Ed25519
-                d: NzJXR3A3TmdGUjFPcWRpOHpsdDdqUVE0MzRYUjBjTlE
-                x: jpIKKU2b77lNXKTNW2NGvw1GUMjU6v_l_tLJAH5uYz0
+          - id: did:indy:sovrin:WRfXPg8dantKVubE3HX8pw#key-1
+            type: JsonWebKey2020
+            privateKeyJwk:
+              kty: OKP
+              crv: Ed25519
+              d: NzJXR3A3TmdGUjFPcWRpOHpsdDdqUVE0MzRYUjBjTlE
+              x: jpIKKU2b77lNXKTNW2NGvw1GUMjU6v_l_tLJAH5uYz0
     RequestSecretVerificationMethod:
       type: array
       items:
