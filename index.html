@@ -92,6 +92,11 @@ into a shared specification that meets the collective needs of the community.
 This spec is regularly updated to reflect relevant changes, and we encourage
 active engagement on GitHub (see above) and other mediums (e.g. DIF) where this
 work is being done.</p>
+<h2 id="conformance"><a class="toc-anchor" href="#conformance" >§</a> Conformance</h2>
+<p>The key words MAY, MUST, MUST NOT, OPTIONAL, REQUIRED, and SHOULD in this document are to be interpreted
+as described in <a path-0="www.rfc-editor.org"path-1="info"path-2="bcp14"href="https://www.rfc-editor.org/info/bcp14" >BCP 14</a>
+[<a class="spec-reference" href="#ref:RFC2119">RFC2119</a>] [<a class="spec-reference" href="#ref:RFC8174">RFC8174</a>]
+when, and only when, they appear in all capitals, as shown here.</p>
 <h2 id="terminology"><a class="toc-anchor" href="#terminology" >§</a> Terminology</h2>
 <table>
 <thead>
@@ -179,7 +184,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-37" class="notice todo"><a class="notice-link" href="#todo-37">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-49" class="notice todo"><a class="notice-link" href="#todo-49">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -223,7 +228,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-19" class="notice note"><a class="notice-link" href="#note-19">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-25" class="notice note"><a class="notice-link" href="#note-25">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -872,7 +877,7 @@ continued.</p>
 			<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 				<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
 				<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span><span class="token punctuation">,</span>
-				<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span> <span class="token comment">// describes the purpose of the requested signature</span>
+				<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span>
 			<span class="token punctuation">}</span>
 		<span class="token punctuation">}</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -971,7 +976,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-38" class="notice todo"><a class="notice-link" href="#todo-38">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-50" class="notice todo"><a class="notice-link" href="#todo-50">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
@@ -1159,20 +1164,18 @@ the corresponding property value MUST be a JSON object which is called the <stro
 </ul>
 <p>Example <strong>Signing Request Set</strong> containing two <strong>Signing Requests</strong> with IDs <code>signingRequest1</code> and <code>signingRequest2</code>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"signingRequest"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"payload"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-				...
-			<span class="token punctuation">}</span><span class="token punctuation">,</span>
-			<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-			<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
-			<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span>
+	<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"payload"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+			...
 		<span class="token punctuation">}</span><span class="token punctuation">,</span>
-		<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-			<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span><span class="token punctuation">,</span>
-			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span> <span class="token comment">// describes the purpose of the requested signature</span>
-		<span class="token punctuation">}</span>
+		<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
+		<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
+		<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"serializedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
+		<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span><span class="token punctuation">,</span>
+		<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span>
 	<span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
@@ -1189,17 +1192,15 @@ which is called the <strong>Signing Response</strong>.</p>
 </ul>
 <p>Example <strong>Signing Response Set</strong> containing two <strong>Signing Responses</strong>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-	<span class="token property">"signingResponse"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-		<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-			<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
-			<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span>
-		<span class="token punctuation">}</span><span class="token punctuation">,</span>
-		<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-			<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-			<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span><span class="token punctuation">,</span>
-			<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span> <span class="token comment">// describes the purpose of the requested signature</span>
-		<span class="token punctuation">}</span>
+	<span class="token property">"signingRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
+		<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-0"</span><span class="token punctuation">,</span>
+		<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"EdDSA"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"signingRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+		<span class="token property">"signature"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
+		<span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"ES256K"</span><span class="token punctuation">,</span>
+		<span class="token property">"purpose"</span><span class="token operator">:</span> <span class="token string">"authentication"</span>
 	<span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
@@ -1390,6 +1391,12 @@ https://uniregistrar.io/1.0/execute
           Manu Sporny; Amy Guy; Markus Sabadello; Drummond Reed; 2022-07-19. <span class="reference-status">Status: REC</span>.
         </dd>
       
+        <dt id="ref:RFC2119">RFC2119</dt>
+        <dd>
+          <cite><a href="https://www.rfc-editor.org/rfc/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a></cite>. 
+          S. Bradner; 1997-03. <span class="reference-status">Status: Best Current Practice</span>.
+        </dd>
+      
         <dt id="ref:RFC7515">RFC7515</dt>
         <dd>
           <cite><a href="https://www.rfc-editor.org/rfc/rfc7515">JSON Web Signature (JWS)</a></cite>. 
@@ -1406,6 +1413,12 @@ https://uniregistrar.io/1.0/execute
         <dd>
           <cite><a href="https://www.rfc-editor.org/rfc/rfc7517">JSON Web Key (JWK)</a></cite>. 
           M. Jones; 2015-05. <span class="reference-status">Status: Proposed Standard</span>.
+        </dd>
+      
+        <dt id="ref:RFC8174">RFC8174</dt>
+        <dd>
+          <cite><a href="https://www.rfc-editor.org/rfc/rfc8174">Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</a></cite>. 
+          B. Leiba; 2017-05. <span class="reference-status">Status: Best Current Practice</span>.
         </dd>
       
 </dl>
@@ -1450,6 +1463,7 @@ https://uniregistrar.io/1.0/execute
                         <ul class="toc">
 <li><a href="#abstract" >Abstract</a></li>
 <li><a href="#status-of-this-document" >Status of This Document</a></li>
+<li><a href="#conformance" >Conformance</a></li>
 <li><a href="#terminology" >Terminology</a></li>
 <li><a href="#key-management" >Key Management</a>
 <ul>
