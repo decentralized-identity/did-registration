@@ -38,4 +38,11 @@ The following HTTP status codes are used for the [`deactivate()` function](#deac
 * **400**, if a problem with the input fields has occurred.
 * **500**, if an internal error has occurred.
 
+The following HTTP status codes are used for the [`execute()` function](#execute):
+
+* **200**, if request was successful, and the operation may or may not be fully completed yet, as indicated by the
+  [`didState.state` output field](#didstatestate).
+* **400**, if a problem with the input fields has occurred.
+* **500**, if an internal error has occurred.
+
 See <a href="https://github.com/decentralized-identity/did-registration/blob/main/openapi/openapi.yaml">here</a> for an OpenAPI definition.
