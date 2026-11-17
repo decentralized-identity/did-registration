@@ -238,7 +238,7 @@ Possible uses for `didState.state="wait"`:
 * Client needs to wait for approval by someone
 
 In this state, the [`didState` output field](#didstate) MUST contain a `wait` property, and MAY contain additional
-properties, to explain the reason for the failure.
+properties, to explain the reason for waiting.
 
 Example:
 
