@@ -347,6 +347,7 @@ Example:
 
 ```json
 {
+	"did": "did:example:123",
 	"options": {
 		"network": "mainnet"
 	},
