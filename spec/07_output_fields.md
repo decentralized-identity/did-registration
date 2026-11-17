@@ -56,7 +56,7 @@ Example:
 {
 	"didState": {
 		"state": "finished",
-		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"did": "did:example:123",
 		"secret": {
 			"verificationMethod": [{
 				"type": "JsonWebKey2020",
@@ -90,7 +90,7 @@ Example:
 {
 	"didState": {
 		"state": "finished",
-		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"did": "did:example:123",
 		"secret": {
 			"verificationMethod": [{
 				"type": "JsonWebKey2020",
@@ -152,7 +152,7 @@ Example:
 {
 	"didState": {
 		"state": "finished",
-		"did": "did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN",
+		"did": "did:example:123",
 		"secret": { ... },
 		"didDocument": {
 			"@context": [
