@@ -184,7 +184,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-13" class="notice todo"><a class="notice-link" href="#todo-13">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-19" class="notice todo"><a class="notice-link" href="#todo-19">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -228,14 +228,14 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-7" class="notice note"><a class="notice-link" href="#note-7">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-10" class="notice note"><a class="notice-link" href="#note-10">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
 <p>This input field indicates the DID method that should be used for the DID operation.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, if the <a href="#did" ><code>did</code> input field</a> is absent or its value is null, then
 this input field MUST NOT be null, otherwise it MUST be null.</p>
-<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be
+<p>For the <a href="#update" ><code>update()</code> function</a>, <a href="#deactivate" ><code>deactivate()</code> function</a>, and <a href="#execute" ><code>execute()</code> function</a>, this input field MUST be
 null, since the DID method is determined by the <a href="#did" ><code>did</code> input field</a>.</p>
 <p>Possible values:</p>
 <ul>
@@ -253,7 +253,7 @@ null, since the DID method is determined by the <a href="#did" ><code>did</code>
 a client to freely choose a DID they want to create, but for other DID methods, the DID is determined by the
 DID method itself.</li>
 </ul>
-<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>:</p>
+<p>For the <a href="#update" ><code>update()</code> function</a>, <a href="#deactivate" ><code>deactivate()</code> function</a>, and <a href="#execute" ><code>execute()</code> function</a>:</p>
 <ul>
 <li>This input field MUST NOT be null.</li>
 </ul>
@@ -417,7 +417,7 @@ be able to use existing DID controller keys stored in the DID Registrar’s inte
 values to indicate one or more DID document operations that should be performed.
 Each entry in this JSON array corresponds to a matching entry at the same index in the <a href="#diddocument" ><code>didDocument</code> input field</a>.
 If it is absent, it is implied to have a single value of <code>&quot;setDidDocument&quot;</code>.</p>
-<p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
+<p>For the <a href="#deactivate" ><code>deactivate()</code> function</a> and <a href="#execute" ><code>execute()</code> function</a>, this input field MUST be absent.</p>
 <p>This specification defines several standard values for this operation. Individual DID methods MAY specify other
 ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 <p>Possible values:</p>
@@ -976,7 +976,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-14" class="notice todo"><a class="notice-link" href="#todo-14">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-20" class="notice todo"><a class="notice-link" href="#todo-20">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>

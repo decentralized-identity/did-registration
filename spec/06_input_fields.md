@@ -7,7 +7,7 @@ This input field indicates the DID method that should be used for the DID operat
 For the [`create()` function](#create), if the [`did` input field](#did) is absent or its value is null, then
 this input field MUST NOT be null, otherwise it MUST be null.
 
-For the [`update()` function](#update) and [`deactivate()` function](#deactivate), this input field MUST be
+For the [`update()` function](#update), [`deactivate()` function](#deactivate), and [`execute()` function](#execute), this input field MUST be
 null, since the DID method is determined by the [`did` input field](#did).
 
 Possible values:
@@ -28,7 +28,7 @@ For the [`create()` function](#create):
   a client to freely choose a DID they want to create, but for other DID methods, the DID is determined by the
   DID method itself.
 
-For the [`update()` function](#update) and [`deactivate()` function](#deactivate):
+For the [`update()` function](#update), [`deactivate()` function](#deactivate), and [`execute()` function](#execute):
 
 - This input field MUST NOT be null.
 
@@ -233,7 +233,7 @@ values to indicate one or more DID document operations that should be performed.
 Each entry in this JSON array corresponds to a matching entry at the same index in the [`didDocument` input field](#diddocument).
 If it is absent, it is implied to have a single value of `"setDidDocument"`.
 
-For the [`deactivate()` function](#deactivate), this input field MUST be absent.
+For the [`deactivate()` function](#deactivate) and [`execute()` function](#execute), this input field MUST be absent.
 
 This specification defines several standard values for this operation. Individual DID methods MAY specify other
 ways of executing an [`update()` function](#update).
