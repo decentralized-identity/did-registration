@@ -330,7 +330,7 @@ For the [`execute()` function](#execute), this input field MUST be absent.
 
 ### `operation`
 
-This input field indicates which operation(s) should be executed when the [`execute()` function](#execute) function is used to
+This input field indicates which operation(s) should be executed when the [`execute()` function](#execute) is used to
 execute an operation that does not affect the DID or DID document itself.
 
 For the [`create()` function](#create), [`update()` function](#update), and [`deactivate()` function](#deactivate) this
@@ -360,7 +360,7 @@ Example:
 
 ### `operationData`
 
-This input field contains additional data when the [`execute()` function](#execute) function is used to
+This input field contains additional data when the [`execute()` function](#execute) is used to
 execute an operation that does not affect the DID or DID document itself.
 
 For the [`create()` function](#create), [`update()` function](#update), and [`deactivate()` function](#deactivate) this

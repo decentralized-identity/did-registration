@@ -184,7 +184,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-49" class="notice todo"><a class="notice-link" href="#todo-49">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-51" class="notice todo"><a class="notice-link" href="#todo-51">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -228,7 +228,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-25" class="notice note"><a class="notice-link" href="#note-25">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-26" class="notice note"><a class="notice-link" href="#note-26">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -498,7 +498,7 @@ Each entry in this JSON array corresponds to a matching entry at the same index 
 <p>For the <a href="#deactivate" ><code>deactivate()</code> function</a>, this input field MUST be absent.</p>
 <p>For the <a href="#execute" ><code>execute()</code> function</a>, this input field MUST be absent.</p>
 <h3 id="operation"><a class="toc-anchor" href="#operation" >§</a> <code>operation</code></h3>
-<p>This input field indicates which operation(s) should be executed when the <a href="#execute" ><code>execute()</code> function</a> function is used to
+<p>This input field indicates which operation(s) should be executed when the <a href="#execute" ><code>execute()</code> function</a> is used to
 execute an operation that does not affect the DID or DID document itself.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, <a href="#update" ><code>update()</code> function</a>, and <a href="#deactivate" ><code>deactivate()</code> function</a> this
 input field MUST be absent.</p>
@@ -520,7 +520,7 @@ in the future by other specifications.</p>
 <span class="token punctuation">}</span>
 </code></pre>
 <h3 id="operationdata"><a class="toc-anchor" href="#operationdata" >§</a> <code>operationData</code></h3>
-<p>This input field contains additional data when the <a href="#execute" ><code>execute()</code> function</a> function is used to
+<p>This input field contains additional data when the <a href="#execute" ><code>execute()</code> function</a> is used to
 execute an operation that does not affect the DID or DID document itself.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, <a href="#update" ><code>update()</code> function</a>, and <a href="#deactivate" ><code>deactivate()</code> function</a> this
 input field MUST be absent.</p>
@@ -722,7 +722,7 @@ DID method-specific and not further specified here.</p>
 <li>Proofs added by a DID controller (e.g. to establish control authority).</li>
 </ul>
 <h3 id="operationresult"><a class="toc-anchor" href="#operationresult" >§</a> <code>operationResult</code></h3>
-<p>This output field contains the result when the <a href="#execute" ><code>execute()</code> function</a> function is used to
+<p>This output field contains the result when the <a href="#execute" ><code>execute()</code> function</a> is used to
 execute an operation that does not affect the DID or DID document itself.</p>
 <p>For the <a href="#create" ><code>create()</code> function</a>, <a href="#update" ><code>update()</code> function</a>, and <a href="#deactivate" ><code>deactivate()</code> function</a> this
 output field MUST be absent.</p>
@@ -976,7 +976,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-50" class="notice todo"><a class="notice-link" href="#todo-50">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-52" class="notice todo"><a class="notice-link" href="#todo-52">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
