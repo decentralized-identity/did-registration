@@ -1,7 +1,7 @@
 DID Registration
 ================
 
-**Specification Status:** [Draft](https://github.com/decentralized-identity/org/blob/master/work-item-lifecycle.md)
+**Specification Status:** [Draft](https://github.com/decentralized-identity/org/blob/main/work-item-lifecycle.md)
 
 **Latest Draft:**
   [identity.foundation/did-registration](https://identity.foundation/did-registration)
@@ -19,6 +19,6 @@ DID Registration
 **Participate:**
 ~ [GitHub repo](https://github.com/decentralized-identity/did-registration)
 ~ [File a bug](https://github.com/decentralized-identity/did-registration/issues)
-~ [Commit history](https://github.com/decentralized-identity/did-registration/commits/master)
+~ [Commit history](https://github.com/decentralized-identity/did-registration/commits/main)
 
 ------------------------------------

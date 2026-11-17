@@ -48,7 +48,7 @@ customElements.define("slide-panels",class extends HTMLElement{static get observ
       
                     <article id="content">
                       <h1 id="did-registration"><a class="toc-anchor" href="#did-registration" >§</a> DID Registration</h1>
-<p><strong>Specification Status:</strong> <a path-0="github.com"path-1="decentralized-identity"path-2="org"path-3="blob"path-4="master"path-5="work-item-lifecycle.md"href="https://github.com/decentralized-identity/org/blob/master/work-item-lifecycle.md" >Draft</a></p>
+<p><strong>Specification Status:</strong> <a path-0="github.com"path-1="decentralized-identity"path-2="org"path-3="blob"path-4="main"path-5="work-item-lifecycle.md"href="https://github.com/decentralized-identity/org/blob/main/work-item-lifecycle.md" >Draft</a></p>
 <p><strong>Latest Draft:</strong>
 <a path-0="identity.foundation"path-1="did-registration"href="https://identity.foundation/did-registration" >identity.foundation/did-registration</a></p>
 <dl>
@@ -69,7 +69,7 @@ customElements.define("slide-panels",class extends HTMLElement{static get observ
 <dt><strong>Participate:</strong></dt>
 <dd><a path-0="github.com"path-1="decentralized-identity"path-2="did-registration"href="https://github.com/decentralized-identity/did-registration" >GitHub repo</a></dd>
 <dd><a path-0="github.com"path-1="decentralized-identity"path-2="did-registration"path-3="issues"href="https://github.com/decentralized-identity/did-registration/issues" >File a bug</a></dd>
-<dd><a path-0="github.com"path-1="decentralized-identity"path-2="did-registration"path-3="commits"path-4="master"href="https://github.com/decentralized-identity/did-registration/commits/master" >Commit history</a></dd>
+<dd><a path-0="github.com"path-1="decentralized-identity"path-2="did-registration"path-3="commits"path-4="main"href="https://github.com/decentralized-identity/did-registration/commits/main" >Commit history</a></dd>
 </dl>
 <hr>
 <h2 id="abstract"><a class="toc-anchor" href="#abstract" >§</a> Abstract</h2>
@@ -179,7 +179,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-31" class="notice todo"><a class="notice-link" href="#todo-31">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-37" class="notice todo"><a class="notice-link" href="#todo-37">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -223,7 +223,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-16" class="notice note"><a class="notice-link" href="#note-16">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-19" class="notice note"><a class="notice-link" href="#note-19">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -971,7 +971,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-32" class="notice todo"><a class="notice-link" href="#todo-32">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-38" class="notice todo"><a class="notice-link" href="#todo-38">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
