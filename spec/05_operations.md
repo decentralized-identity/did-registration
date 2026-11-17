@@ -3,7 +3,7 @@
 This section defines interfaces for the standard DID operations `create()`, `update()`, and `deactivate()`, 
 as well as a fourth `execute()`.
 
-The signatures of these function are to be understood as abstract interfaces
+The signatures of these functions are to be understood as abstract interfaces
 for the specified DID operations, with logical named inputs and outputs. Conforming
 DID Registrar implementations are not required to
 implement these functions using the same names of the inputs, outputs,
@@ -12,7 +12,7 @@ any specific form, such as an explicit function call in a programming language,
 a software library, or a protocol endpoint.
 
 Bindings such as the [HTTP(S) binding](#https-binding)
-can be used to define specific ways of implementing and exposing this function.
+can be used to define specific ways of implementing and exposing these functions.
 
 ### `create()`
 

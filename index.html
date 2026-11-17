@@ -184,7 +184,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-5" class="notice todo"><a class="notice-link" href="#todo-5">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-13" class="notice todo"><a class="notice-link" href="#todo-13">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -192,7 +192,7 @@ the client to perform cryptographic operations such as generating signatures.</p
 <h2 id="operations"><a class="toc-anchor" href="#operations" >§</a> Operations</h2>
 <p>This section defines interfaces for the standard DID operations <code>create()</code>, <code>update()</code>, and <code>deactivate()</code>,
 as well as a fourth <code>execute()</code>.</p>
-<p>The signatures of these function are to be understood as abstract interfaces
+<p>The signatures of these functions are to be understood as abstract interfaces
 for the specified DID operations, with logical named inputs and outputs. Conforming
 DID Registrar implementations are not required to
 implement these functions using the same names of the inputs, outputs,
@@ -200,7 +200,7 @@ or of the function itself, nor do they need to implement the algorithm in
 any specific form, such as an explicit function call in a programming language,
 a software library, or a protocol endpoint.</p>
 <p>Bindings such as the <a href="#https-binding" >HTTP(S) binding</a>
-can be used to define specific ways of implementing and exposing this function.</p>
+can be used to define specific ways of implementing and exposing these functions.</p>
 <h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
 <pre><code>create(method, operationState, options, secret, didDocument) -&gt; didState, operationState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
@@ -228,7 +228,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-3" class="notice note"><a class="notice-link" href="#note-3">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-7" class="notice note"><a class="notice-link" href="#note-7">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -821,7 +821,7 @@ action that needs to be performed.</p>
 <h4 id="didstateactiongetverificationmethod"><a class="toc-anchor" href="#didstateactiongetverificationmethod" >§</a> <code>didState.action=&quot;getVerificationMethod&quot;</code></h4>
 <p>This action indicates that the client needs to provide a newly generated or already existing verification method, before the DID operation can be
 continued.</p>
-<p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a> and <a href="#internal-secret-mode" >Internal Secret Mode</a>.</p>
+<p>This action is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> and <a href="#internal-secret-mode" >Internal Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>verificationMethodTemplate</code> with a JSON array containing one or more <a href="#verification-method-template" >Verification Method Template</a> data structures.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>Example:</p>
@@ -857,7 +857,7 @@ continued.</p>
 <h4 id="didstateactionsignpayload"><a class="toc-anchor" href="#didstateactionsignpayload" >§</a> <code>didState.action=&quot;signPayload&quot;</code></h4>
 <p>This action indicates that the client needs to generate a signature on a payload, before the DID operation can be
 continued.</p>
-<p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
+<p>This action is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>signingRequest</code> with a <a href="#signing-request-set" >Signing Request Set</a> data structure.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>Example:</p>
@@ -889,7 +889,7 @@ continued.</p>
 <h4 id="didstateactiondecryptpayload"><a class="toc-anchor" href="#didstateactiondecryptpayload" >§</a> <code>didState.action=&quot;decryptPayload&quot;</code></h4>
 <p>This action indicates that the client needs to decrypt a payload, before the DID operation can be
 continued.</p>
-<p>This action is used in <a href="#client-managed-secret-mode" >Client Managed Secret Mode</a>.</p>
+<p>This action is used in <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a>.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MUST contain a property <code>decryptionRequest</code> with a <a href="#decryption-request-set" >Decryption Request Set</a> data structure.</p>
 <p>The <a href="#didstate" ><code>didState</code> output field</a> MAY contain additional properties that are relevant to this action.</p>
 <p>Example:</p>
@@ -976,7 +976,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-6" class="notice todo"><a class="notice-link" href="#todo-6">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-14" class="notice todo"><a class="notice-link" href="#todo-14">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
