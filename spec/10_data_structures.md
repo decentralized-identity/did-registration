@@ -12,7 +12,7 @@ is exchanged between the client and the DID Registrar:
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
   when the DID Registrar sends a response.
 
-The [Verification Method Private Data](#verification-method-public-data) structure is used as follows, when private data about a verification method
+The [Verification Method Private Data](#verification-method-private-data) structure is used as follows, when private data about a verification method
 is exchanged between the client and the DID Registrar:
 
 - In [Internal Secret Mode](#internal-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),

@@ -306,10 +306,10 @@ Note that some of the above update operations can be internally transformed into
 
 - If the update operation is `"setDidDocument"`, then it may be transformed into a combination of `"addToDidDocument"`
   and `"removeFromDidDocument"`, by first resolving the current DID document, and then calculating incremental
-  changes (diffs) between the resolved DID document and the value of the [`didDocument` input field](#didcocument).
+  changes (diffs) between the resolved DID document and the value of the [`didDocument` input field](#diddocument).
 - If the update operation is either `"addToDidDocument"` or `"removeFromDidDocument"`, then it may be transformed
   into `"setDidDocument"`, by first resolving the current DID document, and then calculating the updated complete
-  DID document after applying the incremental changes (diffs) in the [`didDocument` input field](#didcocument).
+  DID document after applying the incremental changes (diffs) in the [`didDocument` input field](#diddocument).
 
 A DID Registrar may or may not support certain update operations, and it may or may not support internal
 transformation between them.
