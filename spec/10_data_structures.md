@@ -214,20 +214,18 @@ Example **Signing Request Set** containing two **Signing Requests** with IDs `si
 
 ```json
 {
-	"signingRequest": {
-		"signingRequest1": {
-			"payload": {
-				...
-			},
-			"serializedPayload": "<-base64->",
-			"kid": "did:example:123#key-0",
-			"alg": "EdDSA"
+	"signingRequest1": {
+		"payload": {
+			...
 		},
-		"signingRequest2": {
-			"serializedPayload": "<-base64->",
-			"alg": "ES256K",
-			"purpose": "authentication" // describes the purpose of the requested signature
-		}
+		"serializedPayload": "<-base64->",
+		"kid": "did:example:123#key-0",
+		"alg": "EdDSA"
+	},
+	"signingRequest2": {
+		"serializedPayload": "<-base64->",
+		"alg": "ES256K",
+		"purpose": "authentication" // describes the purpose of the requested signature
 	}
 }
 ```
@@ -249,17 +247,15 @@ Example **Signing Response Set** containing two **Signing Responses**:
 
 ```json
 {
-	"signingResponse": {
-		"signingRequest1": {
-			"signature": "<-base64->",
-			"kid": "did:example:123#key-0",
-			"alg": "EdDSA"
-		},
-		"signingRequest2": {
-			"signature": "<-base64->",
-			"alg": "ES256K",
-			"purpose": "authentication" // describes the purpose of the requested signature
-		}
+	"signingRequest1": {
+		"signature": "<-base64->",
+		"kid": "did:example:123#key-0",
+		"alg": "EdDSA"
+	},
+	"signingRequest2": {
+		"signature": "<-base64->",
+		"alg": "ES256K",
+		"purpose": "authentication" // describes the purpose of the requested signature
 	}
 }
 ```
