@@ -33,9 +33,10 @@ For the [`create()` function](#create):
 
 - If the value of the [`didState.state` output field](#didstatestate) is `"finished"`, the value of this output field
   MUST NOT be null and MUST contain the final DID that has been created.
-- Otherwise, the value of this output field may or may not contain the DID, depending on the DID method.
+- Otherwise, the value of this output field may or may not contain the DID, depending on the DID method and
+  depending on whether the DID is already known while the DID operation is still in progress.
 
-For the [`update()` function](#update) and [`deactivate()` function](#deactivate):
+For the [`update()` function](#update), [`deactivate()` function](#deactivate) and [`execute()` function](#execute):
 
 - This output field MUST NOT be null, and its value MUST match the [`did` input field](#did) that was used when
   executing the function.
@@ -113,7 +114,8 @@ This output field MAY contain additional properties that are considered secrets,
 
 #### `didState.didDocument`
 
-This output field contains the DID document after the DID operation has been successfully executed.
+This output field contains the DID document after the DID operation has been successfully executed, or
+an intermediate DID document while the DID operation is still in progress.
 
 This output field is OPTIONAL.
 

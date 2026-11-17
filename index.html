@@ -179,7 +179,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-47" class="notice todo"><a class="notice-link" href="#todo-47">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-3" class="notice todo"><a class="notice-link" href="#todo-3">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -225,7 +225,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-24" class="notice note"><a class="notice-link" href="#note-24">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-2" class="notice note"><a class="notice-link" href="#note-2">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -548,9 +548,10 @@ is finished, failed, or if a longer-running process has been created that requir
 <ul>
 <li>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is <code>&quot;finished&quot;</code>, the value of this output field
 MUST NOT be null and MUST contain the final DID that has been created.</li>
-<li>Otherwise, the value of this output field may or may not contain the DID, depending on the DID method.</li>
+<li>Otherwise, the value of this output field may or may not contain the DID, depending on the DID method and
+depending on whether the DID is already known while the DID operation is still in progress.</li>
 </ul>
-<p>For the <a href="#update" ><code>update()</code> function</a> and <a href="#deactivate" ><code>deactivate()</code> function</a>:</p>
+<p>For the <a href="#update" ><code>update()</code> function</a>, <a href="#deactivate" ><code>deactivate()</code> function</a> and <a href="#execute" ><code>execute()</code> function</a>:</p>
 <ul>
 <li>This output field MUST NOT be null, and its value MUST match the <a href="#did" ><code>did</code> input field</a> that was used when
 executing the function.</li>
@@ -618,7 +619,8 @@ executing the function.</li>
 </code></pre>
 <p>This output field MAY contain additional properties that are considered secrets, such as seeds, passwords, etc.</p>
 <h4 id="didstatediddocument"><a class="toc-anchor" href="#didstatediddocument" >§</a> <code>didState.didDocument</code></h4>
-<p>This output field contains the DID document after the DID operation has been successfully executed.</p>
+<p>This output field contains the DID document after the DID operation has been successfully executed, or
+an intermediate DID document while the DID operation is still in progress.</p>
 <p>This output field is OPTIONAL.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
@@ -946,7 +948,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-48" class="notice todo"><a class="notice-link" href="#todo-48">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-4" class="notice todo"><a class="notice-link" href="#todo-4">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
