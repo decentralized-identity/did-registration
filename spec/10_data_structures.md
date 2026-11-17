@@ -4,7 +4,8 @@ This specification defines a number of data structures that appear in the [input
 
 The data structures are used as follows:
 
-The [Verification Method Public Data](#verification-method-public-data) structure is used as follows, when public data about a verification method is exchanged between the client and the DID Registrar:
+The [Verification Method Public Data](#verification-method-public-data) structure is used as follows, when public data about a verification method
+is exchanged between the client and the DID Registrar:
 
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),
   after the client received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
@@ -23,6 +24,12 @@ The [Verification Method Template](#verification-method-template) structure is u
 
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as `verificationMethodTemplate` field inside the [`didState` output field](#didstate),
   when the DID Registrar sends a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
+
+The [Verification Method Data Update](#verification-method-data-update) structure is used as follows, when data
+about a verification method needs to be updated.
+
+- In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
+  when the DID Registrar responds to a client request.
 
 The [Signing Request Set](#signing-request-set) data structure is used as follows:
 
@@ -168,6 +175,26 @@ Example **Verification Method Template** containing properties `purpose` and `ty
 	"purpose": ["recovery"],
 	"type": "EcdsaSecp256k1VerificationKey2019"
 }
+```
+
+### Verification Method Data Update
+
+A **Verification Method Data Update** structure is a JSON array consisting of two
+elements. The first element contains a [Verification Method Template](#verification-method-template)
+structure, and the second element contains a
+[Verification Method Public Data](#verification-method-public-data) structure.
+
+Example **Verification Method Data Update**:
+
+```json
+[{
+	"id": "#temp",
+	"purpose": ["authentication"]
+}, {
+	"id": "did:key:z6Mkmg7DTLp6C6utxFduNBPvVohuHgVomCHV7YBH4suxRfwv#z6Mkmg7DTLp6C6utxFduNBPvVohuHgVomCHV7YBH4suxRfwv",
+	"controller": "did:key:z6Mkmg7DTLp6C6utxFduNBPvVohuHgVomCHV7YBH4suxRfwv",
+	"purpose": ["authentication", "assertionMethod", "capabilityInvocation", "capabilityDelegation", "keyAgreement"]
+}]
 ```
 
 ### Signing Request Set
