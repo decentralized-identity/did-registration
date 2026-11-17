@@ -10,7 +10,7 @@ is exchanged between the client and the DID Registrar:
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`secret` input field](#secret),
   after the client received a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
-  when the DID Registrar responds to a client request.
+  when the DID Registrar sends a response.
 
 The [Verification Method Private Data](#verification-method-public-data) structure is used as follows, when private data about a verification method
 is exchanged between the client and the DID Registrar:
@@ -23,18 +23,18 @@ is exchanged between the client and the DID Registrar:
 The [Verification Method Template](#verification-method-template) structure is used as follows:
 
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as `verificationMethodTemplate` field inside the [`didState` output field](#didstate),
-  when the DID Registrar sends a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
+  when the DID Registrar sends a response with a [`didState.action="getVerificationMethod"` output field](#didstateactiongetverificationmethod).
 
 The [Verification Method Data Update](#verification-method-data-update) structure is used as follows, when data
 about a verification method needs to be updated.
 
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as a `verificationMethod` field inside the [`didState.secret` output field](#didstatesecret),
-  when the DID Registrar responds to a client request.
+  when the DID Registrar sends a response.
 
 The [Signing Request Set](#signing-request-set) data structure is used as follows:
 
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as a `signingRequest` field inside the [`didState` output field](#didstate),
-  when the DID Registrar sends a [`didState.action="signPayload"` output field](#didstateactionsignpayload).
+  when the DID Registrar sends a response with a [`didState.action="signPayload"` output field](#didstateactionsignpayload).
 
 The [Signing Response Set](#signing-response-set) data structure is used as follows:
 
@@ -44,7 +44,7 @@ The [Signing Response Set](#signing-response-set) data structure is used as foll
 The [Decryption Request Set](#decryption-request-set) data structure is used as follows:
 
 - In [Client-managed Secret Mode](#client-managed-secret-mode) as a `decryptionRequest` field inside the [`didState` output field](#didstate),
-  when the DID Registrar sends a [`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
+  when the DID Registrar sends a response with a [`didState.action="decryptPayload"` output field](#didstateactiondecryptpayload).
 
 The [Decryption Response Set](#decryption-response-set) data structure is used as follows:
 

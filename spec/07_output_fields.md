@@ -10,7 +10,7 @@ state of the DID:
 * [`didState.secret`](#didstatesecret): An object with DID controller keys and other secrets.
 * [`didState.didDocument`](#didstatediddocument): The DID document after the DID operation has been successfully executed.
 
-In [Client-managed Secret Mode](#client-managed-secret-mode), this output field MAY contain one or more of the following:
+In [Client-managed Secret Mode](#client-managed-secret-mode), this output field MAY also contain one or more of the following:
 
 * A `verificationMethodTemplate` property with a JSON array containing one or more [Verification Method Template](#verification-method-template) objects.
 * A `signingRequest` property with a [Signing Request Set](#signing-request-set).
@@ -45,9 +45,10 @@ For the [`update()` function](#update), [`deactivate()` function](#deactivate) a
 
 This output field contains a JSON object with DID controller keys and other secrets.
 
-In [Internal Secret Mode](#internal-secret-mode), if the [`returnSecrets` option](#returnsecrets) is set to `true`:
+In [Internal Secret Mode](#internal-secret-mode), if the [`returnSecrets` option](#returnsecrets) is set to `true`, this output field MAY contain the following:
 
-- This output field MAY contain a `verificationMethod` property  with a JSON array containing one or more [Verification Method Private Data](#verification-method-private-data) objects.
+- A `verificationMethod` property  with a JSON array containing one or more [Verification Method Private Data](#verification-method-private-data) and/or
+  [Verification Method Data Update](#verification-method-data-update) objects.
 
 Example:
 
@@ -78,9 +79,10 @@ Example:
 }
 ```
 
-In [Client-managed Secret Mode](#client-managed-secret-mode):
+In [Client-managed Secret Mode](#client-managed-secret-mode), this output field MAY contain the following:
 
-- This output field MAY contain a `verificationMethod` property with a JSON array containing one or more [Verification Method Public Data](#verification-method-public-data) objects.
+- A `verificationMethod` property with a JSON array containing one or more [Verification Method Public Data](#verification-method-public-data) and/or
+  [Verification Method Data Update](#verification-method-data-update) objects.
 
 Example:
 
@@ -101,6 +103,31 @@ Example:
 					"y": "RjE_GjsRMELYJ6XuNSFDu3mCbyJnCQ26X_YtmyM9Bfo"
 				}
 			}]
+		},
+		"didDocument": { ... }
+	},
+	"operationState": null,
+	"didRegistrationMetadata": { ... },
+	"didDocumentMetadata": { ... }
+}
+```
+
+Example:
+
+```json
+{
+	"didState": {
+		"state": "finished",
+		"did": "did:key:z6Mkmg7DTLp6C6utxFduNBPvVohuHgVomCHV7YBH4suxRfwv",
+		"secret": {
+			"verificationMethod": [[{
+				"id": "#temp",
+				"purpose": ["authentication"]
+			}, {
+				"id": "did:key:z6Mkmg7DTLp6C6utxFduNBPvVohuHgVomCHV7YBH4suxRfwv#z6Mkmg7DTLp6C6utxFduNBPvVohuHgVomCHV7YBH4suxRfwv",
+				"controller": "did:key:z6Mkmg7DTLp6C6utxFduNBPvVohuHgVomCHV7YBH4suxRfwv",
+				"purpose": ["authentication", "assertionMethod", "capabilityInvocation", "capabilityDelegation", "keyAgreement"]
+			}]]
 		},
 		"didDocument": { ... }
 	},
