@@ -74,7 +74,7 @@ Possible uses for `didState.state="action"`:
 
 * Client needs to generate a new cryptographic key pair
 * Client needs to cryptographically sign a payload
-* Client needs to send cryptocurrency to fund a wallet addres
+* Client needs to send cryptocurrency to fund a wallet address
 * Client needs to obtain an OAuth2 access token from an external service
 * Client needs to accept the terms of a legal agreement
 
