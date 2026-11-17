@@ -181,7 +181,7 @@ Example:
 			"signingRequest2": {
 				"serializedPayload": "<-base64->",
 				"alg": "ES256K",
-				"purpose": "authentication" // describes the purpose of the requested signature
+				"purpose": "authentication"
 			}
 		}
 	},

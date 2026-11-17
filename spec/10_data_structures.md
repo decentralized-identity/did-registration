@@ -225,7 +225,7 @@ Example **Signing Request Set** containing two **Signing Requests** with IDs `si
 	"signingRequest2": {
 		"serializedPayload": "<-base64->",
 		"alg": "ES256K",
-		"purpose": "authentication" // describes the purpose of the requested signature
+		"purpose": "authentication"
 	}
 }
 ```
@@ -255,7 +255,7 @@ Example **Signing Response Set** containing two **Signing Responses**:
 	"signingRequest2": {
 		"signature": "<-base64->",
 		"alg": "ES256K",
-		"purpose": "authentication" // describes the purpose of the requested signature
+		"purpose": "authentication"
 	}
 }
 ```
