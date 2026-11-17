@@ -184,7 +184,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-51" class="notice todo"><a class="notice-link" href="#todo-51">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-54" class="notice todo"><a class="notice-link" href="#todo-54">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -228,7 +228,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-26" class="notice note"><a class="notice-link" href="#note-26">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-28" class="notice note"><a class="notice-link" href="#note-28">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -936,48 +936,6 @@ properties, to explain the reason for waiting.</p>
 	<span class="token property">"didDocumentMetadata"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h2 id="algorithm"><a class="toc-anchor" href="#algorithm" >§</a> Algorithm</h2>
-<p>This section defines a <strong>State Processing Algorithm</strong> that clients can use after invoking the <a href="#operations" >DID Registrar functions</a>,
-in order to process the outputs including current state (see <a href="#states" >States</a>). If the DID operation consists of
-multiple steps, the <a href="#operations" >DID Registrar functions</a> may have to be invoked multiple times until a DID operation is completed.</p>
-<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <a href="#didstatestatefinished" ><code>finished</code></a> or <a href="#didstatestatefailed" ><code>failed</code></a>:</p>
-<ul>
-<li>The DID operation is complete, and no further invocations of the <a href="#operations" >DID Registrar functions</a> are required.</li>
-</ul>
-<p>If the value of the <a href="#didstatestate" ><code>didState.state</code> output field</a> is either <a href="#didstatestateaction" ><code>action</code></a> or <a href="#didstatestatewait" ><code>wait</code></a>:</p>
-<ul>
-<li>The client needs to perform an action, or it needs to wait for a certain period of
-time or until a certain event occurs.</li>
-<li>After that, the client prepares new inputs and invokes the <a href="#operations" >DID Registrar functions</a> again.</li>
-</ul>
-<p>In the latter case, the current state is processed and new inputs are prepared. Given <em>previousInputs</em> and <em>previousOutputs</em>, the algorithm determines
-<em>nextInputs</em> for the next invocation of the <a href="#operations" >DID Registrar functions</a>.</p>
-<ol>
-<li>Initialize <em>nextInputs</em> by copying all <a href="#input-fields" >input fields</a> from <em>previousInputs</em>.</li>
-<li>If present, copy <code>previousOutputs.</code><a href="#didstatedid" ><code>didState.did</code></a> to <code>nextInputs.</code><a href="#did" ><code>did</code></a>.</li>
-<li>If present, copy <code>previousOutputs.</code><a href="#didstatediddocument" ><code>didState.didDocument</code></a> to <code>nextInputs.</code><a href="#diddocument" ><code>didDocument</code></a>.</li>
-<li>If present, copy <code>previousOutputs.</code><a href="#operationstate-2" ><code>operationState</code></a> to <code>nextInputs.</code><a href="#operationstate" ><code>operationState</code></a>.</li>
-<li>If <a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a> and <a href="#didstateactiongetverificationmethod" ><code>didState.action=&quot;getVerificationMethod&quot;</code></a>
-<ol>
-<li>For each <a href="#verification-method-template" >Verification Method Template</a> in the <a href="#didstate" ><code>didState</code> output field</a>, generate or retrieve a key pair,
-and add a <a href="#verification-method-public-data" >Verification Method Public Data</a> to the <a href="#diddocument" ><code>didDocument</code> input field</a> or <a href="#secret" ><code>secret</code> input field</a>.</li>
-</ol>
-</li>
-<li>If <a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a> and <a href="#didstateactionsignpayload" ><code>didState.action=&quot;signPayload&quot;</code></a>
-<ol>
-<li>From the <a href="#signing-request-set" >Signing Request Set</a> in the <a href="#didstate" ><code>didState</code> output field</a>, sign the payload(s),
-and add the <a href="#signing-response-set" >Signing Response Set</a> to the <a href="#secret" ><code>secret</code> input field</a>.</li>
-</ol>
-</li>
-<li>If <a href="#didstatestateaction" ><code>didState.state=&quot;action&quot;</code></a> and <a href="#didstateactiondecryptpayload" ><code>didState.action=&quot;decryptPayload&quot;</code></a>
-<ol>
-<li>From the <a href="#decryption-request-set" >Decryption Request Set</a> in the <a href="#didstate" ><code>didState</code> output field</a>, decrypt the payload(s),
-and add the <a href="#decryption-response-set" >Decryption Response Set</a> to the <a href="#secret" ><code>secret</code> input field</a>.</li>
-</ol>
-</li>
-</ol>
-<div id="todo-52" class="notice todo"><a class="notice-link" href="#todo-52">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
-</div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
 <p>The data structures are used as follows:</p>
@@ -1254,27 +1212,6 @@ which is called the <strong>Decryption Response</strong>.</p>
 	<span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<h2 id="did-url-operations"><a class="toc-anchor" href="#did-url-operations" >§</a> DID URL Operations</h2>
-<p>In addition to the <a href="#operations" >DID Registrar functions</a> defined in previous sections, this specification
-also defines operations on resources identified by DID URLs.</p>
-<h3 id="createresource"><a class="toc-anchor" href="#createresource" >§</a> <code>createResource()</code></h3>
-<pre><code>createResource(did, relativeDidUrl, operationState, options, secret, content) -&gt; didUrlState, operationState, didRegistrationMetadata, contentMetadata
-</code></pre>
-<hr>
-<p>This function creates a new DID URL and associated resource, according to a known DID method, using
-various options and optionally the initial resource data.</p>
-<h3 id="updateresource"><a class="toc-anchor" href="#updateresource" >§</a> <code>updateResource()</code></h3>
-<pre><code>updateResource(did, relativeDidUrl, operationState, options, secret, contentOperation, content) -&gt; didUrlState, operationState, didRegistrationMetadata, contentMetadata
-</code></pre>
-<hr>
-<p>This function updates the content of the resource associated with the DID URL, either by completely replacing it, or
-by performing an incremental update, or in another way. The specific update resource operation to be executed is specified in the
-<a href="#contentoperation" ><code>contentOperation</code> input field</a>.</p>
-<h3 id="deactivateresource"><a class="toc-anchor" href="#deactivateresource" >§</a> <code>deactivateResource()</code></h3>
-<pre><code>deactivateResource(did, relativeDidUrl, operationState, options, secret) -&gt; didUrlState, operationState, didRegistrationMetadata, contentMetadata
-</code></pre>
-<hr>
-<p>This function deactivates the DID URL and associated resource.</p>
 <h2 id="extensions"><a class="toc-anchor" href="#extensions" >§</a> Extensions</h2>
 <p>This section documents various optional extension features that can complement the main functionality of a DID Registrar
 to accommodate advanced use cases.</p>
@@ -1529,7 +1466,6 @@ https://uniregistrar.io/1.0/execute
 <li><a href="#didstatestatewait" ><code>didState.state=&quot;wait&quot;</code></a></li>
 </ul>
 </li>
-<li><a href="#algorithm" >Algorithm</a></li>
 <li><a href="#data-structures" >Data Structures</a>
 <ul>
 <li><a href="#verification-method-public-data" >Verification Method Public Data</a></li>
@@ -1540,13 +1476,6 @@ https://uniregistrar.io/1.0/execute
 <li><a href="#signing-response-set" >Signing Response Set</a></li>
 <li><a href="#decryption-request-set" >Decryption Request Set</a></li>
 <li><a href="#decryption-response-set" >Decryption Response Set</a></li>
-</ul>
-</li>
-<li><a href="#did-url-operations" >DID URL Operations</a>
-<ul>
-<li><a href="#createresource" ><code>createResource()</code></a></li>
-<li><a href="#updateresource" ><code>updateResource()</code></a></li>
-<li><a href="#deactivateresource" ><code>deactivateResource()</code></a></li>
 </ul>
 </li>
 <li><a href="#extensions" >Extensions</a>
