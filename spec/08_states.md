@@ -109,7 +109,7 @@ Example:
 This action indicates that the client needs to provide a newly generated or already existing verification method, before the DID operation can be
 continued.
 
-This action is used in [Client Managed Secret Mode](#client-managed-secret-mode).
+This action is used in [Client Managed Secret Mode](#client-managed-secret-mode) and [Internal Secret Mode](#internal-secret-mode).
 
 The [`didState` output field](#didstate) MUST contain a property `verificationMethodTemplate` with a JSON array containing one or more [Verification Method Template](#verification-method-template) data structures.
 
