@@ -86,7 +86,7 @@ specification also does NOT suggest that private keys should be controlled by an
 DID controller.</p>
 <h2 id="status-of-this-document"><a class="toc-anchor" href="#status-of-this-document" >§</a> Status of This Document</h2>
 <p>DID Registration is a draft specification under development within the
-<a path-0="identity.foundation"href="https://identity.foundation" >Decentralized Identity Foundation</a> (DIF (DIF), and designed to incorporate the
+<a path-0="identity.foundation"href="https://identity.foundation" >Decentralized Identity Foundation</a> (DIF), and designed to incorporate the
 requirements and learnings from related work of the most active industry players
 into a shared specification that meets the collective needs of the community.
 This spec is regularly updated to reflect relevant changes, and we encourage
@@ -107,7 +107,7 @@ work is being done.</p>
 </tr>
 <tr>
 <td style="text-align:left">DID Method</td>
-<td style="text-align:left">A definition of how a specific DID scheme implementeds the precise operations by which DIDs are created, resolved and deactivated and DID documents are written and updated.</td>
+<td style="text-align:left">A definition of how a specific DID scheme implements the precise operations by which DIDs are created, resolved, updated, and deactivated and DID documents are written and updated.</td>
 </tr>
 <tr>
 <td style="text-align:left">DID Document</td>
@@ -115,11 +115,11 @@ work is being done.</p>
 </tr>
 <tr>
 <td style="text-align:left">DID Registrar</td>
-<td style="text-align:left">A software and/or hardware component that implements the DID create/update/deactivate functions.</td>
+<td style="text-align:left">A software and/or hardware component that implements the DID create/update/deactivate and potentially additional functions.</td>
 </tr>
 <tr>
 <td style="text-align:left">DID Resolver</td>
-<td style="text-align:left">A software and/or hardware component that implements the DID resolution function.</td>
+<td style="text-align:left">A software and/or hardware component that implements the DID resolution and DID URL dereferencing functions.</td>
 </tr>
 <tr>
 <td style="text-align:left">Wallet</td>
@@ -179,7 +179,7 @@ alternatively supplied by a client in the <a href="#options" ><code>options</cod
 <h3 id="client-managed-secret-mode"><a class="toc-anchor" href="#client-managed-secret-mode" >§</a> Client-managed Secret Mode</h3>
 <p>In this mode, the DID Registrar does not itself have access to the secrets used by the DID operations, but it will ask
 the client to perform cryptographic operations such as generating signatures.</p>
-<div id="todo-19" class="notice todo"><a class="notice-link" href="#todo-19">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
+<div id="todo-31" class="notice todo"><a class="notice-link" href="#todo-31">TODO</a><p>Explain how the did:ion use case fits in, where the client supplies the public keys / commitments during the create operation.</p>
 </div>
 <p>This mode has one option that controls how DID controller keys are handled:
 <a href="#clientsecretmode" ><code>clientSecretMode</code></a>.</p>
@@ -189,15 +189,13 @@ the client to perform cryptographic operations such as generating signatures.</p
 as well as a fourth <code>execute()</code>.</p>
 <p>The signatures of these function are to be understood as abstract interfaces
 for the specified DID operations, with logical named inputs and outputs. Conforming
-<a>DID URL dereferencing</a> implementations are not required to
-implement this function using the same names of the inputs, outputs,
+DID Registrar implementations are not required to
+implement these functions using the same names of the inputs, outputs,
 or of the function itself, nor do they need to implement the algorithm in
 any specific form, such as an explicit function call in a programming language,
 a software library, or a protocol endpoint.</p>
-</p>
-<p>
-<a>Bindings</a> such as the <a href="#bindings-https">HTTP(S) binding</a>
-can be used to define specific ways of implementing and exposing this function.
+<p>Bindings such as the <a href="#https-binding" >HTTP(S) binding</a>
+can be used to define specific ways of implementing and exposing this function.</p>
 <h3 id="create"><a class="toc-anchor" href="#create" >§</a> <code>create()</code></h3>
 <pre><code>create(method, operationState, options, secret, didDocument) -&gt; didState, operationState, didRegistrationMetadata, didDocumentMetadata
 </code></pre>
@@ -225,7 +223,7 @@ create/update/deactivate operations. This is essentially an extensibility featur
 it possible to perform operations that do not affect the DID or DID document itself, but use
 them for any kind of additional functionality which uses the DID. The specific operation
 to be executed is specified in the <a href="#operation" ><code>operation</code> input field</a>.</p>
-<div id="note-10" class="notice note"><a class="notice-link" href="#note-10">NOTE</a><p>This operation is currently an experimental feature.</p>
+<div id="note-16" class="notice note"><a class="notice-link" href="#note-16">NOTE</a><p>This operation is currently an experimental feature.</p>
 </div>
 <h2 id="input-fields"><a class="toc-anchor" href="#input-fields" >§</a> Input Fields</h2>
 <h3 id="method"><a class="toc-anchor" href="#method" >§</a> <code>method</code></h3>
@@ -479,10 +477,10 @@ ways of executing an <a href="#update" ><code>update()</code> function</a>.</p>
 <ul>
 <li>If the update operation is <code>&quot;setDidDocument&quot;</code>, then it may be transformed into a combination of <code>&quot;addToDidDocument&quot;</code>
 and <code>&quot;removeFromDidDocument&quot;</code>, by first resolving the current DID document, and then calculating incremental
-changes (diffs) between the resolved DID document and the value of the <a href="#didcocument" ><code>didDocument</code> input field</a>.</li>
+changes (diffs) between the resolved DID document and the value of the <a href="#diddocument" ><code>didDocument</code> input field</a>.</li>
 <li>If the update operation is either <code>&quot;addToDidDocument&quot;</code> or <code>&quot;removeFromDidDocument&quot;</code>, then it may be transformed
 into <code>&quot;setDidDocument&quot;</code>, by first resolving the current DID document, and then calculating the updated complete
-DID document after applying the incremental changes (diffs) in the <a href="#didcocument" ><code>didDocument</code> input field</a>.</li>
+DID document after applying the incremental changes (diffs) in the <a href="#diddocument" ><code>didDocument</code> input field</a>.</li>
 </ul>
 <p>A DID Registrar may or may not support certain update operations, and it may or may not support internal
 transformation between them.</p>
@@ -506,6 +504,7 @@ often be DID method-specific, although it is also possible that method-independe
 in the future by other specifications.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+	<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
 	<span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"network"</span><span class="token operator">:</span> <span class="token string">"mainnet"</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
@@ -567,7 +566,7 @@ executing the function.</li>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
-		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
+		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
 		<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 			<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 				<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
@@ -598,7 +597,7 @@ executing the function.</li>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
-		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
+		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
 		<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 			<span class="token property">"verificationMethod"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
 				<span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"JsonWebKey2020"</span><span class="token punctuation">,</span>
@@ -650,7 +649,7 @@ an intermediate DID document while the DID operation is still in progress.</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"finished"</span><span class="token punctuation">,</span>
-		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:key:z6MknhhUUtbXCLRmUVhYG7LPPWN4CTKWXTLsygHMD6Ah5uDN"</span><span class="token punctuation">,</span>
+		<span class="token property">"did"</span><span class="token operator">:</span> <span class="token string">"did:example:123"</span><span class="token punctuation">,</span>
 		<span class="token property">"secret"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>
 		<span class="token property">"didDocument"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 			<span class="token property">"@context"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
@@ -789,7 +788,7 @@ for the failure.</p>
 <ul>
 <li>Client needs to generate a new cryptographic key pair</li>
 <li>Client needs to cryptographically sign a payload</li>
-<li>Client needs to send cryptocurrency to fund a wallet addres</li>
+<li>Client needs to send cryptocurrency to fund a wallet address</li>
 <li>Client needs to obtain an OAuth2 access token from an external service</li>
 <li>Client needs to accept the terms of a legal agreement</li>
 </ul>
@@ -919,7 +918,7 @@ continued.</p>
 <li>Client needs to wait for approval by someone</li>
 </ul>
 <p>In this state, the <a href="#didstate" ><code>didState</code> output field</a> MUST contain a <code>wait</code> property, and MAY contain additional
-properties, to explain the reason for the failure.</p>
+properties, to explain the reason for waiting.</p>
 <p>Example:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"didState"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
@@ -972,7 +971,7 @@ and add the <a href="#decryption-response-set" >Decryption Response Set</a> to t
 </ol>
 </li>
 </ol>
-<div id="todo-20" class="notice todo"><a class="notice-link" href="#todo-20">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
+<div id="todo-32" class="notice todo"><a class="notice-link" href="#todo-32">TODO</a><p>Explain that the generated verification method must then be included in either “secret” or “didDocument” in next request.</p>
 </div>
 <h2 id="data-structures"><a class="toc-anchor" href="#data-structures" >§</a> Data Structures</h2>
 <p>This specification defines a number of data structures that appear in the <a href="#input-fields" >input fields</a> and <a href="#output-fields" >output fields</a>.</p>
@@ -985,7 +984,7 @@ after the client received a <a href="#didstateactiongetverificationmethod" ><cod
 <li>In <a href="#client-managed-secret-mode" >Client-managed Secret Mode</a> as a <code>verificationMethod</code> field inside the <a href="#didstatesecret" ><code>didState.secret</code> output field</a>,
 when the DID Registrar sends a response.</li>
 </ul>
-<p>The <a href="#verification-method-public-data" >Verification Method Private Data</a> structure is used as follows, when private data about a verification method
+<p>The <a href="#verification-method-private-data" >Verification Method Private Data</a> structure is used as follows, when private data about a verification method
 is exchanged between the client and the DID Registrar:</p>
 <ul>
 <li>In <a href="#internal-secret-mode" >Internal Secret Mode</a> as a <code>verificationMethod</code> field inside the <a href="#secret" ><code>secret</code> input field</a>,
@@ -1209,8 +1208,8 @@ which is called the <strong>Signing Response</strong>.</p>
 the corresponding property value MUST be a JSON object which is called the <strong>Decryption Request</strong>.</p>
 <p>A <strong>Decryption Request</strong> contains the following properties:</p>
 <ul>
-<li><code>payload</code>: The payload to be signed in a JSON form for informational purposes. This property is OPTIONAL.</li>
-<li><code>encryptedPayload</code>: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This 0property is REQUIRED.</li>
+<li><code>payload</code>: The payload to be decrypted in a JSON form for informational purposes. This property is OPTIONAL.</li>
+<li><code>encryptedPayload</code>: The Base64-encoded byte array that represents the encrypted payload to be decrypted. This property is REQUIRED.</li>
 <li><code>kid</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>] to indicate a specific key that should be used for decryption. Example value: <code>did:example:123#key-1</code>. This property is OPTIONAL.</li>
 <li><code>enc</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7516">RFC7516</a>] to indicate the cryptographic algorithm to be used to decrypt the payload. Example values: <code>A128GCM</code>, <code>A256GCM</code>. This property is REQUIRED.</li>
 <li><code>purpose</code>: This property indicates the specific intent of the decryption process. Example value: <code>parsing</code>. This property is OPTIONAL.</li>
@@ -1237,19 +1236,19 @@ which is called the <strong>Decryption Response</strong>.</p>
 <ul>
 <li><code>decryptedPayload</code>: The Base64-encoded byte array that represents the decrypted payload. This property is REQUIRED.</li>
 <li><code>kid</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7517">RFC7517</a>] to indicate a specific key that was used for decrypting. Example value: <code>did:example:123#key-1</code>. This property is OPTIONAL, but SHOULD be included if an identifier for the key is known.</li>
-<li><code>enc</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7515">RFC7515</a>] to indicate the cryptographic algorithm that was used to decrypt the payload. Example values: <code>A128GCM</code>, <code>A256GCM</code>. This property SHOULD be included.</li>
+<li><code>enc</code>: This property is interpreted as in [<a class="spec-reference" href="#ref:RFC7516">RFC7516</a>] to indicate the cryptographic algorithm that was used to decrypt the payload. Example values: <code>A128GCM</code>, <code>A256GCM</code>. This property SHOULD be included.</li>
 <li><code>purpose</code>: This property indicates the specific intent of the decryption process. Example value: <code>parsing</code>. This property is OPTIONAL.</li>
 </ul>
 <p>Example <strong>Decryption Response Set</strong> containing two <strong>Decryption Responses</strong>:</p>
 <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
 	<span class="token property">"decryptionRequest1"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"decryptedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-		<span class="token property">"key"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-1"</span><span class="token punctuation">,</span>
+		<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-1"</span><span class="token punctuation">,</span>
 		<span class="token property">"enc"</span><span class="token operator">:</span> <span class="token string">"A128GCM"</span>
 	<span class="token punctuation">}</span><span class="token punctuation">,</span>
 	<span class="token property">"decryptionRequest2"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
 		<span class="token property">"decryptedPayload"</span><span class="token operator">:</span> <span class="token string">"&lt;-base64->"</span><span class="token punctuation">,</span>
-		<span class="token property">"key"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-2"</span><span class="token punctuation">,</span>
+		<span class="token property">"kid"</span><span class="token operator">:</span> <span class="token string">"did:example:123#key-2"</span><span class="token punctuation">,</span>
 		<span class="token property">"enc"</span><span class="token operator">:</span> <span class="token string">"A256GCM"</span>
 	<span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
@@ -1370,6 +1369,13 @@ https://uniregistrar.io/1.0/execute
 <p>The following HTTP status codes are used for the <a href="#deactivate" ><code>deactivate()</code> function</a> operation:</p>
 <ul>
 <li><strong>200</strong>, if request was successful, and the DID may or may not be fully deactivated yet, as indicated by the
+<a href="#didstatestate" ><code>didState.state</code> output field</a>.</li>
+<li><strong>400</strong>, if a problem with the input fields has occurred.</li>
+<li><strong>500</strong>, if an internal error has occurred.</li>
+</ul>
+<p>The following HTTP status codes are used for the <a href="#execute" ><code>execute()</code> function</a>:</p>
+<ul>
+<li><strong>200</strong>, if request was successful, and the operation may or may not be fully completed yet, as indicated by the
 <a href="#didstatestate" ><code>didState.state</code> output field</a>.</li>
 <li><strong>400</strong>, if a problem with the input fields has occurred.</li>
 <li><strong>500</strong>, if an internal error has occurred.</li>
